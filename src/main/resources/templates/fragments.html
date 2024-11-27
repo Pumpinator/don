@@ -13,22 +13,22 @@
             <img th:src="@{/img/logo.png}" alt="Don Galleto"
                  class="size-32 mx-12 object-contain hover:size-36 transition-all duration-300"/>
         </a>
-        <nav class="flex items-center space-x-4">
-            <a href="/notificaciones" class="font-bold text-2xl hover:text-3xl transition-all duration-200">
-                Notificaciones
-            </a>
-            <a href="/configuracion" class="font-bold text-2xl hover:text-3xl transition-all duration-200">
-                Configuración
-            </a>
-            <a href="/perfil" class="font-bold text-2xl hover:text-3xl transition-all duration-200">
-                Perfil
-            </a>
+        <nav class="flex items-center space-x-8">
+            <a th:replace="fragments :: headerLink('Compra', '/compra')"/>
+            <a th:replace="fragments :: headerLink('Venta', '/venta')"/>
+            <a th:replace="fragments :: headerLink('Cocina', '/cocina')"/>
+            <a th:replace="fragments :: headerLink('Inventario', '/inventario')"/>
+            <a th:replace="fragments :: headerLink('Reportes', '/reportes')"/>
         </nav>
     </div>
     <div class="w-full flex justify-center items-center bg-wood py-2">
         <h1 class="text-xl font-bold text-center" th:text="${title}"></h1>
     </div>
 </header>
+
+<a th:fragment="headerLink(text, link)" th:href="@{${link}}" class="font-bold text-2xl hover:text-3xl transition-all duration-200">
+    <span th:text="${text}"></span>
+</a>
 
 <a th:fragment="button(text, link)" th:href="@{${link}}"
    class="py-2 px-4 rounded-full shadow-md font-bold text-center hover:bg-chocolate hover:text-white transition-all duration-200">
