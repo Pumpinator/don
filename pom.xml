@@ -97,7 +97,7 @@
                                     <async>true</async>
                                     <exec>
                                         <directory>src/main/web</directory>
-                                        <command>npm run watch -- -o ../resources/static/main.css</command>
+                                        <command>npm run watch -- -o ../resources/static/css/main.css</command>
                                     </exec>
                                 </task>
                                 <task>
@@ -105,7 +105,7 @@
                                     <exec>
                                         <directory>src/main/web</directory>
                                         <command>npm run watch -- -o
-                                            ${project.build.directory}/classes/static/main.css
+                                            ${project.build.directory}/classes/static/css/main.css
                                         </command>
                                     </exec>
                                 </task>
