@@ -4,4 +4,12 @@ Nuestro equipo esta conformado por:
 -Vayron Abraham Granados Conchas
 -Alejandro Delgado Cardona
 -Josue Alejandro Chavez Hernandez
+<<<<<<< HEAD
 .
+=======
+-Brandon Esau Montoya
+
+
+
+:) 
+>>>>>>> 688437e517512ba8804b65dd2e4217d28a65348d
