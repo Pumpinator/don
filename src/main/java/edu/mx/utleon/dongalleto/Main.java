@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 //hola
 @SpringBootApplication
-public class DongalletoApplication {
+public class Main {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DongalletoApplication.class, args);
+		SpringApplication.run(Main.class, args);
 	}
 
 }
