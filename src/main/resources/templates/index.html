@@ -2,25 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments :: head('Hola, Don Galleto')"/>
 <body>
-<header th:replace="fragments :: header"/>
+<header th:replace="fragments :: header('Inicio')"/>
 <main class="container mx-auto">
-    <div class="container mx-auto py-8">
-        <h1 class="text-3xl font-bold text-[#332722] mb-6">Panel de Control</h1>
+    <div class="container p-4 py-8">
+        <h1 class="text-3xl font-bold text-chocolate mb-6">Panel de Control</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href="/notificaciones"
-               class="bg-[#332722] text-white p-4 rounded-lg hover:bg-[#4B413E]">Notificaciones</a>
-            <a href="/configuracion" class="bg-[#332722] text-white p-4 rounded-lg hover:bg-[#4B413E]">Configuración</a>
-            <a href="/perfil" class="bg-[#332722] text-white p-4 rounded-lg hover:bg-[#4B413E]">Perfil</a>
+            <a th:replace="fragments :: button('Notificaciones', '/notificaciones')"/>
+            <a th:replace="fragments :: button('Configuración', '/configuracion')"/>
+            <a th:replace="fragments :: button('Perfil', '/perfil')"/>
         </div>
     </div>
-    <div class="container mx-auto py-8">
-        <h1 class="text-3xl font-bold text-[#332722] mb-6">Thymeleaf & Tailwind CSS</h1>
-        <p class="text-[#332722] mb-4">Este es un proyecto de ejemplo para mostrar cómo se puede utilizar Spring Web
+    <div class="container p-4 py-8">
+        <h1 class="text-3xl font-bold text-chocolate mb-6">Thymeleaf & Tailwind CSS</h1>
+        <p class="text-chocolate mb-4">Este es un proyecto de ejemplo para mostrar cómo se puede utilizar Spring Web
             MVC, Thyemeleaf y Tailwind CSS para crear aplicaciones web.</p>
         <div class="m-4 mb-6">
             Ejemplo de paso de parámetros:
-            <p class="text-xl text-[#332722]">Clave =
-                <span class="font-bold text-2xl text-[#332722]" th:text="${clave}"></span>
+            <p class="text-xl text-chocolate">Clave =
+                <span class="font-bold text-2xl text-chocolate" th:text="${clave}"></span>
             </p>
         </div>
         <div class="m-4 mb-6">
@@ -35,7 +34,7 @@
                 <thead>
                 <tr>
                     <th class="p-4 border-b ">
-                        <p class="block font-sans text-sm antialiased font-normal leading-none text-[#332722] opacity-70">
+                        <p class="block font-sans text-sm antialiased font-normal leading-none text-chocolate opacity-70">
                             Caracteres
                         </p>
                     </th>
