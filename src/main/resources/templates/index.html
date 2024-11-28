@@ -1,58 +1,121 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: head('Hola, Don Galleto')"/>
+<head th:replace="~{fragments :: head('Hola, Don Galleto')}"/>
 <body>
-<header th:replace="fragments :: header('Inicio')"/>
+<header th:replace="~{fragments :: header('Inicio')}"/>
 <main class="container mx-auto">
     <div class="container p-4 py-8">
         <h1 class="text-3xl font-bold text-chocolate mb-6">Panel de Control</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a th:replace="fragments :: button('Notificaciones', '/notificaciones')"/>
-            <a th:replace="fragments :: button('Configuración', '/configuracion')"/>
-            <a th:replace="fragments :: button('Perfil', '/perfil')"/>
+            <a th:replace="~{fragments :: button('Notificaciones', '#')}"/>
+            <a th:replace="~{fragments :: button('Configuración', '#')}"/>
+            <a th:replace="~{fragments :: button('Perfil', '#')}"/>
         </div>
     </div>
     <div class="container p-4 py-8">
         <h1 class="text-3xl font-bold text-chocolate mb-6">Thymeleaf & Tailwind CSS</h1>
         <p class="text-chocolate mb-4">Este es un proyecto de ejemplo para mostrar cómo se puede utilizar Spring Web
             MVC, Thyemeleaf y Tailwind CSS para crear aplicaciones web.</p>
+        <h1 class="text-2xl font-bold text-chocolate mb-8">Ejemplos de uso de Thymeleaf</h1>
         <div class="m-4 mb-6">
-            Ejemplo de paso de parámetros:
-            <p class="text-xl text-chocolate">Clave =
-                <span class="font-bold text-2xl text-chocolate" th:text="${clave}"></span>
+            Ejemplo de uso de variables:
+            <p class="text-xl text-chocolate">
+                <span class="font-bold text-xl text-chocolate">Clave</span>
+                =
+                <span class="text-red" th:text="${key.equals('value') ? 'valor' : ''}"/>
             </p>
         </div>
-        <div class="m-4 mb-6">
+        <div class="m-4 mb-12">
             Ejemplo de uso de arreglos:
             <ul>
-                <li class="font-bold" th:each="valor : ${arreglo}" th:text="${valor}"></li>
+                <li class="font-bold" th:each="value : ${array}"><span class="text-red" th:text="${value}"></span></li>
             </ul>
         </div>
-        <div class="m-4 mb-6">
+        <div class="m-4 mb-12">
             Ejemplo de uso de listas:
             <table class="w-full text-left table-auto min-w-max">
                 <thead>
                 <tr>
-                    <th class="p-4 border-b ">
-                        <p class="block font-sans text-sm antialiased font-normal leading-none text-chocolate opacity-70">
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
                             Caracteres
                         </p>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="caracter : ${lista}">
-                    <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-[#F46F4A]"
-                           th:text="${caracter}">
+                <tr th:each="char : ${list}">
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-red"
+                           th:text="${char}">
                         </p>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+        <div class="m-4 mb-12">
+            Ejemplo de uso de números:
+            <p class="text-xl text-chocolate">
+                <span class="font-bold text-xl text-chocolate">Número</span>
+                =
+                <span class="text-red" th:text="${number}"/>
+            </p>
+        </div>
+        <div class="m-4 mb-12">
+            Ejemplo de uso de booleanos:
+            <p class="text-xl text-chocolate">
+                <span class="font-bold text-xl text-chocolate">Booleano</span>
+                =
+                <span class="text-red" th:text="${boolean.equals(true) ? 'Verdadero' : 'Falso'}"/>
+            </p>
+        </div>
+        <div class="m-4 mb-12">
+            Ejemplo de uso de objetos:
+            <p class="text-xl text-chocolate">
+                <span class="font-bold text-xl text-chocolate">Nombre</span>
+                =
+                <span class="text-red" th:text="${product.name}"/>
+                <br/>
+                <span class="font-bold text-xl text-chocolate">Descripción</span>
+                =
+                <span class="text-red" th:text="${product.description}"/>
+            </p>
+        </div>
+        <h1 class="text-2xl font-bold text-chocolate mb-8">Código fuente</h1>
+        <div class="m-4 mb-6">
+            <p class="text-latte font-mono">MainController.java</p>
+            <img th:src="@{/img/MainController.png}" class="">
+        </div>
+        <div class="m-4 mb-6">
+            <p class="text-latte font-mono">index.html</p>
+            <img th:src="@{/img/index.png}" class="">
+        </div>
     </div>
+    <button id="volverArriba"
+            class="hidden sm:w-32 md:w-48 p-5 sm:text-xs md:text-xl rounded-full bg-red text-white cursor-pointer fixed bottom-5 right-5 hover:font-bold transition-all duration-500"
+            onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+        Volver arriba
+    </button>
 </main>
-<footer th:replace="fragments :: footer"/>
+<footer th:replace="~{fragments :: footer}"/>
+<script>
+    window.onscroll = () => {
+        scroll();
+    };
+
+    function scroll() {
+        const footer = document.querySelector('footer');
+        const rect = footer.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        const button = document.getElementById('volverArriba');
+
+        if (isVisible) {
+            button.classList.remove('hidden');
+        } else {
+            button.classList.add('hidden');
+        }
+    }
+</script>
 </body>
 </html>

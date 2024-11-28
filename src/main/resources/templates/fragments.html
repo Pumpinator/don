@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
@@ -8,25 +6,31 @@
 </head>
 
 <header th:fragment="header(title)" class="text-white">
-    <div class="w-full flex justify-between items-center text bg-latte px-4">
-        <a href="/" class="text-2xl font-bold">
+    <div class="w-full flex flex-col sm:flex-row justify-between items-center bg-latte px-4 py-2 sm:py-4">
+        <a href="/" class="text-2xl font-bold mb-2 sm:mb-0">
             <img th:src="@{/img/logo.png}" alt="Don Galleto"
-                 class="size-32 mx-12 object-contain hover:size-36 transition-all duration-300"/>
+                 class="md:size-24 md:mx-16 size-20 object-contain hover:size-28 transition-all duration-300"/>
         </a>
-        <nav class="flex items-center space-x-8">
-            <a th:replace="fragments :: headerLink('Compra', '/compra')"/>
-            <a th:replace="fragments :: headerLink('Venta', '/venta')"/>
-            <a th:replace="fragments :: headerLink('Cocina', '/cocina')"/>
-            <a th:replace="fragments :: headerLink('Inventario', '/inventario')"/>
-            <a th:replace="fragments :: headerLink('Reportes', '/reportes')"/>
+        <nav class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8">
+            <a th:replace="~{fragments :: headerLink('Compra', '#')}"/>
+            <a th:replace="~{fragments :: headerLink('Venta', '#')}"/>
+            <a th:replace="~{fragments :: headerLink('Cocina', '#')}"/>
+            <a th:replace="~{fragments :: headerLink('Inventario', '#')}"/>
+            <a th:replace="~{fragments :: headerLink('Reportes', '#')}"/>
         </nav>
     </div>
-    <div class="w-full flex justify-center items-center bg-wood py-2">
-        <h1 class="text-xl font-bold text-center" th:text="${title}"></h1>
+    <div class="w-full flex justify-center items-center bg-wood py-2 sm:py-4">
+        <h1 class="text-xl sm:text-2xl font-bold text-center" th:text="${title}"></h1>
     </div>
 </header>
 
-<a th:fragment="headerLink(text, link)" th:href="@{${link}}" class="font-bold text-2xl hover:text-3xl transition-all duration-200">
+<footer th:fragment="footer" class="bg-chocolate text-white py-4 sm:py-6">
+    <div class="container mx-auto text-center items-center content-center h-20">
+        <p th:text="|&copy; ${#dates.format(#dates.createNow(), 'yyyy')} Don Galleto. Todos los derechos reservados.|"></p>
+    </div>
+</footer>
+
+<a th:fragment="headerLink(text, link)" th:href="@{${link}}" class="font-bold text-xl sm:text-2xl hover:text-2xl sm:hover:text-3xl transition-all duration-200">
     <span th:text="${text}"></span>
 </a>
 
@@ -34,10 +38,3 @@
    class="py-2 px-4 rounded-full shadow-md font-bold text-center hover:bg-chocolate hover:text-white transition-all duration-200">
     <span th:text="${text}"></span>
 </a>
-
-<footer th:fragment="footer" class="bg-chocolate text-white py-4">
-    <div class="container mx-auto text-center">
-        <p th:text="|&copy; ${#dates.format(#dates.createNow(), 'yyyy')} Don Galleto. Todos los derechos reservados.|"></p>
-    </div>
-</footer>
-</html>
