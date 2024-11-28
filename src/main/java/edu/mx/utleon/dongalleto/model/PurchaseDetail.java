@@ -14,19 +14,6 @@ public class PurchaseDetail extends TransactionDetail {
     @EmbeddedId
     private PurchaseDetailId id;
 
-    @Column(length = 150, nullable = false)
-    private double price;
-
-    @Column(length = 150, nullable = false)
-    private int quantity;
-
-    @Column(length = 150, nullable = false)
-    private double subtotal;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
-
     @ManyToOne
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;

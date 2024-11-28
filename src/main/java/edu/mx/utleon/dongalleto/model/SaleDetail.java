@@ -15,10 +15,6 @@ public class SaleDetail extends TransactionDetail {
     private SaleDetailId id;
 
     @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
-
-    @ManyToOne
     @MapsId("cookie")
     @JoinColumn(name = "cookie_id")
     private Cookie cookie;

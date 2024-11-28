@@ -10,18 +10,11 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Inventory {
+public abstract class Inventory extends Measurable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(length = 150, nullable = false)
-    private double quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
 
     @Column(length = 150, nullable = false)
     private LocalDate expirationDate;

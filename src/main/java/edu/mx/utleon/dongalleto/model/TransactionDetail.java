@@ -22,6 +22,10 @@ public abstract class TransactionDetail {
     @Column(length = 150, nullable = false)
     private double subtotal;
 
+    @ManyToOne
+    @JoinColumn(name = "measure_id", nullable = false)
+    private Measure measure;
+
     public double getSubtotal() {
         return this.quantity * this.price;
     }

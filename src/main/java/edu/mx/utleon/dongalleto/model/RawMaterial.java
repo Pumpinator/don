@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 public class RawMaterial {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

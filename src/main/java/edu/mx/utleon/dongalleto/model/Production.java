@@ -11,21 +11,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Production {
+public class Production extends Measurable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 150, nullable = false)
-    private double quantity;
-
-    @Column(length = 150, nullable = false)
     private LocalDate creationDate;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
 
     @ManyToOne
     @JoinColumn(name = "cookie_id", nullable = false)

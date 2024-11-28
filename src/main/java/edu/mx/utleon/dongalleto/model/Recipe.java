@@ -11,7 +11,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Recipe {
+public class Recipe extends Measurable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,18 +21,10 @@ public class Recipe {
     private String name;
 
     @Column(length = 150, nullable = false)
-    private double quantity;
-
-
-    @Column(length = 150, nullable = false)
     private double cost;
 
     @Column(length = 150, nullable = false)
     private String instructions;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id")
-    private Measure measure;
 
     @ManyToOne
     @JoinColumn(name = "cookie_id")

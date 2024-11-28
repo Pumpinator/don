@@ -3,7 +3,6 @@ package edu.mx.utleon.dongalleto.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
 import java.util.Collection;
 
 @Entity

@@ -9,17 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Ingredient {
+public class Ingredient extends Measurable {
 
     @EmbeddedId
     private IngredientId id;
-
-    @Column(length = 150, nullable = false)
-    private double quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
 
     @ManyToOne
     @MapsId("rawMaterial")

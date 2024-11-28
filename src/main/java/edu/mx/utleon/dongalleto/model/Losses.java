@@ -9,21 +9,14 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Losses {
+public class Losses extends Measurable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(length = 150, nullable = false)
-    private double quantity;
-
-    @Column(length = 150, nullable = false)
     private double total;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
 
     @ManyToOne
     @JoinColumn(name = "production_id")
@@ -36,9 +29,6 @@ public class Losses {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Cookie cookie;
-
-
-
 
 
 }

@@ -57,12 +57,12 @@
                     </td>
                     <td class="p-4 border-b border-latte">
                         <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.quantity > 1 ? recipe.quantity : recipe.quantity.intValue()}">
+                           th:text="${recipe.quantity}">
                         </p>
                     </td>
                     <td class="p-4 border-b border-latte">
                         <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.quantity > 1 ? recipe.measure.symbol + 's' : recipe.measure.symbol}">
+                           th:text="${recipe.measure.symbol}">
                         </p>
                     </td>
                     <td class="p-4 border-b border-latte">

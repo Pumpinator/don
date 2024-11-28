@@ -1,9 +1,9 @@
 INSERT INTO dongalleto.measure (name, symbol)
-VALUES ('Gramo', 'g'),
+VALUES ('Gramo', 'gr'),
        ('Kilogramo', 'kg'),
-       ('Litro', 'L'),
+       ('Litro', 'Lt'),
        ('Pieza', 'pz'),
-       ('Dinero', '$');
+       ('Peso', '$');
 
 INSERT INTO dongalleto.raw_material (name)
 VALUES ('Harina'),
