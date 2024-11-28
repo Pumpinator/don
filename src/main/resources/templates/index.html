@@ -77,9 +77,9 @@
                 =
                 <span class="text-red" th:text="${product.name}"/>
                 <br/>
-                <span class="font-bold text-xl text-chocolate">Descripción</span>
+                <span class="font-bold text-xl text-chocolate">Precio</span>
                 =
-                <span class="text-red" th:text="${product.description}"/>
+                <span class="text-red" th:text="${product.price}"/>
             </p>
         </div>
         <h1 class="text-2xl font-bold text-chocolate mb-8">Código fuente</h1>
@@ -92,30 +92,11 @@
             <img th:src="@{/img/index.png}" class="">
         </div>
     </div>
-    <button id="volverArriba"
-            class="hidden sm:w-32 md:w-48 p-5 sm:text-xs md:text-xl rounded-full bg-red text-white cursor-pointer fixed bottom-5 right-5 hover:font-bold transition-all duration-500"
-            onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
-        Volver arriba
-    </button>
 </main>
+<button th:replace="~{fragments :: volverArriba}"/>
 <footer th:replace="~{fragments :: footer}"/>
 <script>
-    window.onscroll = () => {
-        scroll();
-    };
 
-    function scroll() {
-        const footer = document.querySelector('footer');
-        const rect = footer.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
-        const button = document.getElementById('volverArriba');
-
-        if (isVisible) {
-            button.classList.remove('hidden');
-        } else {
-            button.classList.add('hidden');
-        }
-    }
 </script>
 </body>
 </html>

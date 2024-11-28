@@ -3,6 +3,7 @@
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <script th:src="@{/js/main.js}"></script>
 </head>
 
 <header th:fragment="header(title)" class="text-white">
@@ -14,7 +15,7 @@
         <nav class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8">
             <a th:replace="~{fragments :: headerLink('Compra', '#')}"/>
             <a th:replace="~{fragments :: headerLink('Venta', '#')}"/>
-            <a th:replace="~{fragments :: headerLink('Cocina', '#')}"/>
+            <a th:replace="~{fragments :: headerLink('Cocina', '/cocina')}"/>
             <a th:replace="~{fragments :: headerLink('Inventario', '#')}"/>
             <a th:replace="~{fragments :: headerLink('Reportes', '#')}"/>
         </nav>
@@ -30,7 +31,8 @@
     </div>
 </footer>
 
-<a th:fragment="headerLink(text, link)" th:href="@{${link}}" class="font-bold text-xl sm:text-2xl hover:text-2xl sm:hover:text-3xl transition-all duration-200">
+<a th:fragment="headerLink(text, link)" th:href="@{${link}}"
+   class="font-bold text-xl sm:text-2xl hover:text-2xl sm:hover:text-3xl transition-all duration-200">
     <span th:text="${text}"></span>
 </a>
 
@@ -38,3 +40,9 @@
    class="py-2 px-4 rounded-full shadow-md font-bold text-center hover:bg-chocolate hover:text-white transition-all duration-200">
     <span th:text="${text}"></span>
 </a>
+
+<button th:fragment="volverArriba" id="volverArriba"
+        class="hidden sm:w-32 md:w-48 p-5 sm:text-xs md:text-xl rounded-full bg-red text-white cursor-pointer fixed bottom-5 right-5 hover:font-bold transition-all duration-500"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+    Volver arriba
+</button>

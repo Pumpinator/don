@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Cocina de Don Galleto')}"/>
+<body>
+<header th:replace="~{fragments :: header('Cocina')}"/>
+<main class="container mx-auto">
+    <div class="container p-4 py-8">
+        <h1 class="text-3xl font-bold text-chocolate mb-6">Cocina</h1>
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-red mb-3">Recetas:</h2>
+            <table class="w-full text-left table-auto min-w-max">
+                <thead>
+                <tr>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Id
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Nombre
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Cantidad
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Medida
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Costo
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Ingredientes
+                        </p>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="recipe : ${recipes}">
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${recipe.id}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${recipe.name}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${recipe.quantity > 1 ? recipe.quantity : recipe.quantity.intValue()}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${recipe.quantity > 1 ? recipe.measure.symbol + 's' : recipe.measure.symbol}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${'$ ' + recipe.cost}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <ul>
+                            <li class="font-bold" th:each="ingredient : ${recipe.ingredients}">
+                                <span class="text-chocolate" th:text="${ingredient.rawMaterial.name}"></span>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-red mb-3">Insumos:</h2>
+            <table class="w-full text-left table-auto min-w-max">
+                <thead>
+                <tr>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Id
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Nombre
+                        </p>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rawMaterial : ${rawMaterials}">
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${rawMaterial.id}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${rawMaterial.name}">
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-red mb-3">Ingredientes:</h2>
+            <table class="w-full text-left table-auto min-w-max">
+                <thead>
+                <tr>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Insumo
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Cantidad
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Medida
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Receta
+                        </p>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ingredient : ${ingredients}">
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${ingredient.rawMaterial.name}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${ingredient.quantity}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${ingredient.measure.symbol}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${ingredient.recipe.name}">
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-red mb-3">Medidas:</h2>
+            <table class="w-full text-left table-auto min-w-max">
+                <thead>
+                <tr>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Id
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Nombre
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                            Símbolo
+                        </p>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="measure : ${measures}">
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${measure.id}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${measure.name}">
+                        </p>
+                    </td>
+                    <td class="p-4 border-b border-latte">
+                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                           th:text="${measure.symbol}">
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<button th:replace="~{fragments :: volverArriba}"/>
+<footer th:replace="~{fragments :: footer}"/>
+</body>
+</html>
