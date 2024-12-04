@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class SaleDetail extends TransactionDetail {
 
     @EmbeddedId

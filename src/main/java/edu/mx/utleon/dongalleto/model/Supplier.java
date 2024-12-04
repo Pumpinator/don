@@ -1,7 +1,10 @@
 package edu.mx.utleon.dongalleto.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Collection;
 
 @Entity
 @Builder
@@ -9,6 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Supplier {
 
     @Id
@@ -23,5 +27,14 @@ public class Supplier {
 
     @Column(length = 50, nullable = false)
     private String type;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "raw_material_supplier",
+            joinColumns = @JoinColumn(name = "supplier_id"),
+            inverseJoinColumns = @JoinColumn(name = "raw_material_id")
+    )
+    private Collection<RawMaterial> rawMaterial;
 
 }

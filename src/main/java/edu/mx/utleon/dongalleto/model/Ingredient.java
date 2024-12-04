@@ -9,16 +9,19 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Ingredient extends Measurable {
 
     @EmbeddedId
     private IngredientId id;
 
+    @ToString.Exclude
     @ManyToOne
     @MapsId("rawMaterial")
     @JoinColumn(name = "raw_material_id")
     private RawMaterial rawMaterial;
 
+    @ToString.Exclude
     @ManyToOne
     @MapsId("recipe")
     @JoinColumn(name = "recipe_id")

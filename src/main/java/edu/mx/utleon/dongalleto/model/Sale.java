@@ -11,6 +11,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Sale extends Transaction {
 
     @OneToMany(mappedBy = "sale")

@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Compra de Materia Prima - Don Galleto')}"/>
+<body class="bg-latte-light">
+<header th:replace="~{fragments :: header('Compra de Materia Prima')}"/>
+<main class="container mx-auto p-4 py-8">
+    <div class="grid grid-cols-2 gap-8">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-center text-chocolate mb-6">Registrar Compra de Insumos</h2>
+
+            <div class="mb-6">
+                <input type="text" id="searchInput" placeholder="Buscar materia prima..."
+                       class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
+            </div>
+
+            <div id="rawMaterialContainer" class="w-full grid grid-cols-1 gap-4">
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-center text-chocolate mb-6">Artículos en el Carrito</h2>
+            <div id="purchaseItems" class="grid grid-cols-1 gap-4">
+            </div>
+            <div class="mt-8">
+                <button onclick="submitPurchase()"
+                        class="bg-red hover:bg-terracotta text-white font-bold py-3 px-6 rounded-lg h-20 w-full focus:outline-none focus:shadow-outline transition-all duration-300">
+                    Realizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+<button th:replace="~{fragments :: volverArriba}"/>
+<footer th:replace="~{fragments :: footer}"/>
+
+<script th:inline="javascript">
+    let purchaseItems = [];
+    let rawMaterials = [];
+    let measures = /*[[${measures}]]*/ [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', debounce(searchRawMaterials, 300));
+    });
+
+    function searchRawMaterials() {
+        const searchTerm = document.getElementById('searchInput').value.trim();
+        if (searchTerm.length > 0) {
+            fetch(`/materiaprima/${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    rawMaterials = data;
+                    console.log('Raw materials:', rawMaterials); // Agrega esta línea para depurar
+                    renderRawMaterials();
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            renderRawMaterials();
+        }
+    }
+
+    function renderRawMaterials() {
+        const container = document.getElementById('rawMaterialContainer');
+        container.innerHTML = '';
+
+        rawMaterials.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'bg-white p-4 w-full flex-grow rounded-lg shadow hover:shadow-lg transition-shadow duration-300';
+            card.innerHTML = `
+        <h3 id="name-${item.id}" class="font-semibold text-chocolate mb-2">${item.name}</h3>
+        <div class="grid grid-cols-5 gap-2 pb-4">
+            <select id="supplier-${item.id}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent">
+                <option value="" selected>Seleccione un Proveedor</option>
+            </select>
+            <input id="quantity-${item.id}" type="number" placeholder="Cantidad" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
+            <select id="measure-${item.id}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent">
+                <option value="" selected>Unidad de Medida</option>
+            </select>
+            <input id="unitPrice-${item.id}" type="number" step="0.01" placeholder="Precio Unitario" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
+            <input id="totalPrice-${item.id}" type="number" step="0.01" placeholder="Precio Total" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
+        </div>
+        <button onclick="addItem(${item.id})" class="bg-white w-full hover:bg-terracotta hover:text-white font-bold py-2 px-4 rounded transition-all duration-300">
+            Agregar a la Compra
+        </button>
+    `;
+            container.appendChild(card);
+
+            // Populate suppliers
+            const supplierSelect = document.getElementById(`supplier-${item.id}`);
+            item.suppliers.forEach(supplier => {
+                const option = document.createElement('option');
+                option.value = supplier.id;
+                option.textContent = supplier.name;
+                supplierSelect.appendChild(option);
+            });
+
+            // Populate measures
+            const measureSelect = document.getElementById(`measure-${item.id}`);
+            measures.forEach(measure => {
+                const option = document.createElement('option');
+                option.value = measure.id;
+                option.textContent = measure.symbol;
+                measureSelect.appendChild(option);
+            });
+        });
+    }
+
+    function getSupplierName(id) {
+        const supplierOption = document.querySelector(`option[value="${id}"]`);
+        return supplierOption ? supplierOption.textContent : 'Desconocido';
+    }
+
+    function getMeasureSymbol(id) {
+        const measureOption = measures.find(measure => measure.id === id);
+        return measureOption ? measureOption.symbol : 'Desconocido';
+    }
+
+    function updatePurchaseItems() {
+        const container = document.getElementById('purchaseItems');
+        container.innerHTML = '';
+
+        purchaseItems.forEach((item, index) => {
+            const supplierName = getSupplierName(item.supplierId);
+            const measureSymbol = getMeasureSymbol(item.measureId);
+
+            const card = document.createElement('div');
+            card.className = 'bg-white p-4 rounded-lg shadow';
+            card.innerHTML = `
+            <h4 class="font-semibold text-red">${item.name}</h4>
+            <p class="text-sm">Proveedor: ${supplierName}</p>
+            <p class="text-sm">Cantidad: ${item.quantity} ${measureSymbol}</p>
+            <p class="text-sm">Precio Unitario: $${item.unitPrice.toFixed(2)}</p>
+            <p class="text-sm">Precio Total: $${item.totalPrice.toFixed(2)}</p>
+            <div class="mt-2">
+                <button onclick="removeItem(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded mr-2 transition-all duration-300">Eliminar</button>
+                <button onclick="decreaseQuantity(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded transition-all duration-300">Restar</button>
+            </div>
+        `;
+            container.appendChild(card);
+        });
+    }
+
+    function addItem(itemId) {
+        const supplier = document.getElementById(`supplier-${itemId}`);
+        const quantity = document.getElementById(`quantity-${itemId}`);
+        const measure = document.getElementById(`measure-${itemId}`);
+        const unitPrice = document.getElementById(`unitPrice-${itemId}`);
+        const totalPrice = document.getElementById(`totalPrice-${itemId}`);
+        const name = document.getElementById(`name-${itemId}`);
+
+        if (!supplier.value || !quantity.value || !measure.value || (!unitPrice.value && !totalPrice.value)) {
+            alert('Por favor, complete todos los campos necesarios');
+            return;
+        }
+
+        const item = {
+            rawMaterialId: itemId,
+            name: name.textContent,
+            supplierId: parseInt(supplier.value),
+            quantity: parseFloat(quantity.value),
+            measureId: parseInt(measure.value),
+            unitPrice: unitPrice.value ? parseFloat(unitPrice.value) : parseFloat(totalPrice.value) / parseFloat(quantity.value),
+            totalPrice: totalPrice.value ? parseFloat(totalPrice.value) : parseFloat(unitPrice.value) * parseFloat(quantity.value)
+        };
+
+        console.log(item)
+
+        purchaseItems.push(item);
+        updatePurchaseItems();
+        clearForm(itemId);
+    }
+
+    function clearForm(itemId) {
+        document.getElementById(`supplier-${itemId}`).value = '';
+        document.getElementById(`quantity-${itemId}`).value = '';
+        document.getElementById(`measure-${itemId}`).value = '';
+        document.getElementById(`unitPrice-${itemId}`).value = '';
+        document.getElementById(`totalPrice-${itemId}`).value = '';
+    }
+
+    function removeItem(index) {
+        purchaseItems.splice(index, 1);
+        updatePurchaseItems();
+    }
+
+    function decreaseQuantity(index) {
+        if (purchaseItems[index].quantity > 1) {
+            purchaseItems[index].quantity -= 1;
+            purchaseItems[index].totalPrice = purchaseItems[index].unitPrice * purchaseItems[index].quantity;
+            updatePurchaseItems();
+        } else {
+            removeItem(index);
+        }
+    }
+
+    function submitPurchase() {
+        if (purchaseItems.length === 0) {
+            alert('Agregue al menos un artículo a la compra');
+            return;
+        }
+
+        fetch('/materiaprima/compra', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(purchaseItems)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Compra realizada con éxito');
+                purchaseItems = [];
+                updatePurchaseItems();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error al realizar la compra');
+            });
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+</script>
+
+</body>
+</html>

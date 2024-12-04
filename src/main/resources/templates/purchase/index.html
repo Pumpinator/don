@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Compras')}"/>
+<body class="bg-latte-light">
+<header th:replace="~{fragments :: header('Compras')}"/>
+<main class="container mx-auto p-4 py-8">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-chocolate mb-6">Historial de Compras</h2>
+        <div class="mt-8">
+            <h3 class="text-xl font-bold text-chocolate mb-4">Compras Realizadas</h3>
+            <table id="purchaseItems" class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                <tr th:each="purchase : ${purchases}">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items center">
+                            <div class="text-sm text-gray-900" th:text="${purchase.date}"></div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900" th:text="${purchase.total}"></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <a th:href="@{/purchases/details/{id}(id=${purchase.id})}"
+                           class="text-blue-500 hover:text-blue-700">Ver Detalles</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+</main>
+<button th:replace="~{fragments :: volverArriba}"/>
+<footer th:replace="~{fragments :: footer}"/>
+<script>
+
+</script>
+</body>
+</html>

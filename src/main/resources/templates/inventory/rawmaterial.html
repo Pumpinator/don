@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Inventario - Don Galleto')}"/>
+<body class="bg-latte-light">
+<header th:replace="~{fragments :: header('Selección de Inventario')}"/>
+<main class="container mx-auto p-4 py-8">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-[#332722] mb-6 text-center">Seleccione el tipo de inventario</h1>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold text-[#CB765E] mb-4">Opción A</h2>
+                    <p class="text-[#4B413E] mb-4">Visualice y gestione el inventario directamente sin una transacción en medio.</p>
+                    <a href="/inventario/materiaprima/a" class="inline-block bg-[#F46F4A] hover:bg-[#CB765E] text-white font-bold py-2 px-4 rounded transition-colors duration-300">
+                        Ver Opción A
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold text-[#CB765E] mb-4">Opción B</h2>
+                    <p class="text-[#4B413E] mb-4">Revise y administre el inventario, pero agregue elementos mediante el registro de compras en el sistema.</p>
+                    <a href="/inventario/materiaprima/b" class="inline-block bg-[#F46F4A] hover:bg-[#CB765E] text-white font-bold py-2 px-4 rounded transition-colors duration-300">
+                        Ver Opción B
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<button th:replace="~{fragments :: volverArriba}"/>
+<footer th:replace="~{fragments :: footer}"/>
+</body>
+</html>

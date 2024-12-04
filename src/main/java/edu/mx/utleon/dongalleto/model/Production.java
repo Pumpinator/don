@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Production extends Measurable {
 
     @Id

@@ -1,18 +1,16 @@
 package edu.mx.utleon.dongalleto.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDate;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
-@Getter
-@Setter
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public abstract class Measurable {
 
     @Column(length = 150, nullable = false)
@@ -21,10 +19,6 @@ public abstract class Measurable {
     @ManyToOne
     @JoinColumn(name = "measure_id", nullable = false)
     private Measure measure;
-
-    public String getQuantity() {
-        return this.quantity == (int) this.quantity ? String.valueOf((int) this.quantity) : String.valueOf(this.quantity);
-    }
 
     public Measure getMeasure() {
         if (this.measure.getSymbol().equals("$"))

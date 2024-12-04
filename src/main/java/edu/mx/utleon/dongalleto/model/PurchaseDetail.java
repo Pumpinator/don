@@ -1,14 +1,19 @@
 package edu.mx.utleon.dongalleto.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PurchaseDetail extends TransactionDetail {
 
     @EmbeddedId
@@ -23,12 +28,15 @@ public class PurchaseDetail extends TransactionDetail {
     @JoinColumn(name = "raw_material_id")
     private RawMaterial rawMaterial;
 
+    @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     @MapsId("purchase")
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
 
     @Embeddable
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter

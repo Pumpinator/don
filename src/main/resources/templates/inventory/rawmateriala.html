@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Inven')}"/>
+<body class="bg-latte-light">
+<header th:replace="~{fragments :: header('Compra de Materia Prima')}"/>
+<main class="container mx-auto p-4 py-8">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-[#332722] mb-6">Agregar Materia Prima al Inventario</h2>
+        <form id="purchaseForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="supplier" class="block text-sm font-medium text-chocolate">Proveedor</label>
+                    <select id="supplier" name="supplier"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50">
+                        <option value="">Seleccione un proveedor</option>
+                        <option th:each="supplier : ${suppliers}" th:value="${supplier.id}"
+                                th:text="${supplier.name}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="rawMaterial" class="block text-sm font-medium text-chocolate">Materia Prima</label>
+                    <select id="rawMaterial" name="rawMaterial"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50">
+                        <option value="">Seleccione una materia prima</option>
+                        <option th:each="rawMaterial : ${rawMaterial}" th:value="${rawMaterial.id}"
+                                th:text="${rawMaterial.name}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="measure" class="block text-sm font-medium text-chocolate">Unidad de Medida</label>
+                    <select id="measure" name="measure"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50">
+                        <option value="">Seleccione una unidad de medida</option>
+                        <option th:each="measure : ${measures}" th:value="${measure.id}"
+                                th:text="${measure.name}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="quantity" class="block text-sm font-medium text-chocolate">Cantidad</label>
+                    <input type="number" id="quantity" name="quantity" step="0.01"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50"
+                           required>
+                </div>
+                <div>
+                    <label for="unitPrice" class="block text-sm font-medium text-chocolate">Precio Unitario</label>
+                    <input type="number" id="unitPrice" name="unitPrice" step="0.01"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50"
+                    >
+                </div>
+                <div>
+                    <label for="unitPrice" class="block text-sm font-medium text-chocolate">Precio Total</label>
+                    <input type="number" id="totalPrice" name="totalPrice" step="0.01"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50"
+                    >
+                </div>
+                <div>
+                    <label for="expirationDate" class="block text-sm font-medium text-chocolate">Fecha de
+                        Expiración</label>
+                    <input type="date" id="expirationDate" name="expirationDate"
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-terracotta focus:ring focus:ring-terracotta focus:ring-opacity-50"
+                           required>
+                </div>
+            </div>
+            <div>
+                <button type="button" onclick="addItem()"
+                        class="bg-[#F46F4A] hover:bg-terracotta text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Agregar Artículo
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-8">
+            <h3 class="text-xl font-bold text-[#332722] mb-4">Artículos en el Inventario</h3>
+            <table id="purchaseItems" class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Materia
+                        Prima
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Cantidad
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unidad de
+                        Medida
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Proveedor
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de
+                        Expiración
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                <tr th:each="item : ${rawMaterialInventory}">
+                    <td hidden class="hidden" th:id="${item.rawMaterial.id}"></td>
+                    <td hidden class="hidden" th:id="${item.supplier.id}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap" th:text="${item.rawMaterial.name}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap" th:text="${item.quantity}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap" th:text="${item.measure.name}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap" th:text="${item.supplier.name}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap" th:text="${item.expirationDate}"></td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button class="bg-chocolate hover:bg-terracotta-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Eliminar</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<button th:replace="~{fragments :: volverArriba}"/>
+<footer th:replace="~{fragments :: footer}"/>
+
+<script th:inline="javascript">
+    let purchaseItems = /*[[${rawMaterialInventory}]]*/ [];
+
+    function addItem() {
+        const supplier = document.getElementById('supplier');
+        const rawMaterial = document.getElementById('rawMaterial');
+        const measure = document.getElementById('measure');
+        const quantity = document.getElementById('quantity');
+        const unitPrice = document.getElementById('unitPrice');
+        const totalPrice = document.getElementById('totalPrice');
+        const expirationDate = document.getElementById('expirationDate');
+
+        if (!supplier.value || !rawMaterial.value || !measure.value || !quantity.value || (!unitPrice.value && !totalPrice.value) || !expirationDate.value) {
+            alert('Please complete all fields');
+            return;
+        }
+
+        const item = {
+            rawMaterialId: parseInt(rawMaterial.value),
+            quantity: parseFloat(quantity.value),
+            unitPrice: unitPrice.value !== '' ? parseFloat(unitPrice.value) : parseFloat(totalPrice.value) / parseFloat(quantity.value),
+            totalPrice: totalPrice.value !== '' ? parseFloat(totalPrice.value) : parseFloat(unitPrice.value) * parseFloat(quantity.value),
+            measureId: parseInt(measure.value),
+            supplierId: parseInt(supplier.value),
+            expirationDate: expirationDate.value
+        };
+
+        fetch('/inventario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(item)
+        })
+            .then(response => response.json())
+            .then(data => {
+                purchaseItems.push(data);
+                updateTable();
+                clearForm();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error adding item to inventory');
+            });
+    }
+
+    function updateTable() {
+        const tbody = document.querySelector('#purchaseItems tbody');
+        tbody.innerHTML = '';
+
+        purchaseItems.forEach((item, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">${document.querySelector(`#rawMaterial option[value="${item.rawMaterialId}"]`).textContent}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${item.quantity}</td>
+                <td class="px-6 py-4 whitespace-nowrap">$${item.unitPrice.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap">$${item.totalPrice.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${document.querySelector(`#measure option[value="${item.measureId}"]`).textContent}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${document.querySelector(`#supplier option[value="${item.supplierId}"]`).textContent}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${item.expirationDate}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <button onclick="removeItem(${item.rawMaterialId}, ${index})" class="bg-chocolate hover:bg-terracotta-dark text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Eliminar</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function clearForm() {
+        document.getElementById('supplier').value = '';
+        document.getElementById('rawMaterial').value = '';
+        document.getElementById('measure').value = '';
+        document.getElementById('quantity').value = '';
+        document.getElementById('unitPrice').value = '';
+        document.getElementById('totalPrice').value = '';
+        document.getElementById('expirationDate').value = '';
+    }
+
+    function removeItem(rawMaterialId, index) {
+        fetch(`/inventario/${rawMaterialId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    purchaseItems.splice(index, 1);
+                    updateTable();
+                } else {
+                    alert('Error removing item from inventory');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error removing item from inventory');
+            });
+    }
+</script>
+</body>
+</html>

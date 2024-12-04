@@ -8,17 +8,23 @@ import edu.mx.utleon.dongalleto.repository.IngredientRepository;
 import edu.mx.utleon.dongalleto.repository.MeasureRepository;
 import edu.mx.utleon.dongalleto.repository.RawMaterialRepository;
 import edu.mx.utleon.dongalleto.repository.RecipeRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class KitchenService {
 
-    private final RecipeRepository recipeRepository;
-    private final RawMaterialRepository rawMaterialRepository;
-    private final IngredientRepository ingredientRepository;
-    private final MeasureRepository measureRepository;
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RawMaterialRepository rawMaterialRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private MeasureRepository measureRepository;
 
     public Iterable<Recipe> getRecipes() {
         return recipeRepository.findAll();
