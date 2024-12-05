@@ -5,210 +5,53 @@
 <header th:replace="~{fragments :: header('Cocina')}"/>
 <main class="container mx-auto p-4 py-8">
     <div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-3xl font-bold text-chocolate mb-6">Cocina</h1>
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-red mb-3">Recetas:</h2>
-            <table class="w-full text-left table-auto min-w-max">
-                <thead>
-                <tr>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Id
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Nombre
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Cantidad
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Medida
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Costo
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Ingredientes
-                        </p>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="recipe : ${recipes}">
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.id}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.name}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.quantity}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${recipe.measure.symbol}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${'$ ' + recipe.cost}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <ul>
-                            <li class="font-bold" th:each="ingredient : ${recipe.ingredients}">
-                                <span class="text-chocolate" th:text="${ingredient.rawMaterial.name}"></span>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-red mb-3">Insumos:</h2>
-            <table class="w-full text-left table-auto min-w-max">
-                <thead>
-                <tr>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Id
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Nombre
-                        </p>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="rawMaterial : ${rawMaterials}">
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${rawMaterial.id}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${rawMaterial.name}">
-                        </p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-red mb-3">Ingredientes:</h2>
-            <table class="w-full text-left table-auto min-w-max">
-                <thead>
-                <tr>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Insumo
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Cantidad
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Medida
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Receta
-                        </p>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="ingredient : ${ingredients}">
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${ingredient.rawMaterial.name}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${ingredient.quantity}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${ingredient.measure.symbol}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${ingredient.recipe.name}">
-                        </p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-red mb-3">Medidas:</h2>
-            <table class="w-full text-left table-auto min-w-max">
-                <thead>
-                <tr>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Id
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Nombre
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-none text-chocolate">
-                            Símbolo
-                        </p>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="measure : ${measures}">
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${measure.id}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${measure.name}">
-                        </p>
-                    </td>
-                    <td class="p-4 border-b border-latte">
-                        <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
-                           th:text="${measure.symbol}">
-                        </p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <h1 class="text-3xl font-bold text-[#332722] mb-6 text-center">Seleccione la receta</h1>
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Tarjeta para seleccion de recetas -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold text-[#332722] mb-4">Receta</h2>
+                    <table class="w-full text-left table-auto min-w-max">
+                        <thead>
+                        <tr>
+                            <th class="p-4 border-b border-latte">
+                                <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                                    Nombre
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-latte">
+                                <p class="block font-bold text-sm antialiased leading-none text-chocolate">
+                                    Acción
+                                </p>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="recipe : ${recipes}">
+                            <td class="p-4 border-b border-latte">
+                                <p class="block font-bold text-sm antialiased leading-normal text-chocolate"
+                                   th:text="${recipe.name}">
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-latte">
+                                <a href="#" class="inline-block bg-red-600 hover:bg-red-700 text-red font-bold py-2 px-4 rounded transition-colors duration-300">
+                                    Preparar ya!!
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="/inventario/materiaprima" class="inline-block bg-[#F46F4A] hover:bg-[#CB765E] text-white font-bold py-2 px-4 rounded transition-colors duration-300">
+                        Ver Inventario
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tarjeta para Inventario de Galletas -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <h2 class="text-2xl font-semibold text-[#332722] mb-4">Horneado</h2>
+
+            </div>
         </div>
     </div>
 </main>
