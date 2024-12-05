@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -22,6 +23,13 @@ public class KitchenController {
         model.addAttribute("ingredients", kitchenService.getIngredients());
         model.addAttribute("measures", kitchenService.getMeasures());
         return "kitchen/index";
+    }
+
+    @GetMapping
+    @RequestMapping("/produccion")
+    public String ejemplo(Model model) {
+        model.addAttribute("variable", "Soy Brandon y soy gay!!!!!");
+        return "kitchen/production";
     }
 
 }
