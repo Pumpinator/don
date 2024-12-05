@@ -1,19 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Compra de Materia Prima - Don Galleto')}"/>
+<head th:replace="~{fragments/head :: head('Ventas')}"/>
 <body class="bg-latte-light">
-<header th:replace="~{fragments :: header('Compra de Materia Prima')}"/>
+<header th:replace="~{fragments/header :: header('Ventas')}"/>
 <main class="container mx-auto p-4 py-8">
     <div class="grid grid-cols-2 gap-8">
         <div class="bg-white shadow-md rounded-lg p-6">
-            <h2 class="text-2xl font-bold text-center text-chocolate mb-6">Registrar Compra de Insumos</h2>
+            <h2 class="text-2xl font-bold text-center text-chocolate mb-6">Registrar Venta de Galletas</h2>
 
             <div class="mb-6">
-                <input type="text" id="searchInput" placeholder="Buscar materia prima..."
+                <input type="text" id="searchInput" placeholder="Buscar galletas..."
                        class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
             </div>
 
-            <div id="rawMaterialContainer" class="w-full grid grid-cols-1 gap-4">
+            <div id="cookiesContainer" class="w-full grid grid-cols-1 gap-4">
             </div>
         </div>
 
@@ -24,33 +24,33 @@
             <div class="mt-8">
                 <button onclick="submitPurchase()"
                         class="bg-red hover:bg-terracotta text-white font-bold py-3 px-6 rounded-lg h-20 w-full focus:outline-none focus:shadow-outline transition-all duration-300">
-                    Realizar Compra
+                    Cerrar Venta
                 </button>
             </div>
         </div>
     </div>
 </main>
-<button th:replace="~{fragments :: volverArriba}"/>
-<footer th:replace="~{fragments :: footer}"/>
+<button th:replace="~{fragments/goTop :: goTop}"/>
+<footer th:replace="~{fragments/footer :: footer}"/>
 
 <script th:inline="javascript">
-    let purchaseItems = [];
-    let rawMaterials = [];
+    let saleItems = [];
+    let cookies = [];
     let measures = /*[[${measures}]]*/ [];
 
     document.addEventListener('DOMContentLoaded', () => {
         const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', debounce(searchRawMaterials, 300));
+        searchInput.addEventListener('input', debounce(searchCookies, 300));
     });
 
-    function searchRawMaterials() {
+    function searchCookies() {
         const searchTerm = document.getElementById('searchInput').value.trim();
         if (searchTerm.length > 0) {
-            fetch(`/materiaprima/${searchTerm}`)
+            fetch(`/galleta/${searchTerm}`)
                 .then(response => response.json())
                 .then(data => {
-                    rawMaterials = data;
-                    console.log('Raw materials:', rawMaterials); // Agrega esta línea para depurar
+                    cookies = data;
+                    console.log('Raw materials:', cookies); // Agrega esta línea para depurar
                     renderRawMaterials();
                 })
                 .catch(error => console.error('Error:', error));
@@ -60,10 +60,10 @@
     }
 
     function renderRawMaterials() {
-        const container = document.getElementById('rawMaterialContainer');
+        const container = document.getElementById('cookiesContainer');
         container.innerHTML = '';
 
-        rawMaterials.forEach(item => {
+        cookies.forEach(item => {
             const card = document.createElement('div');
             card.className = 'bg-white p-4 w-full flex-grow rounded-lg shadow hover:shadow-lg transition-shadow duration-300';
             card.innerHTML = `
@@ -119,7 +119,7 @@
         const container = document.getElementById('purchaseItems');
         container.innerHTML = '';
 
-        purchaseItems.forEach((item, index) => {
+        saleItems.forEach((item, index) => {
             const supplierName = getSupplierName(item.supplierId);
             const measureSymbol = getMeasureSymbol(item.measureId);
 
@@ -165,7 +165,7 @@
 
         console.log(item)
 
-        purchaseItems.push(item);
+        saleItems.push(item);
         updatePurchaseItems();
         clearForm(itemId);
     }
@@ -179,14 +179,14 @@
     }
 
     function removeItem(index) {
-        purchaseItems.splice(index, 1);
+        saleItems.splice(index, 1);
         updatePurchaseItems();
     }
 
     function decreaseQuantity(index) {
-        if (purchaseItems[index].quantity > 1) {
-            purchaseItems[index].quantity -= 1;
-            purchaseItems[index].totalPrice = purchaseItems[index].unitPrice * purchaseItems[index].quantity;
+        if (saleItems[index].quantity > 1) {
+            saleItems[index].quantity -= 1;
+            saleItems[index].totalPrice = saleItems[index].unitPrice * saleItems[index].quantity;
             updatePurchaseItems();
         } else {
             removeItem(index);
@@ -194,7 +194,7 @@
     }
 
     function submitPurchase() {
-        if (purchaseItems.length === 0) {
+        if (saleItems.length === 0) {
             alert('Agregue al menos un artículo a la compra');
             return;
         }
@@ -204,12 +204,12 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(purchaseItems)
+            body: JSON.stringify(saleItems)
         })
             .then(response => response.json())
             .then(data => {
                 alert('Compra realizada con éxito');
-                purchaseItems = [];
+                saleItems = [];
                 updatePurchaseItems();
             })
             .catch((error) => {

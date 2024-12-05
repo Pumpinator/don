@@ -59,126 +59,62 @@ VALUES (1, 1),  -- Harina de Proveedor Harinas SA
        (13, 4), -- Chispas de Chocolate de Costco Wholesale
        (14, 4); -- Chispas de Colores de Costco Wholesale
 
-INSERT INTO dongalleto.purchase (date, total)
-VALUES ('2021-01-01 10:00:00', 0),
-       ('2021-01-02 10:00:00', 0),
-       ('2021-01-03 10:00:00', 0),
-       ('2021-01-04 10:00:00', 0);
-
-INSERT INTO dongalleto.purchase_detail (purchase_id, raw_material_id, measure_id, quantity, total_price, unit_price,
-                                        supplier_id)
-VALUES (1, 1, 2, 1000, 1000, 1, 1), -- 1 kg de Harina de Proveedor Harinas SA
-       (1, 2, 2, 500, 500, 1, 1),   -- 500 gr de Azúcar de Proveedor Harinas SA
-       (1, 3, 2, 250, 250, 1, 1),   -- 250 gr de Mantequilla de Proveedor Harinas SA
-       (1, 4, 1, 12, 12, 1, 1),     -- 12 Huevos de Proveedor Harinas SA
-       (1, 5, 2, 500, 500, 1, 2),   -- 500 gr de Leche de Lácteos del Centro
-       (1, 6, 2, 500, 500, 1, 2),   -- 500 gr de Leche condensada de Lácteos del Centro
-       (1, 7, 2, 50, 50, 1, 3),     -- 50 gr de Polvo para hornear de Distribuidora Dulces SA
-       (1, 8, 2, 25, 25, 1, 3),     -- 25 gr de Vainilla de Distribuidora Dulces SA
-       (1, 9, 2, 25, 25, 1, 3),     -- 25 gr de Sal de Distribuidora Dulces SA
-       (1, 10, 2, 500, 500, 1, 1),  -- 500 gr de Avena de Proveedor Harinas SA
-       (1, 11, 2, 250, 250, 1, 1),  -- 250 gr de Pasas de Proveedor Harinas SA
-       (1, 12, 2, 250, 250, 1, 1),  -- 250 gr de Nueces de Proveedor Harinas SA
-       (1, 13, 2, 100, 100, 1, 3),  -- 100 gr de Chispas de Chocolate de Distribuidora Dulces SA
-       (1, 14, 2, 100, 100, 1, 3),  -- 100 gr de Chispas de Colores de Distribuidora Dulces SA
-       (2, 1, 2, 1000, 1000, 1, 4), -- 1 kg de Harina de Costco Wholesale
-       (2, 2, 2, 500, 500, 1, 4),   -- 500 gr de Azúcar de Costco Wholesale
-       (2, 3, 2, 250, 250, 1, 4),   -- 250 gr de Mantequilla de Costco Wholesale
-       (2, 4, 1, 12, 12, 1, 4),     -- 12 Huevos de Costco Wholesale
-       (2, 5, 2, 500, 500, 1, 4),   -- 500 gr de Leche de Costco Wholesale
-       (2, 6, 2, 500, 500, 1, 4),   -- 500 gr de Leche condensada de Costco Wholesale
-       (2, 7, 2, 50, 50, 1, 4),     -- 50 gr de Polvo para hornear de Costco Wholesale
-       (2, 8, 2, 25, 25, 1, 4),     -- 25 gr de Vainilla de Costco Wholesale
-       (2, 9, 2, 25, 25, 1, 4),     -- 25 gr de Sal de Costco Wholesale
-       (2, 10, 2, 500, 500, 1, 4),  -- 500 gr de Avena de Costco Wholesale
-       (2, 11, 2, 250, 250, 1, 4),  -- 250 gr de Pasas de Costco Wholesale
-       (2, 12, 2, 250, 250, 1, 4),  -- 250 gr de Nueces de Costco Wholesale
-       (2, 13, 2, 100, 100, 1, 4),  -- 100 gr de Chispas de Chocolate de Costco Wholesale
-       (2, 14, 2, 100, 100, 1, 4),  -- 100 gr de Chispas de Colores de Costco Wholesale
-       (3, 1, 2, 1000, 1000, 1, 1), -- 1 kg de Harina de Proveedor Harinas SA
-       (3, 2, 2, 500, 500, 1, 1),   -- 500 gr de Azúcar de Proveedor Harinas SA
-       (3, 3, 2, 250, 250, 1, 1),   -- 250 gr de Mantequilla de Proveedor Harinas SA
-       (3, 4, 1, 12, 12, 1, 1),     -- 12 Huevos de Proveedor Harinas SA
-       (3, 5, 2, 500, 500, 1, 2),   -- 500 gr de Leche de Lácteos del Centro
-       (3, 6, 2, 500, 500, 1, 2),   -- 500 gr de Leche condensada de Lácteos del Centro
-       (3, 7, 2, 50, 50, 1, 3),     -- 50 gr de Polvo para hornear de Distribuidora Dulces SA
-       (3, 8, 2, 25, 25, 1, 3),     -- 25 gr de Vainilla de Distribuidora Dulces SA
-       (3, 9, 2, 25, 25, 1, 3),     -- 25 gr de Sal de Distribuidora Dulces SA
-       (3, 10, 2, 500, 500, 1, 1),  -- 500 gr de Avena de Proveedor Harinas SA
-       (3, 11, 2, 250, 250, 1, 1),  -- 250 gr de Pasas de Proveedor Harinas SA
-       (3, 12, 2, 250, 250, 1, 1),  -- 250 gr de Nueces de Proveedor Harinas SA
-       (3, 13, 2, 100, 100, 1, 3),  -- 100 gr de Chispas de Chocolate de Distribuidora Dulces SA
-       (3, 14, 2, 100, 100, 1, 3),  -- 100 gr de Chispas de Colores de Distribuidora Dulces SA
-       (4, 1, 2, 1000, 1000, 1, 4), -- 1 kg de Harina de Costco Wholesale
-       (4, 2, 2, 500, 500, 1, 4),   -- 500 gr de Azúcar de Costco Wholesale
-       (4, 3, 2, 250, 250, 1, 4),   -- 250 gr de Mantequilla de Costco Wholesale
-       (4, 4, 1, 12, 12, 1, 4),     -- 12 Huevos de Costco Wholesale
-       (4, 5, 2, 500, 500, 1, 4),   -- 500 gr de Leche de Costco Wholesale
-       (4, 6, 2, 500, 500, 1, 4),   -- 500 gr de Leche condensada de Costco Wholesale
-       (4, 7, 2, 50, 50, 1, 4),     -- 50 gr de Polvo para hornear de Costco Wholesale
-       (4, 8, 2, 25, 25, 1, 4),     -- 25 gr de Vainilla de Costco Wholesale
-       (4, 9, 2, 25, 25, 1, 4),     -- 25 gr de Sal de Costco Wholesale
-       (4, 10, 2, 500, 500, 1, 4),  -- 500 gr de Avena de Costco Wholesale
-       (4, 11, 2, 250, 250, 1, 4),  -- 250 gr de Pasas de Costco Wholesale
-       (4, 12, 2, 250, 250, 1, 4); -- 250 gr de Nueces de Costco Wholesale
-
-
-INSERT INTO dongalleto.raw_material_inventory (quantity, cost, expiration_date, measure_id, purchase_id, raw_material_id, supplier_id)
+INSERT INTO dongalleto.raw_material_inventory (quantity, cost, expiration_date, measure_id, raw_material_id, supplier_id)
 VALUES
-    (1000, 1000, '2025-01-01', 2, 1, 1, 1), -- 1 kg of Harina from purchase 1
-    (500, 500, '2025-01-01', 2, 1, 2, 1),   -- 500 gr of Azúcar from purchase 1
-    (250, 250, '2025-01-01', 2, 1, 3, 1),   -- 250 gr of Mantequilla from purchase 1
-    (12, 12, '2025-01-01', 1, 1, 4, 1),     -- 12 Huevos from purchase 1
-    (500, 500, '2025-01-01', 2, 1, 5, 2),   -- 500 gr of Leche from purchase 1
-    (500, 500, '2025-01-01', 2, 1, 6, 2),   -- 500 gr of Leche condensada from purchase 1
-    (50, 50, '2025-01-01', 2, 1, 7, 3),     -- 50 gr of Polvo para hornear from purchase 1
-    (25, 25, '2025-01-01', 2, 1, 8, 3),     -- 25 gr of Vainilla from purchase 1
-    (25, 25, '2025-01-01', 2, 1, 9, 3),     -- 25 gr of Sal from purchase 1
-    (500, 500, '2025-01-01', 2, 1, 10, 1),  -- 500 gr of Avena from purchase 1
-    (250, 250, '2025-01-01', 2, 1, 11, 1),  -- 250 gr of Pasas from purchase 1
-    (250, 250, '2025-01-01', 2, 1, 12, 1),  -- 250 gr of Nueces from purchase 1
-    (100, 100, '2025-01-01', 2, 1, 13, 3),  -- 100 gr of Chispas de Chocolate from purchase 1
-    (100, 100, '2025-01-01', 2, 1, 14, 3),  -- 100 gr of Chispas de Colores from purchase 1
-    (1000, 1000, '2025-01-02', 2, 2, 1, 4), -- 1 kg of Harina from purchase 2
-    (500, 500, '2025-01-02', 2, 2, 2, 4),   -- 500 gr of Azúcar from purchase 2
-    (250, 250, '2025-01-02', 2, 2, 3, 4),   -- 250 gr of Mantequilla from purchase 2
-    (12, 12, '2025-01-02', 1, 2, 4, 4),     -- 12 Huevos from purchase 2
-    (500, 500, '2025-01-02', 2, 2, 5, 4),   -- 500 gr of Leche from purchase 2
-    (500, 500, '2025-01-02', 2, 2, 6, 4),   -- 500 gr of Leche condensada from purchase 2
-    (50, 50, '2025-01-02', 2, 2, 7, 4),     -- 50 gr of Polvo para hornear from purchase 2
-    (25, 25, '2025-01-02', 2, 2, 8, 4),     -- 25 gr of Vainilla from purchase 2
-    (25, 25, '2025-01-02', 2, 2, 9, 4),     -- 25 gr of Sal from purchase 2
-    (500, 500, '2025-01-02', 2, 2, 10, 4),  -- 500 gr of Avena from purchase 2
-    (250, 250, '2025-01-02', 2, 2, 11, 4),  -- 250 gr of Pasas from purchase 2
-    (250, 250, '2025-01-02', 2, 2, 12, 4),  -- 250 gr of Nueces from purchase 2
-    (100, 100, '2025-01-02', 2, 2, 13, 4),  -- 100 gr of Chispas de Chocolate from purchase 2
-    (100, 100, '2025-01-02', 2, 2, 14, 4),  -- 100 gr of Chispas de Colores from purchase 2
-    (1000, 1000, '2025-01-03', 2, 3, 1, 1), -- 1 kg of Harina from purchase 3
-    (500, 500, '2025-01-03', 2, 3, 2, 1),   -- 500 gr of Azúcar from purchase 3
-    (250, 250, '2025-01-03', 2, 3, 3, 1),   -- 250 gr of Mantequilla from purchase 3
-    (12, 12, '2025-01-03', 1, 3, 4, 1),     -- 12 Huevos from purchase 3
-    (500, 500, '2025-01-03', 2, 3, 5, 2),   -- 500 gr of Leche from purchase 3
-    (500, 500, '2025-01-03', 2, 3, 6, 2),   -- 500 gr of Leche condensada from purchase 3
-    (50, 50, '2025-01-03', 2, 3, 7, 3),     -- 50 gr of Polvo para hornear from purchase 3
-    (25, 25, '2025-01-03', 2, 3, 8, 3),     -- 25 gr of Vainilla from purchase 3
-    (25, 25, '2025-01-03', 2, 3, 9, 3),     -- 25 gr of Sal from purchase 3
-    (500, 500, '2025-01-03', 2, 3, 10, 1),  -- 500 gr of Avena from purchase 3
-    (250, 250, '2025-01-03', 2, 3, 11, 1),  -- 250 gr of Pasas from purchase 3
-    (250, 250, '2025-01-03', 2, 3, 12, 1),  -- 250 gr of Nueces from purchase 3
-    (100, 100, '2025-01-03', 2, 3, 13, 3),  -- 100 gr of Chispas de Chocolate from purchase 3
-    (100, 100, '2025-01-03', 2, 3, 14, 3),  -- 100 gr of Chispas de Colores from purchase 3
-    (1000, 1000, '2025-01-04', 2, 4, 1, 4), -- 1 kg of Harina from purchase 4
-    (500, 500, '2025-01-04', 2, 4, 2, 4),   -- 500 gr of Azúcar from purchase 4
-    (250, 250, '2025-01-04', 2, 4, 3, 4),   -- 250 gr of Mantequilla from purchase 4
-    (12, 12, '2025-01-04', 1, 4, 4, 4),     -- 12 Huevos from purchase 4
-    (500, 500, '2025-01-04', 2, 4, 5, 4),   -- 500 gr of Leche from purchase 4
-    (500, 500, '2025-01-04', 2, 4, 6, 4),   -- 500 gr of Leche condensada from purchase 4
-    (50, 50, '2025-01-04', 2, 4, 7, 4),     -- 50 gr of Polvo para hornear from purchase 4
-    (25, 25, '2025-01-04', 2, 4, 8, 4),     -- 25 gr of Vainilla from purchase 4
-    (25, 25, '2025-01-04', 2, 4, 9, 4),     -- 25 gr of Sal from purchase 4
-    (500, 500, '2025-01-04', 2, 4, 10, 4),  -- 500 gr of Avena from purchase 4
-    (250, 250, '2025-01-04', 2, 4, 11, 4),  -- 250 gr of Pasas from purchase 4
-    (250, 250, '2025-01-04', 2, 4, 12, 4);  -- 250 gr of Nueces from purchase 4
+    (1000, 1000, '2025-01-01', 2, 1, 1), -- 1 kg of Harina from purchase 1
+    (500, 500, '2025-01-01', 2, 2, 1),   -- 500 gr of Azúcar from purchase 1
+    (250, 250, '2025-01-01', 2, 3, 1),   -- 250 gr of Mantequilla from purchase 1
+    (12, 12, '2025-01-01', 1, 4, 1),     -- 12 Huevos from purchase 1
+    (500, 500, '2025-01-01', 2, 5, 2),   -- 500 gr of Leche from purchase 1
+    (500, 500, '2025-01-01', 2, 6, 2),   -- 500 gr of Leche condensada from purchase 1
+    (50, 50, '2025-01-01', 2, 7, 3),     -- 50 gr of Polvo para hornear from purchase 1
+    (25, 25, '2025-01-01', 2, 8, 3),     -- 25 gr of Vainilla from purchase 1
+    (25, 25, '2025-01-01', 2, 9, 3),     -- 25 gr of Sal from purchase 1
+    (500, 500, '2025-01-01', 2, 10, 1),  -- 500 gr of Avena from purchase 1
+    (250, 250, '2025-01-01', 2, 11, 1),  -- 250 gr of Pasas from purchase 1
+    (250, 250, '2025-01-01', 2, 12, 1),  -- 250 gr of Nueces from purchase 1
+    (100, 100, '2025-01-01', 2, 13, 3),  -- 100 gr of Chispas de Chocolate from purchase 1
+    (100, 100, '2025-01-01', 2, 14, 3),  -- 100 gr of Chispas de Colores from purchase 1
+    (1000, 1000, '2025-01-02', 2, 1, 4), -- 1 kg of Harina from purchase 2
+    (500, 500, '2025-01-02', 2, 2, 4),   -- 500 gr of Azúcar from purchase 2
+    (250, 250, '2025-01-02', 2, 3, 4),   -- 250 gr of Mantequilla from purchase 2
+    (12, 12, '2025-01-02', 1, 4, 4),     -- 12 Huevos from purchase 2
+    (500, 500, '2025-01-02', 2, 5, 4),   -- 500 gr of Leche from purchase 2
+    (500, 500, '2025-01-02', 2, 6, 4),   -- 500 gr of Leche condensada from purchase 2
+    (50, 50, '2025-01-02', 2, 7, 4),     -- 50 gr of Polvo para hornear from purchase 2
+    (25, 25, '2025-01-02', 2, 8, 4),     -- 25 gr of Vainilla from purchase 2
+    (25, 25, '2025-01-02', 2, 9, 4),     -- 25 gr of Sal from purchase 2
+    (500, 500, '2025-01-02', 2, 10, 4),  -- 500 gr of Avena from purchase 2
+    (250, 250, '2025-01-02', 2, 11, 4),  -- 250 gr of Pasas from purchase 2
+    (250, 250, '2025-01-02', 2, 12, 4),  -- 250 gr of Nueces from purchase 2
+    (100, 100, '2025-01-02', 2, 13, 4),  -- 100 gr of Chispas de Chocolate from purchase 2
+    (100, 100, '2025-01-02', 2, 14, 4),  -- 100 gr of Chispas de Colores from purchase 2
+    (1000, 1000, '2025-01-03', 2, 1, 1), -- 1 kg of Harina from purchase 3
+    (500, 500, '2025-01-03', 2, 2, 1),   -- 500 gr of Azúcar from purchase 3
+    (250, 250, '2025-01-03', 2, 3, 1),   -- 250 gr of Mantequilla from purchase 3
+    (12, 12, '2025-01-03', 1, 4, 1),     -- 12 Huevos from purchase 3
+    (500, 500, '2025-01-03', 2, 5, 2),   -- 500 gr of Leche from purchase 3
+    (500, 500, '2025-01-03', 2, 6, 2),   -- 500 gr of Leche condensada from purchase 3
+    (50, 50, '2025-01-03', 2, 7, 3),     -- 50 gr of Polvo para hornear from purchase 3
+    (25, 25, '2025-01-03', 2, 8, 3),     -- 25 gr of Vainilla from purchase 3
+    (25, 25, '2025-01-03', 2, 9, 3),     -- 25 gr of Sal from purchase 3
+    (500, 500, '2025-01-03', 2, 10, 1),  -- 500 gr of Avena from purchase 3
+    (250, 250, '2025-01-03', 2, 11, 1),  -- 250 gr of Pasas from purchase 3
+    (250, 250, '2025-01-03', 2, 12, 1),  -- 250 gr of Nueces from purchase 3
+    (100, 100, '2025-01-03', 2, 13, 3),  -- 100 gr of Chispas de Chocolate from purchase 3
+    (100, 100, '2025-01-03', 2, 14, 3),  -- 100 gr of Chispas de Colores from purchase 3
+    (1000, 1000, '2025-01-04', 2, 1, 4), -- 1 kg of Harina from purchase 4
+    (500, 500, '2025-01-04', 2, 2, 4),   -- 500 gr of Azúcar from purchase 4
+    (250, 250, '2025-01-04', 2, 3, 4),   -- 250 gr of Mantequilla from purchase 4
+    (12, 12, '2025-01-04', 1, 4, 4),     -- 12 Huevos from purchase 4
+    (500, 500, '2025-01-04', 2, 5, 4),   -- 500 gr of Leche from purchase 4
+    (500, 500, '2025-01-04', 2, 6, 4),   -- 500 gr of Leche condensada from purchase 4
+    (50, 50, '2025-01-04', 2, 7, 4),     -- 50 gr of Polvo para hornear from purchase 4
+    (25, 25, '2025-01-04', 2, 8, 4),     -- 25 gr of Vainilla from purchase 4
+    (25, 25, '2025-01-04', 2, 9, 4),     -- 25 gr of Sal from purchase 4
+    (500, 500, '2025-01-04', 2, 10, 4),  -- 500 gr of Avena from purchase 4
+    (250, 250, '2025-01-04', 2, 11, 4),  -- 250 gr of Pasas from purchase 4
+    (250, 250, '2025-01-04', 2, 12, 4);  -- 250 gr of Nueces from purchase 4
 
 INSERT INTO dongalleto.cookie (name, price)
 VALUES ('Chispas de Chocolate', 10.50),

@@ -6,7 +6,7 @@ function scroll() {
     const footer = document.querySelector('footer');
     const rect = footer.getBoundingClientRect();
     const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
-    const button = document.getElementById('volverArriba');
+    const button = document.getElementById('goTop');
 
     if (isVisible) {
         button.classList.remove('hidden');

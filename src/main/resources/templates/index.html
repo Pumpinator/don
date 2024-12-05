@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Hola, Don Galleto')}"/>
+<head th:replace="~{fragments/head :: head('Hola, Don Galleto')}"/>
 <body class="bg-latte-light">
-<header th:replace="~{fragments :: header('Inicio')}"/>
+<header th:replace="~{fragments/header :: header('Inicio')}"/>
 <main class="container mx-auto p-4 py-8">
     <div class="bg-white shadow-md rounded-lg p-6">
         <h1 class="text-3xl font-bold text-chocolate mb-6">Thymeleaf & Tailwind CSS</h1>
@@ -85,10 +85,7 @@
         </div>
     </div>
 </main>
-<button th:replace="~{fragments :: volverArriba}"/>
-<footer th:replace="~{fragments :: footer}"/>
-<script>
-
-</script>
+<button th:replace="~{fragments/goTop :: goTop}"/>
+<footer th:replace="~{fragments/footer :: footer}"/>
 </body>
 </html>

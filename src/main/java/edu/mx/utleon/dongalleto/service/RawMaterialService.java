@@ -1,7 +1,6 @@
 package edu.mx.utleon.dongalleto.service;
 
-import edu.mx.utleon.dongalleto.dto.PurchaseItemDto;
-import edu.mx.utleon.dongalleto.model.Purchase;
+import edu.mx.utleon.dongalleto.dto.RawMaterialInventoryItemDto;
 import edu.mx.utleon.dongalleto.model.RawMaterial;
 import edu.mx.utleon.dongalleto.model.RawMaterialInventory;
 import edu.mx.utleon.dongalleto.model.Supplier;
@@ -26,8 +25,7 @@ public class RawMaterialService {
 
     @Autowired
     private RawMaterialInventoryRepository rawMaterialInventoryRepository;
-    @Autowired
-    private PurchaseRepository purchaseRepository;
+
     @Autowired
     private MeasureRepository measureRepository;
 
@@ -78,26 +76,24 @@ public class RawMaterialService {
         return rawMaterialRepository.findAllByNameContaining(searchParam);
     }
 
-    public RawMaterialInventory addInventory(PurchaseItemDto item) {
-        if (purchaseRepository.findById(item.getTransactionId()).isEmpty()) {
-            Purchase purchase = purchaseRepository.save(
-                    Purchase.builder().date(Instant.now()).total(item.getTotalPrice()).build());
+    public RawMaterialInventory addInventory(RawMaterialInventoryItemDto item) {
+        if(item.getSupplierId() != null) {
             return rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
-                    .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElseThrow())
+                    .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElse(null))
+                    .supplier(supplierRepository.findById(item.getSupplierId()).orElse(null))
                     .quantity(item.getQuantity())
                     .cost(item.getTotalPrice())
                     .expirationDate(item.getExpirationDate())
-                    .purchase(purchase)
+                    .measure(measureRepository.findByName(item.getMeasureName()).orElseThrow())
+                    .build());
+        } else {
+            return rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
+                    .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElse(null))
+                    .quantity(item.getQuantity())
+                    .cost(item.getTotalPrice())
+                    .expirationDate(item.getExpirationDate())
                     .measure(measureRepository.findByName(item.getMeasureName()).orElseThrow())
                     .build());
         }
-        return rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
-                .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElseThrow())
-                .quantity(item.getQuantity())
-                .cost(item.getTotalPrice())
-                .expirationDate(item.getExpirationDate())
-                .purchase(purchaseRepository.findById(item.getTransactionId()).orElseThrow())
-                .measure(measureRepository.findByName(item.getMeasureName()).orElseThrow())
-                .build());
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class MainController {
 
     @GetMapping
-    public String index(Model model) {
+    public String viewIndex(Model model) {
         model.addAttribute("key", "value"); // Enviar un atributo a la vista
         model.addAttribute("array", new String[] { "a", "b", "c" }); // Enviar un arreglo a la vista
         model.addAttribute("list", List.of("a", "b", "c")); // Enviar una lista a la vista

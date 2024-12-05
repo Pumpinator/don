@@ -18,6 +18,5 @@ public abstract class ItemDto {
     private double quantity;
     private String measureName;
     private LocalDate expirationDate;
-    private Integer transactionId;
 
 }
