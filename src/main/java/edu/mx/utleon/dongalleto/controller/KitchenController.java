@@ -17,19 +17,12 @@ public class KitchenController {
     private KitchenService kitchenService;
 
     @GetMapping
-    public String kitchen(Model model) {
+    public String viewKitchen(Model model) {
         model.addAttribute("recipes", kitchenService.getRecipes());
         model.addAttribute("rawMaterials", kitchenService.getRawMaterial());
         model.addAttribute("ingredients", kitchenService.getIngredients());
         model.addAttribute("measures", kitchenService.getMeasures());
         return "kitchen/index";
-    }
-
-    @GetMapping
-    @RequestMapping("/produccion")
-    public String ejemplo(Model model) {
-        model.addAttribute("variable", "Soy Brandon y soy gay!!!!!");
-        return "kitchen/production";
     }
 
 }

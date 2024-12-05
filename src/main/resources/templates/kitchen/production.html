@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Producción')}"/>
+<head th:replace="~{fragments/head :: head('Producción')}"/>
 <body class="bg-latte-light">
-<header th:replace="~{fragments :: header('Producción')}"/>
+<header th:replace="~{fragments/header :: header('Producción')}"/>
 <main class="rounded bg-white">
     <h1 class="text-3xl font-bold text-red">Hola mundo</h1>
     <p class="font-thin text-3xl" th:text="${variable}"></p>
 </main>
-<button th:replace="~{fragments :: volverArriba}"/>
-<footer th:replace="~{fragments :: footer}"/>
+<button th:replace="~{fragments/goTop :: goTop}"/>
+<footer th:replace="~{fragments/footer :: footer}"/>
 </body>
 </html>
