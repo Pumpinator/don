@@ -23,11 +23,7 @@ public class RawMaterialInventory extends Inventory {
     private RawMaterial rawMaterial;
 
     @ManyToOne
-    @JoinColumn(name = "purchase_id", nullable = false)
-    private Purchase purchase;
-
-    @ManyToOne
-    @JoinColumn(name = "supplier_id", nullable = false)
+    @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
     public boolean isExpired() {

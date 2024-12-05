@@ -1,0 +1,16 @@
+<header th:fragment="header(title)" class="text-white">
+    <div class="w-full flex flex-col sm:flex-row justify-between items-center bg-latte px-4 py-2 sm:py-4">
+        <a href="/" class="text-2xl font-bold mb-2 sm:mb-0">
+            <img th:src="@{/img/logo.png}" alt="Don Galleto"
+                 class="md:size-24 md:mx-16 size-20 object-contain hover:size-28 transition-all duration-300"/>
+        </a>
+        <nav class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-8">
+            <a th:replace="~{fragments/headerLink :: headerLink('Ventas', '/ventas')}"/>
+            <a th:replace="~{fragments/headerLink :: headerLink('Cocina', '/cocina')}"/>
+            <a th:replace="~{fragments/headerLink :: headerLink('Inventario', '/inventario')}"/>
+        </nav>
+    </div>
+    <div class="w-full flex justify-center items-center bg-wood py-2 sm:py-4">
+        <h1 class="text-xl sm:text-2xl font-bold text-center" th:text="${title}"></h1>
+    </div>
+</header>

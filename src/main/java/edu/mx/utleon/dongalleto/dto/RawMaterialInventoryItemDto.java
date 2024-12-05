@@ -4,15 +4,14 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @ToString
-public class PurchaseItemDto extends ItemDto {
+public class RawMaterialInventoryItemDto extends ItemDto {
 
     private Integer rawMaterialId;
     private Integer supplierId;
-
 
 }

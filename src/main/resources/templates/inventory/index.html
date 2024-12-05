@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Inventario - Don Galleto')}"/>
+<head th:replace="~{fragments/head :: head('Inventario - Don Galleto')}"/>
 <body class="bg-latte-light">
-<header th:replace="~{fragments :: header('Selección de Inventario')}"/>
+<header th:replace="~{fragments/header :: header('Selección de Inventario')}"/>
 <main class="container mx-auto p-4 py-8">
     <div class="bg-white shadow-md rounded-lg p-6">
         <h1 class="text-3xl font-bold text-[#332722] mb-6 text-center">Seleccione el tipo de inventario</h1>
@@ -31,7 +31,7 @@
         </div>
     </div>
 </main>
-<button th:replace="~{fragments :: volverArriba}"/>
-<footer th:replace="~{fragments :: footer}"/>
+<button th:replace="~{fragments/goTop :: goTop}"/>
+<footer th:replace="~{fragments/footer :: footer}"/>
 </body>
 </html>
