@@ -15,12 +15,6 @@ public class RawMaterialRestController {
     private RawMaterialService rawMaterialService;
 
     @GetMapping
-    @RequestMapping("/materiaprima/inventario")
-    public ResponseEntity<?> listRawMaterials() {
-        return ResponseEntity.ok(rawMaterialService.list());
-    }
-
-    @GetMapping
     @RequestMapping("/materiaprima/{rawMaterialId}/proveedores")
     public ResponseEntity<?> listSuppliersByRawMaterialId(@PathVariable Integer rawMaterialId) {
         RawMaterial rawMaterial = rawMaterialService.getRawMaterialWithSuppliers(rawMaterialId);
