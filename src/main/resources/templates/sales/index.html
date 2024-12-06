@@ -44,22 +44,22 @@
     });
 
     function searchCookies() {
-        const searchTerm = document.getElementById('searchInput').value.trim();
-        if (searchTerm.length > 0) {
-            fetch(`/galleta/${searchTerm}`)
+        const searchParam = document.getElementById('searchInput').value.trim();
+        if (searchParam.length > 0) {
+            fetch(`api/galletas/${searchParam}`)
                 .then(response => response.json())
                 .then(data => {
                     cookies = data;
-                    console.log('Raw materials:', cookies); // Agrega esta línea para depurar
-                    renderRawMaterials();
+                    console.log('Cookies:', cookies); // Agrega esta línea para depurar
+                    renderCookies();
                 })
                 .catch(error => console.error('Error:', error));
         } else {
-            renderRawMaterials();
+            renderCookies();
         }
     }
 
-    function renderRawMaterials() {
+    function renderCookies() {
         const container = document.getElementById('cookiesContainer');
         container.innerHTML = '';
 
@@ -67,11 +67,10 @@
             const card = document.createElement('div');
             card.className = 'bg-white p-4 w-full flex-grow rounded-lg shadow hover:shadow-lg transition-shadow duration-300';
             card.innerHTML = `
-        <h3 id="name-${item.id}" class="font-semibold text-chocolate mb-2">${item.name}</h3>
         <div class="grid grid-cols-5 gap-2 pb-4">
-            <select id="supplier-${item.id}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent">
-                <option value="" selected>Seleccione un Proveedor</option>
-            </select>
+            <h6 id="name-${item.id}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent">
+             ${item.name}
+            </h6>
             <input id="quantity-${item.id}" type="number" placeholder="Cantidad" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent"/>
             <select id="measure-${item.id}" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red focus:border-transparent">
                 <option value="" selected>Unidad de Medida</option>
@@ -84,30 +83,22 @@
         </button>
     `;
             container.appendChild(card);
-
-            // Populate suppliers
-            const supplierSelect = document.getElementById(`supplier-${item.id}`);
-            item.suppliers.forEach(supplier => {
-                const option = document.createElement('option');
-                option.value = supplier.id;
-                option.textContent = supplier.name;
-                supplierSelect.appendChild(option);
-            });
-
-            // Populate measures
             const measureSelect = document.getElementById(`measure-${item.id}`);
-            measures.forEach(measure => {
-                const option = document.createElement('option');
-                option.value = measure.id;
-                option.textContent = measure.symbol;
-                measureSelect.appendChild(option);
-            });
-        });
-    }
+            fetch('api/galletas/medidas')
+                .then(response => response.json())
+                .then(data => {
+                    measures = data;
+                    console.log('Measures:', measures); // Agrega esta línea para depurar
 
-    function getSupplierName(id) {
-        const supplierOption = document.querySelector(`option[value="${id}"]`);
-        return supplierOption ? supplierOption.textContent : 'Desconocido';
+                    measures.forEach(measure => {
+                        const option = document.createElement('option');
+                        option.value = measure.id;
+                        option.textContent = measure.name;
+                        measureSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
     }
 
     function getMeasureSymbol(id) {
@@ -126,8 +117,7 @@
             const card = document.createElement('div');
             card.className = 'bg-white p-4 rounded-lg shadow';
             card.innerHTML = `
-            <h4 class="font-semibold text-red">${item.name}</h4>
-            <p class="text-sm">Proveedor: ${supplierName}</p>
+            <h4 class="font-semibold text-red">Galleta: ${item.name}</h4>
             <p class="text-sm">Cantidad: ${item.quantity} ${measureSymbol}</p>
             <p class="text-sm">Precio Unitario: $${item.unitPrice.toFixed(2)}</p>
             <p class="text-sm">Precio Total: $${item.totalPrice.toFixed(2)}</p>
@@ -141,22 +131,22 @@
     }
 
     function addItem(itemId) {
-        const supplier = document.getElementById(`supplier-${itemId}`);
         const quantity = document.getElementById(`quantity-${itemId}`);
         const measure = document.getElementById(`measure-${itemId}`);
         const unitPrice = document.getElementById(`unitPrice-${itemId}`);
         const totalPrice = document.getElementById(`totalPrice-${itemId}`);
         const name = document.getElementById(`name-${itemId}`);
 
-        if (!supplier.value || !quantity.value || !measure.value || (!unitPrice.value && !totalPrice.value)) {
+        if (!quantity.value || !measure.value || (!unitPrice.value && !totalPrice.value)) {
             alert('Por favor, complete todos los campos necesarios');
             return;
         }
 
+
+
         const item = {
             rawMaterialId: itemId,
             name: name.textContent,
-            supplierId: parseInt(supplier.value),
             quantity: parseFloat(quantity.value),
             measureId: parseInt(measure.value),
             unitPrice: unitPrice.value ? parseFloat(unitPrice.value) : parseFloat(totalPrice.value) / parseFloat(quantity.value),
