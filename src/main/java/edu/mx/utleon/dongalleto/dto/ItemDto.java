@@ -11,12 +11,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public abstract class ItemDto {
+public abstract class ItemDto extends MeasurableDto {
 
     private double unitPrice;
     private double totalPrice;
-    private double quantity;
-    private String measureName;
     private LocalDate expirationDate;
 
 }
