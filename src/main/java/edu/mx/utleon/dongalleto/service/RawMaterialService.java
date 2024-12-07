@@ -8,7 +8,6 @@ import edu.mx.utleon.dongalleto.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
@@ -76,24 +75,51 @@ public class RawMaterialService {
         return rawMaterialRepository.findAllByNameContaining(searchParam);
     }
 
-    public RawMaterialInventory addInventory(RawMaterialInventoryItemDto item) {
-        if(item.getSupplierId() != null) {
-            return rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
+    public RawMaterialInventoryItemDto saveInventory(RawMaterialInventoryItemDto item) {
+        if (item.getId() != null) {
+            RawMaterialInventory rawMaterialInventory = rawMaterialInventoryRepository.findById(item.getId()).orElseThrow();
+            rawMaterialInventory.setQuantity(item.getQuantity());
+            rawMaterialInventory.setCost(item.getTotalPrice());
+            rawMaterialInventory.setExpirationDate(item.getExpirationDate());
+            rawMaterialInventory.setMeasure(measureRepository.findByName(item.getMeasureName()).orElseThrow());
+            return toDto(rawMaterialInventoryRepository.save(rawMaterialInventory));
+        }
+        if (item.getSupplierId() != null) {
+            return toDto(rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
                     .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElse(null))
                     .supplier(supplierRepository.findById(item.getSupplierId()).orElse(null))
                     .quantity(item.getQuantity())
                     .cost(item.getTotalPrice())
                     .expirationDate(item.getExpirationDate())
                     .measure(measureRepository.findByName(item.getMeasureName()).orElseThrow())
-                    .build());
+                    .build()));
         } else {
-            return rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
+            return toDto(rawMaterialInventoryRepository.save(RawMaterialInventory.builder()
                     .rawMaterial(rawMaterialRepository.findById(item.getRawMaterialId()).orElse(null))
                     .quantity(item.getQuantity())
                     .cost(item.getTotalPrice())
                     .expirationDate(item.getExpirationDate())
                     .measure(measureRepository.findByName(item.getMeasureName()).orElseThrow())
-                    .build());
+                    .build()));
         }
     }
+
+    public RawMaterialInventoryItemDto getInventory(Integer id) {
+        return toDto(rawMaterialInventoryRepository.findById(id).orElseThrow());
+    }
+
+    private RawMaterialInventoryItemDto toDto(RawMaterialInventory rawMaterialInventory) {
+        System.out.println(rawMaterialInventory.getExpirationDate());
+        return RawMaterialInventoryItemDto.builder()
+                .id(rawMaterialInventory.getId())
+                .rawMaterialId(rawMaterialInventory.getRawMaterial().getId())
+                .supplierId(rawMaterialInventory.getSupplier() != null ? rawMaterialInventory.getSupplier().getId() : null)
+                .quantity(rawMaterialInventory.getQuantity())
+                .totalPrice(rawMaterialInventory.getCost())
+                .expirationDate(rawMaterialInventory.getExpirationDate())
+                .measureName(rawMaterialInventory.getMeasure().getName())
+                .measureSymbol(rawMaterialInventory.getMeasure().getSymbol())
+                .build();
+    }
+
 }

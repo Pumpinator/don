@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @ToString
 public abstract class ItemDto extends MeasurableDto {
 
+    private Integer id;
     private double unitPrice;
     private double totalPrice;
     private LocalDate expirationDate;

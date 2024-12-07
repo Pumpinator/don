@@ -214,7 +214,7 @@
                     ${getStatusBadge(item)}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <button class="rounded-full bg-terracotta px-4 py-2 text-white font-bold hover:bg-terracotta-dark">Acción</button>
+                    <a href="materiaprima/${item.id}" class="rounded-full bg-terracotta px-4 py-2 text-white font-bold hover:bg-terracotta-dark">Ver</a>
                 </td>
             `;
             tableBody.appendChild(row);
@@ -225,9 +225,9 @@
                 <h3 class="font-bold text-lg mb-2">${item.rawMaterial.name}</h3>
                 <p><span class="font-semibold">Cantidad:</span> ${item.quantity} ${item.measure.symbol}</p>
                 <p><span class="font-semibold">Proveedor:</span> ${item.supplier ? item.supplier.name : 'Sin proveedor'}</p>
-                <p><span class="font-semibold">Fecha de Expiración:</span> ${new Date(item.expirationDate).toLocaleDateString()}</p>
+                <p><span class="font-semibold">Fecha de Expiración:</span> ${item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : 'Sin fecha de expiración'}</p>
                 <div class="mt-2">${getStatusBadge(item)}</div>
-                <button class="rounded-full bg-terracotta mx-4 my-2 text-white font-bold">Acción</button>
+                <a href="materiaprima/${item.id}" class="rounded-full bg-terracotta mx-4 my-2 text-white font-bold">Ver</a>
             `;
             cardContainer.appendChild(card);
         });

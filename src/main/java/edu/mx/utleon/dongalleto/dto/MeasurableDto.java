@@ -12,4 +12,5 @@ import lombok.experimental.SuperBuilder;
 public abstract  class MeasurableDto {
     private double quantity;
     private String measureName;
+    private String measureSymbol;
 }

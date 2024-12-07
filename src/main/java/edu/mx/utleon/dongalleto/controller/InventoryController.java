@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,9 +49,19 @@ public class InventoryController {
         return "inventory/rawmaterial";
     }
 
+    @GetMapping("/materiaprima/{id}")
+    public String viewRawMaterialInventory(Model model, @PathVariable Integer id) {
+        model.addAttribute("rawMaterialInventory", rawMaterialService.getInventory(id));
+        model.addAttribute("rawMaterial", rawMaterialService.list());
+        model.addAttribute("measures", measureService.list());
+        model.addAttribute("suppliers", supplierService.list());
+        model.addAttribute("inventoryItem", new RawMaterialInventoryItemDto());
+        return "inventory/rawmaterialdetails";
+    }
+
     @PostMapping("/materiaprima")
     public String addRawMaterialInventory(RawMaterialInventoryItemDto item) {
-        rawMaterialService.addInventory(item);
+        rawMaterialService.saveInventory(item);
         return "redirect:/inventario/materiaprima";
     }
 

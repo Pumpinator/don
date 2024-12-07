@@ -22,7 +22,7 @@ public class InventoryRestController {
     @PostMapping
     @RequestMapping("/materiaprima")
     public ResponseEntity<?> addRawMaterialInventory(@RequestBody RawMaterialInventoryItemDto item) {
-        return ResponseEntity.ok(rawMaterialService.addInventory(item));
+        return ResponseEntity.ok(rawMaterialService.saveInventory(item));
     }
 
 
