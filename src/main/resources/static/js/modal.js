@@ -11,11 +11,11 @@ function closeModal() {
 }
 
 function changeStatus() {
-    var statusElement = document.getElementById('status');
-    var preparingCircle = document.getElementById('preparingCircle');
-    var bakingCircle = document.getElementById('bakingCircle');
-    var readyCircle = document.getElementById('readyCircle');
-    var timeElement = document.getElementById('timeElement'); //muestra la fecha y hora
+    let statusElement = document.getElementById('status');
+    let preparingCircle = document.getElementById('preparingCircle');
+    let bakingCircle = document.getElementById('bakingCircle');
+    let readyCircle = document.getElementById('readyCircle');
+    let timeElement = document.getElementById('timeElement'); //muestra la fecha y hora
 
     // Función para obtener la fecha y hora actual
     function getCurrentDateTime() {
