@@ -2,6 +2,7 @@ package edu.mx.utleon.dongalleto.component;
 
 import edu.mx.utleon.dongalleto.model.*;
 import edu.mx.utleon.dongalleto.repository.*;
+import edu.mx.utleon.dongalleto.service.CookieService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class DataComponent {
     private static final Logger logger = LoggerFactory.getLogger(DataComponent.class);
     private final ProductionRepository productionRepository;
     private final CookieInventoryRepository cookieInventoryRepository;
+    private final CookieService cookieService;
 
     @EventListener
     public void createData(ApplicationReadyEvent event) {
@@ -209,10 +211,9 @@ public class DataComponent {
         )));
 
         Production nutsCookieProduction = createProduction(Production.builder().creationDate(LocalDate.now()).recipe(nutsCookieRecipe).build());
-
-
         CookieInventory nutsCookieInventory = createCookieInventory(CookieInventory.builder().cookie(nutsCookie).quantity(nutsCookieProduction.getRecipe().getQuantity()).measure(nutsCookieProduction.getRecipe().getMeasure()).cost(nutsCookieProduction.getRecipe().getIngredients().stream().mapToDouble(i -> i.getQuantity() * rawMaterialInventoryRepository.findByRawMaterialId(i.getRawMaterial().getId()).orElseThrow().getCost()).sum()).production(nutsCookieProduction).build());
-        nutsCookie.setPrice(nutsCookieInventory.getCost() * 1.2);
+
+        nutsCookie.setPrice(cookieService.getPrice(nutsCookie.getId()));
         cookieRepository.save(nutsCookie);
 
         logger.info("Initial data loaded and created ✅");

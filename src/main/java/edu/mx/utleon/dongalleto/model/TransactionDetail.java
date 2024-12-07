@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public abstract class TransactionDetail {
+public abstract class TransactionDetail extends Measurable {
 
     @Column(length = 150)
     private double unitPrice;
@@ -19,15 +19,8 @@ public abstract class TransactionDetail {
     @Column(length = 150)
     private double totalPrice;
 
-    @Column(length = 150, nullable = false)
-    private double quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "measure_id", nullable = false)
-    private Measure measure;
-
     public double getSubtotal() {
-        return this.quantity * this.unitPrice;
+        return this.getQuantity() * this.getUnitPrice();
     }
 
 }

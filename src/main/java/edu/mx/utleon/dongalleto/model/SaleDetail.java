@@ -26,6 +26,7 @@ public class SaleDetail extends TransactionDetail {
     private Sale sale;
 
     @Embeddable
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter

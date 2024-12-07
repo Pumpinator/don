@@ -2,11 +2,12 @@ package edu.mx.utleon.dongalleto.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Collection;
 
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,5 +19,8 @@ public class Sale extends Transaction {
     private Collection<SaleDetail> saleDetails;
 
 
-
+    public void addSaleDetail(SaleDetail saleDetailEntity) {
+        this.saleDetails.add(saleDetailEntity);
+        saleDetailEntity.setSale(this);
+    }
 }
