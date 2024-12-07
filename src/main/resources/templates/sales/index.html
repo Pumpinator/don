@@ -256,6 +256,8 @@
             return;
         }
 
+        showConfirmationDialog()
+
         fetch('/ventas/venta', {
             method: 'POST',
             headers: {
@@ -265,7 +267,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                alert('Compra realizada con éxito');
+                //alert('Compra realizada con éxito');
                 saleItems = [];
                 updatePurchaseItems();
             })
@@ -285,6 +287,46 @@
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    }
+
+    function showConfirmationDialog() {
+        const confirmationDialog = document.createElement('div');
+        confirmationDialog.style.position = 'fixed';
+        confirmationDialog.style.top = '0';
+        confirmationDialog.style.left = '0';
+        confirmationDialog.style.width = '100%';
+        confirmationDialog.style.height = '100%';
+        confirmationDialog.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        confirmationDialog.style.display = 'flex';
+        confirmationDialog.style.alignItems = 'center';
+        confirmationDialog.style.justifyContent = 'center';
+        confirmationDialog.style.zIndex = '1000';
+
+        confirmationDialog.innerHTML = `
+            <div style="background-color: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center;">
+                <h3 style="margin-bottom: 20px;">¿Generar ticket?</h3>
+                <button onclick="handleResponse(true)" style="background-color: #75635E; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">Sí, generar</button>
+                <button onclick="handleResponse(false)" style="background-color: #F46F4A; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">No generar</button>
+                <button onclick="handleResponse(false)" style="background-color: #332722; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">Cancelar</button>
+            </div>
+        `;
+
+        // Añadir el cuadro al DOM
+        document.body.appendChild(confirmationDialog);
+    }
+
+    function handleResponse(confirm) {
+        const dialog = document.querySelector('div[style*="position: fixed"]');
+        if (dialog) {
+            document.body.removeChild(dialog);
+        }
+        if (confirm) {
+            alert('Compra realizada con éxito');
+            document.body.removeChild(dialog);
+        }else{
+            alert('Compra realizada con éxito');
+            document.body.removeChild(dialog);
+        }
     }
 </script>
 
