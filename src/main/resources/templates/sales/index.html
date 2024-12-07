@@ -303,11 +303,11 @@
         confirmationDialog.style.zIndex = '1000';
 
         confirmationDialog.innerHTML = `
-            <div style="background-color: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center;">
-                <h3 style="margin-bottom: 20px;">¿Generar ticket?</h3>
-                <button onclick="handleResponse(true)" style="background-color: #75635E; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">Sí, generar</button>
-                <button onclick="handleResponse(false)" style="background-color: #F46F4A; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">No generar</button>
-                <button onclick="handleResponse(false)" style="background-color: #332722; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; border: none;">Cancelar</button>
+            <div style="background-color: white; padding: 20px; border-radius: 20px; width: 600px; height: 300px; text-align: center;">
+                <h1 style="margin: 50px; font-size: 30px">¿Deseas imprimir el recibo?</h1>
+                <button onclick="handleResponse(true)" style="background-color: #75635E; color: white; padding: 10px 20px; border-radius: 10px; margin: 20px; border: none;">Sí, generar</button>
+                <button onclick="handleResponse(false)" style="background-color: #F46F4A; color: white; padding: 10px 20px; border-radius: 10px; margin: 20px; border: none;">No generar</button>
+                <button onclick="handleResponse(false)" style="background-color: #332722; color: white; padding: 10px 20px; border-radius: 10px; margin: 20px; border: none;">Cancelar</button>
             </div>
         `;
 
@@ -321,9 +321,6 @@
             document.body.removeChild(dialog);
         }
         if (confirm) {
-            alert('Compra realizada con éxito');
-            document.body.removeChild(dialog);
-        }else{
             alert('Compra realizada con éxito');
             document.body.removeChild(dialog);
         }
