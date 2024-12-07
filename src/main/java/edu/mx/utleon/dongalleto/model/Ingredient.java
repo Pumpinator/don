@@ -2,14 +2,15 @@ package edu.mx.utleon.dongalleto.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper=true)
 public class Ingredient extends Measurable {
 
     @EmbeddedId
@@ -28,6 +29,7 @@ public class Ingredient extends Measurable {
     private Recipe recipe;
 
     @Embeddable
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter

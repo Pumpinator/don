@@ -20,7 +20,7 @@ public abstract class Inventory extends Measurable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 150, nullable = false)
+    @Column(length = 150)
     private LocalDate expirationDate;
 
     @Column(length = 150, nullable = false)

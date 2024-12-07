@@ -2,16 +2,17 @@ package edu.mx.utleon.dongalleto.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Collection;
 
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public class Recipe extends Measurable {
 
     @Id
@@ -21,17 +22,14 @@ public class Recipe extends Measurable {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(length = 150, nullable = false)
-    private double cost;
-
-    @Column(length = 150, nullable = false)
+    @Column(length = 1000, nullable = false)
     private String instructions;
 
     @ManyToOne
     @JoinColumn(name = "cookie_id")
     private Cookie cookie;
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER) // Fetch ingredients eagerly
     private Collection<Ingredient> ingredients;
 
 }
