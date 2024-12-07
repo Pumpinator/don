@@ -19,7 +19,7 @@ public class MainController {
         model.addAttribute("list", List.of("a", "b", "c")); // Enviar una lista a la vista
         model.addAttribute("number", 123); // Enviar un número a la vista
         model.addAttribute("boolean", true); // Enviar un booleano a la vista
-        model.addAttribute("product", Cookie.builder().id(22).name("Galleta de Nuez").price(12.5).build()); // Enviar un objeto a la vista
+        model.addAttribute("product", Cookie.builder().id(22).name("Galleta de Nuez").build()); // Enviar un objeto a la vista
         return "index";
     }
 

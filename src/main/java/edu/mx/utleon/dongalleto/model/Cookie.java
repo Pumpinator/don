@@ -24,7 +24,8 @@ public class Cookie {
     @Column(length = 150, nullable = false)
     private double price;
 
-    @OneToMany(mappedBy = "cookie")
+    @ToString.Exclude
+    @OneToMany(mappedBy = "cookie", fetch = FetchType.EAGER)
     private Collection<Recipe> recipes;
 
 }

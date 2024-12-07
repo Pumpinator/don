@@ -2,6 +2,7 @@ package edu.mx.utleon.dongalleto.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class Production extends Measurable {
+public class Production {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,10 @@ public class Production extends Measurable {
     private LocalDate creationDate;
 
     @ManyToOne
-    @JoinColumn(name = "cookie_id", nullable = false)
-    private Cookie cookie;
+    @JoinColumn(name = "recipe_id", nullable = false)
+    private Recipe recipe;
+
+    @Column(nullable = false)
+    private double productionExpenses; // Agregar atributo de gastos de producción
 
 }
