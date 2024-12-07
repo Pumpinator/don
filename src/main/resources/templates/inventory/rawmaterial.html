@@ -24,20 +24,6 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3">
-            <div class="" th:each="rm : ${rawMaterial}">
-                <div class="bg-white p-4 rounded-lg shadow">
-                    <h3 class="font-bold text-lg mb-2" th:text="${rm.name}">Nombre del Insumo</h3>
-                    <p th:text="${#lists.size(rawMaterialInventory.?[rawMaterial.name == ${rm.name}])}"></p>
-                    <div class="mt-2">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-wood/10 text-wood">En Stock</span>
-                    </div>
-                    <button class="rounded-full bg-terracotta px-4 py-2 text-white font-bold">Acción</button>
-                </div>
-            </div>
-        </div>
-
-
         <div class="mt-8 grid grid-cols-1 gap-8">
             <div class="w-full">
                 <input type="text" id="searchInput" placeholder="Buscar productos en el inventario..."
@@ -222,7 +208,7 @@
                     <div class="text-sm text-dirt">${item.supplier ? item.supplier.name : 'Sin proveedor'}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-dirt">${new Date(item.expirationDate).toLocaleDateString()}</div>
+                    <div class="text-sm text-dirt">${item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : 'Sin fecha de expiración'}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     ${getStatusBadge(item)}

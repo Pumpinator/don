@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 public abstract class Inventory extends Measurable {
 
     @Id
@@ -27,7 +27,12 @@ public abstract class Inventory extends Measurable {
     private double cost;
 
     public long getDaysUntilExpiration() {
-        return ChronoUnit.DAYS.between(LocalDate.now(), this.getExpirationDate());
+        LocalDate expirationDate = this.getExpirationDate();
+        if (expirationDate == null) {
+            return Long.MAX_VALUE; // or any other value that indicates no expiration date
+        }
+        return ChronoUnit.DAYS.between(LocalDate.now(), expirationDate);
     }
+
 
 }

@@ -51,7 +51,7 @@ public class CookieService {
         return recipeRepository.findByCookieId(cookieId).orElseThrow();
     }
 
-    private double getPrice(Integer cookieId) {
+    public double getPrice(Integer cookieId) {
         Recipe recipe = recipeRepository.findByCookieId(cookieId).orElseThrow();
         double totalCost = 0.0;
         for (Ingredient ingredient : recipe.getIngredients()) {

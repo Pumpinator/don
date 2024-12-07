@@ -20,20 +20,5 @@ public abstract class Measurable {
     @JoinColumn(name = "measure_id", nullable = false)
     private Measure measure;
 
-    public double convert() {
-        if (this.measure.getName().equals(Measures.Kilogramo.name())) {
-            return this.quantity * 1000;
-        }
-        if (this.measure.getName().equals(Measures.Litro.name())) {
-            return this.quantity * 1000;
-        }
-        if (this.measure.getName().equals(Measures.Gramo.name())) {
-            return this.quantity / 1000;
-        }
-        if (this.measure.getName().equals(Measures.Mililitro.name())) {
-            return this.quantity / 1000;
-        }
-        return this.quantity;
-    }
 
 }

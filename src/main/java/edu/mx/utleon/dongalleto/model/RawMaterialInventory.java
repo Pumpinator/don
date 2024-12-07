@@ -15,7 +15,7 @@ import java.time.temporal.ChronoUnit;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(callSuper = true)
 public class RawMaterialInventory extends Inventory {
 
     @ManyToOne
@@ -27,11 +27,19 @@ public class RawMaterialInventory extends Inventory {
     private Supplier supplier;
 
     public boolean isExpired() {
-        return ChronoUnit.DAYS.between(LocalDate.now(), this.getExpirationDate()) < 0;
+        LocalDate expirationDate = this.getExpirationDate();
+        if (expirationDate == null) {
+            return false;
+        }
+        return ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) < 0;
     }
 
     public boolean isExpiring() {
-        return ChronoUnit.DAYS.between(LocalDate.now(), this.getExpirationDate()) < 7;
+        LocalDate expirationDate = this.getExpirationDate();
+        if (expirationDate == null) {
+            return false;
+        }
+        return ChronoUnit.DAYS.between(LocalDate.now(), expirationDate) < 7;
     }
 
 }
