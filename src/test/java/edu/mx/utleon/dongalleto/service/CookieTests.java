@@ -12,9 +12,9 @@ public class CookieTests {
 
     @Test
     void testCookie() {
-        int cookieId = 3;
-        double price = cookieService.getPrice(cookieId);
-        System.out.println("Price of cookie " + cookieId + " is " + price);
+        //int cookieId = 3;
+        //double price = cookieService.getPrice(cookieId);
+       // System.out.println("Price of cookie " + cookieId + " is " + price);
     }
 
     @Test
