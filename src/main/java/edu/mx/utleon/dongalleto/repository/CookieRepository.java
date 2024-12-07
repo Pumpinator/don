@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CookieRepository extends CrudRepository<Cookie, Integer> {
+    Iterable<Cookie> findAllByNameContaining(String searchParam);
 }
