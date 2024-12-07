@@ -11,6 +11,7 @@ public class SaleController {
 
     @GetMapping
     public String viewSale() {
+
         return "sales/index";
     }
 
