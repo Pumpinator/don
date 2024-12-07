@@ -9,3 +9,49 @@ function closeModal() {
     document.body.classList.remove('modal-open');
     document.getElementById('mainContent').classList.remove('blur');
 }
+
+function changeStatus() {
+    var statusElement = document.getElementById('status');
+    var preparingCircle = document.getElementById('preparingCircle');
+    var bakingCircle = document.getElementById('bakingCircle');
+    var readyCircle = document.getElementById('readyCircle');
+    var timeElement = document.getElementById('timeElement'); //muestra la fecha y hora
+
+    // Función para obtener la fecha y hora actual
+    function getCurrentDateTime() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var ampm = hours >= 12 ? 'p. m.' : 'a. m.';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // la hora '0' debe ser '12'
+      minutes = minutes < 10 ? '0' + minutes : minutes; // Formato de minutos
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      var dateString = now.toLocaleDateString('es-ES'); // Fecha en formato local
+
+      return 'Iniciado el ' + dateString + ' a las ' + strTime;
+    }
+
+    // Cambiar el texto dependiendo del estado actual
+    if (statusElement.innerHTML === "Preparando") {
+      statusElement.innerHTML = "Horneando";
+      preparingCircle.classList.add('hidden');
+      bakingCircle.classList.remove('hidden');
+      timeElement.innerHTML = getCurrentDateTime(); // Actualiza la fecha y hora al iniciar el horneado
+    } else if (statusElement.innerHTML === "Horneando") {
+      statusElement.innerHTML = "Listo";
+      bakingCircle.classList.add('hidden');
+      readyCircle.classList.remove('hidden');
+    } else if (statusElement.innerHTML === "Listo") {
+      statusElement.innerHTML = "Preparando";
+      readyCircle.classList.add('hidden');
+      preparingCircle.classList.remove('hidden');
+    }
+  }
+
+function startPreparation() {
+    closeModal();
+
+    // Cambia el estado de la tarjeta a "Preparando"
+    document.getElementById('status').innerHTML = "Preparando";
+}

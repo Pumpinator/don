@@ -40,7 +40,23 @@
             <!-- Tarjeta para horneado de Galletas -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 p-4" style="width: 145%; margin-left: -45%;">
                 <h2 class="text-2xl font-semibold text-[#332722] mb-4 text-center">Horneado</h2>
+
+
+                <div class="card">
+                    <div class="circle" id="preparingCircle"></div>
+                    <div class="circle hidden" id="bakingCircle"></div>
+                    <div class="circle hidden" id="readyCircle"></div>
+                    <h3><strong>Galletas de nuez</strong></h3>
+                    <div id="horneadoStatus">
+                        <h3 id="status">Preparando</h3>
+                        <p id="timeElement"></p>
+                    <button onclick="changeStatus()" class="bg-white hover:bg-chocolate hover:text-white rounded-full shadow-lg font-bold py-1 px-2 text-xs">
+                        Avanzar
+                    </button>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 </main>
@@ -95,12 +111,13 @@
         <button onclick="closeModal()" class="bg-chocolate hover:bg-white hover:text-chocolate rounded-full shadow-lg font-bold py-1 px-1 text-xs  text-white">
             Cancelar
         </button>
-        <button onclick="closeModal()" class="bg-white hover:bg-chocolate hover:text-white rounded-full shadow-lg font-bold py-1 px-2 text-xs">
-            Preparar
-        </button>
+            <button onclick="startPreparation()" class="bg-white hover:bg-chocolate hover:text-white rounded-full shadow-lg font-bold py-1 px-2 text-xs">
+                Preparar
+            </button>
         </div>
     </div>
 </div>
+
 
 <button th:replace="~{fragments/goTop :: goTop}"></button>
 <footer th:replace="~{fragments/footer :: footer}"></footer>

@@ -1,6 +1,9 @@
 package edu.mx.utleon.dongalleto.service;
 
-import edu.mx.utleon.dongalleto.model.*;
+import edu.mx.utleon.dongalleto.model.Ingredient;
+import edu.mx.utleon.dongalleto.model.Measure;
+import edu.mx.utleon.dongalleto.model.RawMaterial;
+import edu.mx.utleon.dongalleto.model.Recipe;
 import edu.mx.utleon.dongalleto.repository.IngredientRepository;
 import edu.mx.utleon.dongalleto.repository.MeasureRepository;
 import edu.mx.utleon.dongalleto.repository.RawMaterialRepository;
