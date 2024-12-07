@@ -93,10 +93,9 @@
                     console.log('Measures:', measures); // Agrega esta línea para depurar
 
                     measures.forEach((measure, index) => {
-                        if (index === 2) return;
+                        if (measure.id === 3 || measure.id === 4 || measure.id === 5) return;
 
                         const option = document.createElement('option');
-
                         option.value = measure.id;
                         option.textContent = measure.name;
                         measureSelect.appendChild(option);
@@ -123,8 +122,6 @@
                 return (cookieOption.price * 25) / 1000;
             case 2:
                 return cookieOption.price * 25;
-            case 5:
-                return 0;
             default:
                 return cookieOption.price;
         }
