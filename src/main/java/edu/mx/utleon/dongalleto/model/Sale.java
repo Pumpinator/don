@@ -17,4 +17,6 @@ public class Sale extends Transaction {
     @OneToMany(mappedBy = "sale")
     private Collection<SaleDetail> saleDetails;
 
+
+
 }

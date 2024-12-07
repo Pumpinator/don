@@ -43,6 +43,8 @@
         searchInput.addEventListener('input', debounce(searchCookies, 300));
     });
 
+
+
     function searchCookies() {
         const searchParam = document.getElementById('searchInput').value.trim();
         if (searchParam.length > 0) {
@@ -90,11 +92,21 @@
                     measures = data;
                     console.log('Measures:', measures); // Agrega esta línea para depurar
 
-                    measures.forEach(measure => {
+                    measures.forEach((measure, index) => {
+                        if (index === 2) return;
+
                         const option = document.createElement('option');
+
                         option.value = measure.id;
                         option.textContent = measure.name;
                         measureSelect.appendChild(option);
+                    });
+
+                    measureSelect.addEventListener('change', () => {
+                        const unitPriceElement = document.getElementById(`unitPrice-${item.id}`);
+                        const selectedMeasureId = parseInt(measureSelect.value, 10);
+                        const updatedPrice = getCookiePrice(item.id, selectedMeasureId);
+                        unitPriceElement.textContent = updatedPrice.toFixed(2);
                     });
                 })
                 .catch(error => console.error('Error:', error));
@@ -102,9 +114,20 @@
         });
     }
 
-    function getCookiePrice(id){
-        const cookieOption = cookies.find(cookie => cookie.id === id);
-        return cookieOption.price ? cookieOption.price : 0;
+    function getCookiePrice(cookieId, measureId) {
+        const cookieOption = cookies.find(cookie => cookie.id === cookieId);
+        if (!cookieOption) return 0;
+
+        switch (measureId) {
+            case 1:
+                return (cookieOption.price * 25) / 1000;
+            case 2:
+                return cookieOption.price * 25;
+            case 5:
+                return 0;
+            default:
+                return cookieOption.price;
+        }
     }
 
     function getMeasureSymbol(id) {
@@ -119,20 +142,36 @@
         saleItems.forEach((item, index) => {
             const measureSymbol = getMeasureSymbol(item.measureId);
 
-            const card = document.createElement('div');
-            card.className = 'bg-white p-4 rounded-lg shadow';
-            card.innerHTML = `
+            if( item.measureId == 5){
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-lg shadow';
+                card.innerHTML = `
             <h4 class="font-semibold text-red">Galleta: ${item.name}</h4>
             <p class="text-sm">Cantidad: ${item.quantity} ${measureSymbol}</p>
             <p class="text-sm">Precio Unitario: $${item.unitPrice.toFixed(2)}</p>
             <p class="text-sm">Precio Total: $${item.totalPrice.toFixed(2)}</p>
             <div class="mt-2">
                 <button onclick="removeItem(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded mr-2 transition-all duration-300">Eliminar</button>
-                <button onclick="decreaseQuantity(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded mr-2 transition-all duration-300">Restar</button>
-                <button onclick="increaseQuantity(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded transition-all duration-300">Sumar</button>
             </div>
         `;
-            container.appendChild(card);
+                container.appendChild(card);
+            }else{
+                const card = document.createElement('div');
+                card.className = 'bg-white p-4 rounded-lg shadow';
+                card.innerHTML = `
+            <h4 class="font-semibold text-red">Galleta: ${item.name}</h4>
+            <p class="text-sm">Cantidad: ${item.quantity} ${measureSymbol}</p>
+            <p class="text-sm">Precio Unitario: $${item.unitPrice.toFixed(2)}</p>
+            <p class="text-sm">Precio Total: $${item.totalPrice.toFixed(2)}</p>
+            <div class="mt-2">
+                <button onclick="removeItem(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded mr-2 transition-all duration-300">Eliminar</button>
+                <button id="restar" onclick="decreaseQuantity(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded mr-2 transition-all duration-300">Restar</button>
+                <button id="sumar" onclick="increaseQuantity(${index})" class="bg-chocolate hover:bg-white hover:text-chocolate text-white text-sm font-bold py-1 px-2 rounded transition-all duration-300">Sumar</button>
+            </div>
+        `;
+                container.appendChild(card);
+            }
+
         });
     }
 
@@ -140,13 +179,23 @@
         let item = null;
         const quantity = document.getElementById(`quantity-${itemId}`);
         const measure = document.getElementById(`measure-${itemId}`);
-        const unitPrice = getCookiePrice(itemId);
-        const totalPrice = parseFloat(unitPrice) * parseFloat(quantity.value);
+        let unitPrice =  getCookiePrice(itemId);
+        let totalPrice = parseFloat(unitPrice) * parseFloat(quantity.value);
         const name = document.getElementById(`name-${itemId}`);
 
         if (!quantity.value || !measure.value) {
             alert('Por favor, complete todos los campos necesarios');
             return;
+        }
+
+        if( measure.value == 1) {
+            unitPrice = (unitPrice * 25) / 1000;
+            totalPrice = unitPrice * parseFloat(quantity.value);
+        }
+
+        if( measure.value == 2) {
+            unitPrice = unitPrice * 25;
+            totalPrice = unitPrice * parseFloat(quantity.value);
         }
 
         if( measure.value == 5){
@@ -157,7 +206,7 @@
                 unitPrice: unitPrice,
                 totalPrice: parseFloat(quantity.value)
             };
-        }else{
+        } else{
             item = {
                 name: name.textContent,
                 quantity: parseFloat(quantity.value),
