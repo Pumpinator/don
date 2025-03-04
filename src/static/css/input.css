@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+@theme {
+    --color-terracotta-light: #E49A84;
+    --color-terracotta-default: #CB765E;
+    --color-terracotta-dark: #9A4D3D;
+
+    --color-wood-light: #B78C7A;
+    --color-wood-default: #A07265;
+    --color-wood-dark: #7E5B4A;
+
+    --color-red-light: #F88C6A;
+    --color-red-default: #F46F4A;
+    --color-red-dark: #D14A31;
+
+    --color-latte-light: #9E8A7C;
+    --color-latte-default: #75635E;
+    --color-latte-dark: #4E4036;
+
+    --color-dirt-light: #6D574F;
+    --color-dirt-default: #4B413E;
+    --color-dirt-dark: #3A2D27;
+
+    --color-chocolate-light: #5D463B;
+    --color-chocolate-default: #332722;
+    --color-chocolate-dark: #2B1E17;
+}

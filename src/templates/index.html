@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Inicio - DON GALLETO{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <a href="{{ url_for('produccion') }}"
+        class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
+        <p class="text-gray-500 text-3xl">
+            <i class="fas fa-cogs"></i>
+        </p>
+    </a>
+
+    <!-- Contenedores secundarios -->
+    <div class="grid grid-cols-2 gap-4">
+        <a href="{{ url_for('ventas') }}"
+            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
+            <p class="text-gray-500 text-3xl">
+                <i class="fas fa-store"></i>
+            </p>
+        </a>
+        <a href="{{ url_for('reportes') }}"
+            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
+            <p class="text-gray-500 text-3xl">
+                <i class="fas fa-chart-line"></i>
+            </p>
+        </a>
+    </div>
+</div>
+{% endblock %}
