@@ -1,6 +1,9 @@
 from flask import Flask, render_template
+from config import DevelopmentConfig
+from modelos import bd
 
 app = Flask(__name__)
+app.config.from_object(DevelopmentConfig)
 
 @app.route("/")
 def index():
@@ -39,4 +42,7 @@ def reportes():
 	return render_template('reportes.html')
 
 if __name__ == '__main__':
-	app.run(debug=True, port=3000)
+    bd.init_app(app)
+    with app.app_context():
+        bd.create_all()
+    app.run(debug=True, port=3000)
