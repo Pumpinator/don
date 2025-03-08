@@ -2254,6 +2254,7 @@
   .h-40 {
     height: calc(var(--spacing) * 40);
   }
+<<<<<<< HEAD
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
@@ -2269,6 +2270,8 @@
   .h-80 {
     height: calc(var(--spacing) * 80);
   }
+=======
+>>>>>>> 9bf65e56ce04175afed2a444ef426d23ac473eaa
   .h-96 {
     height: calc(var(--spacing) * 96);
   }
@@ -5510,6 +5513,7 @@
   .text-white {
     color: var(--color-white);
   }
+<<<<<<< HEAD
   .text-yellow-300 {
     color: var(--color-yellow-300);
   }
@@ -6149,6 +6153,8 @@
       }
     }
   }
+=======
+>>>>>>> 9bf65e56ce04175afed2a444ef426d23ac473eaa
   .hover\:text-\[var\(--color-chocolate-default\)\] {
     &:hover {
       @media (hover: hover) {
