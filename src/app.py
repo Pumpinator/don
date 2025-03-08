@@ -43,7 +43,7 @@ def reportes():
 
 @app.route('/clientes')
 def clientes():
-    return render_template('clientes.html') 
+    return render_template('catalogo_cliente.html') 
 
 @app.route('/usuarios')
 def usuarios():
