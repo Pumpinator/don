@@ -41,6 +41,10 @@ def ventas():
 def reportes():
 	return render_template('reportes.html')
 
+@app.route('/usuarios')
+def usuarios():
+	return render_template('usuarios.html')
+
 if __name__ == '__main__':
     bd.init_app(app)
     with app.app_context():

@@ -54,6 +54,9 @@
             <a href="{{ url_for('mermas') }}" class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'mermas' else 'text-gray-700' }}">
                 <i class="fas fa-arrow-trend-down text-xl"></i>
             </a>
+            <a href="{{ url_for('usuarios') }}" class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'usuarios' else 'text-gray-700' }}">
+                <i class="fas fa-users text-xl"></i>
+            </a>
         </div>
     </nav>
 

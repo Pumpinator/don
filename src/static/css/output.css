@@ -211,12 +211,6 @@
   .h-40 {
     height: calc(var(--spacing) * 40);
   }
-  .h-44 {
-    height: calc(var(--spacing) * 44);
-  }
-  .h-80 {
-    height: calc(var(--spacing) * 80);
-  }
   .h-96 {
     height: calc(var(--spacing) * 96);
   }
@@ -337,13 +331,6 @@
   }
   .text-white {
     color: var(--color-white);
-  }
-  .hover\:cursor-pointer {
-    &:hover {
-      @media (hover: hover) {
-        cursor: pointer;
-      }
-    }
   }
   .hover\:text-\[var\(--color-chocolate-default\)\] {
     &:hover {
