@@ -49,6 +49,10 @@ def clientes():
 def usuarios():
 	return render_template('usuarios.html')
 
+@app.route('/cuenta')
+def cuenta():
+    return render_template('cuenta.html')
+
 if __name__ == '__main__':
     bd.init_app(app)
     with app.app_context():
