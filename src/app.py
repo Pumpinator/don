@@ -1,13 +1,14 @@
 from flask import Flask, render_template
 from config import DevelopmentConfig
-from modelos import bd
+from bd import bd
+from repositorio import *
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 
 @app.route("/")
 def index():
-	return render_template("index.html")
+    return render_template('index.html')
 
 @app.route('/compras')
 def compras():
