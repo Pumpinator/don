@@ -15,7 +15,28 @@ def compras():
 
 @app.route('/insumos')
 def insumos():
-    return render_template('insumos.html')
+    insumos=[
+        "harina",
+        "azucar",
+        "huevo",
+        "leche",
+        "mantequilla",
+        "chocolate",
+        "canela",
+        "vainilla",
+        "sal",
+        "royal",
+        "coco",
+        "almendra",
+        "nuez",
+        "cacahuate",
+        "fresa",
+        "pasas",
+        "avellana",
+        "chispas",
+        "avena",
+        "colorante",]
+    return render_template('insumos.html', insumos=insumos)
 
 @app.route('/recetas')
 def recetas():

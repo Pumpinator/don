@@ -3,5 +3,61 @@
 {% block title %}Insumos - DON GALLETO{% endblock %}
 
 {% block content %}
-<p class="text-gray-500">Inventario de insumos</p>
-{% endblock %}
+<div>
+    <form class="max-w-md mx-auto">
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+            </div>
+            <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 
+            focus:border-blue-500 block w-full ps-10 p-2.5 light:bg-gray-700 light:border-gray-600 dark:placeholder-gray-400 
+            dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cookie" required
+                oninput="filterInsumos()" />
+        </div>
+    </form><br>
+
+    <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
+        {% for insumo in insumos %}
+
+        <div class="insumo-item bg-white border border-gray-200 rounded-lg 
+    shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+            <a href="#">
+                <div class="p-5 grid grid-cols-2 gap-6">
+                    <div>
+                        <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 
+                    font-bold tracking-tight text-gray-900 dark:text-black">
+                            {{ insumo }}</h7>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
+                    </div>
+                    <div class="justify-self-end ">
+                        <h7
+                            class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
+                            20</h7>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function filterInsumos() {
+            const searchInput = document.getElementById('simple-search').value.toLowerCase();
+            const insumos = document.querySelectorAll('.insumo-item');
+    
+            insumos.forEach(insumo => {
+                const insumoText = insumo.textContent.toLowerCase();
+                if (insumoText.includes(searchInput)) {
+                    insumo.style.display = '';
+                } else {
+                    insumo.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</div>
+    {% endblock %}
