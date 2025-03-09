@@ -23,7 +23,19 @@ def recetas():
 
 @app.route('/galletas')
 def galletas():
-    return render_template('galletas.html')
+    galletas = [
+        "chispas",
+        "avellana",
+        "almendra",
+        "avena",
+        "coco",
+        "cacahuate",
+        "nuez",
+        "pasas",
+        "mantequilla",
+        "fresa",
+    ]
+    return render_template('galletas.html', galletas=galletas )
 
 @app.route('/mermas')
 def mermas():

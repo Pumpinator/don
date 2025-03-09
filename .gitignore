@@ -1,4 +1,4 @@
-static/css/output.css
+src/static/css/output.css
 __pycache__/
 *.py[cod]
 *$py.class

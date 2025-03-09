@@ -3,5 +3,40 @@
 {% block title %}Galletas - DON GALLETO{% endblock %}
 
 {% block content %}
-<p class="text-gray-500">Inventario de galletas</p>
+
+<form class="max-w-md mx-auto">
+    <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+        </div>
+        <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 
+            focus:border-blue-500 block w-full ps-10 p-2.5 light:bg-gray-700 light:border-gray-600 dark:placeholder-gray-400 
+            dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Cookie" required />
+    </div>
+</form><br>
+
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
+    {% for galleta in galletas %}
+    
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        <a href="#">
+            <img class="rounded-t-lg w-50 md:w-full md:h-110 object-cover" src="../static/img/{{ galleta }}.png" alt="{{ galleta }}" />
+        </a>
+        <div class="p-5 grid grid-cols-2 gap-6">
+            <div >
+                <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg font-bold tracking-tight text-gray-900 dark:text-black">{{ galleta }}</h7>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
+            </div>
+            <div class="justify-self-end ">
+                <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">20</h7>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
