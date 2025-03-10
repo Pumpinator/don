@@ -1,4 +1,5 @@
 from bd import bd
+from modelo.rol import Rol
 
 class Usuario(bd.Model):
     __tablename__ = 'usuarios'
@@ -8,4 +9,4 @@ class Usuario(bd.Model):
     password = bd.Column(bd.String(50), nullable=False)
     
     rol_id = bd.Column(bd.Integer, bd.ForeignKey('roles.id'), nullable=False)
-    rol = bd.relationship('Rol', backref='usuarios')
+    rol = bd.relationship(Rol, backref='usuarios')
