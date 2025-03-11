@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from config import DevelopmentConfig
 from bd import bd
 from controlador.usuario import controlador as controlador_usuario
