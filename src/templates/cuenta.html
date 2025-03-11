@@ -4,4 +4,7 @@
 
 {% block content %}
 <p class="text-gray-500">Información de la cuenta del usuario logeado</p>
+<div class="mt-4">
+    <a href="{{ url_for('crear_cuenta') }}" class="bg-red-500 text-white px-4 py-2 rounded-lg">Crear cuenta</a>
+</div>
 {% endblock %}

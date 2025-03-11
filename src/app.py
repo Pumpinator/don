@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from config import DevelopmentConfig
 from bd import bd
 from repositorio import *
+import forms
+from modelo.usuario import Usuario
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -86,6 +88,20 @@ def usuarios():
 @app.route('/cuenta')
 def cuenta():
     return render_template('cuenta.html')
+
+@app.route('/crear_cuenta', methods=['GET', 'POST'])
+def crear_cuenta():
+    form=forms.UseForm(request.form)
+    if request.method == 'POST':
+        usuario = Usuario(nombre=form.nombre.data + " " + form.apellido.data
+                          , email=form.email.data
+                          , password=form.contrasenia.data
+                          , rol_id='3'
+                          ,estatus = '1')
+        bd.session.add(usuario)
+        bd.session.commit()
+        return redirect(url_for("index"))
+    return render_template('crear_cuenta.html', form=form)
 
 if __name__ == '__main__':
     bd.init_app(app)
