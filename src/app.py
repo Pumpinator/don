@@ -6,7 +6,7 @@ from controlador.galletas import controlador as controlador_galleta
 from controlador.insumo import controlador as controlador_insumo
 from controlador.principal import controlador as controlador_principal
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='vista/static', template_folder='vista/templates')
 app.config.from_object(DevelopmentConfig)
 
 app.register_blueprint(controlador_principal)
