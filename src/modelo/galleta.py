@@ -6,5 +6,3 @@ class Galleta(bd.Model):
     id = bd.Column(bd.Integer, primary_key=True)
     nombre = bd.Column(bd.String(50), nullable=False)
     precio = bd.Column(bd.Float, nullable=False)
-    
-    recetas = bd.relationship('Receta', backref='galleta')

@@ -1,11 +1,13 @@
 from bd import bd
 from modelo.inventario import Inventario
+from modelo.compra import Compra
+from modelo.insumo import Insumo
 
 class InsumoInventario(Inventario, bd.Model):
     __tablename__ = 'insumos_inventarios'
     
     compra_id = bd.Column(bd.Integer, bd.ForeignKey('compras.id'), primary_key=True)
-    compra = bd.relationship('Compra', backref='insumos_inventario')
+    compra = bd.relationship(Compra, backref='insumos_inventario')
     
     insumo_id = bd.Column(bd.Integer, bd.ForeignKey('insumos.id'), primary_key=True)
-    insumo = bd.relationship('Insumo', backref='inventarios')
+    insumo = bd.relationship(Insumo, backref='inventarios')

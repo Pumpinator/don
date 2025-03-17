@@ -1,4 +1,5 @@
 from bd import bd
+from modelo.galleta import Galleta
 
 class Receta(bd.Model):
     __tablename__ = 'recetas'
@@ -7,4 +8,4 @@ class Receta(bd.Model):
     nombre = bd.Column(bd.String(50), nullable=False)
     
     galleta_id = bd.Column(bd.Integer, bd.ForeignKey('galletas.id'), nullable=False)
-    galleta = bd.relationship('Galleta', backref='recetas')
+    galleta = bd.relationship(Galleta, backref='recetas')
