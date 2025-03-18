@@ -3,5 +3,67 @@
 {% block title %}Ventas - DON GALLETO{% endblock %}
 
 {% block content %}
-<p class="text-gray-500">Mostrador de ventas</p>
+<div class="grid grid-cols-2">
+    {% for venta in ventas %}
+        
+    {% endfor %}
+    <div class="text-right">
+    </div>
+</div>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.comprador_id.label }}<br>
+        {{ form.comprador_id(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.vendedor_id.label }}<br>
+        {{ form.vendedor_id(size=32) }}<br>
+    </p>
+    <p>
+        {{ form.pagado.label }}<br>
+        {{ form.pagado() }}<br>
+    </p>
+    <p>
+        {{ form.fecha_entrega.label }}<br>
+        {{ form.fecha_entrega() }}<br>
+    </p>
+    <h2>Detalles de Venta</h2>
+    <div id="detalles">
+        {% for detalle in form.detalles %}
+            <div>
+                <p>
+                    {{ detalle.galleta_id.label }}<br>
+                    {{ detalle.galleta_id() }}<br>
+                </p>
+                <p>
+                    {{ detalle.cantidad.label }}<br>
+                    {{ detalle.cantidad(size=32) }}<br>
+                </p>
+                <p>
+                    {{ detalle.medida_id.label }}<br>
+                    {{ detalle.medida_id(size=32) }}<br>
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="addDetalle()">Agregar Galleta</button>
+    <p><input type="submit" value="Registrar Venta"></p>
+</form>
+
+<script>
+    function addDetalle() {
+        var detallesDiv = document.getElementById('detalles');
+        var newDetalle = detallesDiv.children[0].cloneNode(true);
+        var totalDetalles = detallesDiv.children.length;
+        newDetalle.querySelectorAll('input, select').forEach(function(input) {
+            var name = input.getAttribute('name');
+            var newName = name.replace(/\d+/, totalDetalles);
+            input.setAttribute('name', newName);
+            input.setAttribute('id', newName);
+            input.value = '';
+        });
+        detallesDiv.appendChild(newDetalle);
+    }
+</script>
 {% endblock %}

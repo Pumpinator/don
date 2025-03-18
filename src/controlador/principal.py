@@ -22,10 +22,6 @@ def mermas():
 def produccion():
 	return render_template('produccion.html')
 
-@controlador.route('/ventas')
-def ventas():
-    return render_template('ventas.html')
-
 @controlador.route('/reportes')
 def reportes():
 	return render_template('reportes.html')

@@ -1,4 +1,5 @@
 from bd import bd
+from modelo.medida import Medida
 from sqlalchemy.ext.declarative import declared_attr
 
 class Medible:
@@ -12,4 +13,4 @@ class Medible:
 
     @declared_attr
     def medida(cls):
-        return bd.relationship('Medida')
+        return bd.relationship(Medida, backref=cls.__name__.lower() + 's')
