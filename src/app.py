@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-from flask import Flask, render_template, request, redirect, url_for
-=======
 from flask import Flask
->>>>>>> ed83beaaa9b325d7fd4f6e27639610829086048e
 from config import DevelopmentConfig
 from bd import bd
 from repositorio import *
