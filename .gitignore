@@ -1,4 +1,4 @@
-src/static/css/output.css
+src/vista/static/css/output.css
 __pycache__/
 *.py[cod]
 *$py.class
