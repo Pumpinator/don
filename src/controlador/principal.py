@@ -18,6 +18,10 @@ def recetas():
 def mermas():
     return render_template('mermas.html')
 
+@controlador.route('/agregarMerma')
+def agregarMerma():
+    return render_template('agregarMerma.html')
+
 @controlador.route('/produccion')
 def produccion():
 	return render_template('produccion.html')
