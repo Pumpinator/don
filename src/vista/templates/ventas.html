@@ -3,67 +3,50 @@
 {% block title %}Ventas - DON GALLETO{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-2">
-    {% for venta in ventas %}
-        
-    {% endfor %}
-    <div class="text-right">
+<!-- Barra de búsqueda -->
+<form action="{{ url_for('controlador_venta.ventas') }}" method="get" class="mb-6">
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+        <input type="search" name="busqueda" value="{{ busqueda }}" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Buscar galletas..." required>
     </div>
-</div>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.comprador_id.label }}<br>
-        {{ form.comprador_id(size=32) }}<br>
-    </p>
-    <p>
-        {{ form.vendedor_id.label }}<br>
-        {{ form.vendedor_id(size=32) }}<br>
-    </p>
-    <p>
-        {{ form.pagado.label }}<br>
-        {{ form.pagado() }}<br>
-    </p>
-    <p>
-        {{ form.fecha_entrega.label }}<br>
-        {{ form.fecha_entrega() }}<br>
-    </p>
-    <h2>Detalles de Venta</h2>
-    <div id="detalles">
-        {% for detalle in form.detalles %}
-            <div>
-                <p>
-                    {{ detalle.galleta_id.label }}<br>
-                    {{ detalle.galleta_id() }}<br>
-                </p>
-                <p>
-                    {{ detalle.cantidad.label }}<br>
-                    {{ detalle.cantidad(size=32) }}<br>
-                </p>
-                <p>
-                    {{ detalle.medida_id.label }}<br>
-                    {{ detalle.medida_id(size=32) }}<br>
-                </p>
-            </div>
-        {% endfor %}
-    </div>
-    <button type="button" onclick="addDetalle()">Agregar Galleta</button>
-    <p><input type="submit" value="Registrar Venta"></p>
 </form>
 
-<script>
-    function addDetalle() {
-        var detallesDiv = document.getElementById('detalles');
-        var newDetalle = detallesDiv.children[0].cloneNode(true);
-        var totalDetalles = detallesDiv.children.length;
-        newDetalle.querySelectorAll('input, select').forEach(function(input) {
-            var name = input.getAttribute('name');
-            var newName = name.replace(/\d+/, totalDetalles);
-            input.setAttribute('name', newName);
-            input.setAttribute('id', newName);
-            input.value = '';
-        });
-        detallesDiv.appendChild(newDetalle);
-    }
-</script>
+<!-- Tarjetas de galletas -->
+<div class="grid grid-cols-1 w-full gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    {% for inventario in inventarios %}
+    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+        <div class="flex justify-between items-start">
+            <div>
+                <h5 class="mb-2 text-xl break-words font-bold tracking-tight text-gray-900">{{ inventario.galleta }}</h5>
+                <div class="flex flex-col">
+                    {% if inventario.estado == "Disponible" %}
+                        <span class="text-sm font-normal text-green-600">{{ inventario.estado }}</span>
+                    {% elif inventario.estado == "Pronto a expirar" %}
+                        <span class="text-sm font-normal text-yellow-600">{{ inventario.estado }}</span>
+                    {% elif inventario.estado == "Bajo inventario" %}
+                        <span class="text-sm font-normal text-orange-600">{{ inventario.estado }}</span>
+                    {% else %}
+                        <span class="text-sm font-normal text-gray-600">{{ inventario.estado }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-right">
+                <span class="text-2xl font-bold text-gray-900">{{ inventario.cantidad }}</span>
+                <p class="text-sm font-normal text-gray-700">{{ inventario.medida }}s</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Mensaje si no hay resultados -->
+{% if inventarios|length == 0 %}
+<div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
+    <span class="font-medium">No se encontraron galletas</span> con el término de búsqueda "{{ busqueda }}".
+</div>
+{% endif %}
 {% endblock %}
