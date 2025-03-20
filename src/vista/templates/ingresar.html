@@ -1,0 +1,45 @@
+{% extends 'layouts/guest.html' %}
+
+{% block content %}
+<div class="flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Quiero ingresar</h2>
+    <form action="{{ url_for('controlador_principal.ingresar') }}" method="post" class="space-y-5" novalidate>
+      {{ form.csrf_token() }}
+
+      <div>
+        {{ form.correo.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.correo(class="mt-1 block w-full border border-gray-300 rounded-full px-4 py-2
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="correo@don.mx")
+        }}
+        {% if form.correo.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.correo.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.password(class="mt-1 block w-full border border-gray-300 rounded-full px-4 py-2
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="********") }}
+        {% if form.password.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.password.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex items-center">
+        {{ form.recordarme(class="cursor-pointer") }}
+        <label for="recordarme" class="ml-2 text-sm text-gray-700">Recordarme</label>
+      </div>
+
+      <button type="submit"
+        class="w-full cursor-pointer bg-[var(--color-dirt-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-dark)]">
+        Ingresar
+      </button>
+    </form>
+    <a href="{{ url_for('controlador_principal.registrar') }}"
+      class="block text-center text-sm text-gray-700 mt-4 hover:underline">
+      ¿No tienes cuenta? Regístrate
+    </a>
+  </div>
+</div>
+{% endblock %}

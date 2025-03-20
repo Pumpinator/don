@@ -1,10 +1,42 @@
-{% extends "layouts/trabajador.html" %}
+{% extends "layouts/auth.html" %}
 
-{% block title %}Mi Cuenta - DON GALLETO{% endblock %}
+{% block title %}Mi Cuenta - DON{% endblock %}
 
 {% block content %}
-<p class="text-gray-500">Información de la cuenta del usuario logeado</p>
-<div class="mt-4">
-    <a href="{{ url_for('crear_cuenta') }}" class="bg-red-500 text-white px-4 py-2 rounded-lg">Crear cuenta</a>
+<div class="flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-6">
+        <table class="table-auto w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase">
+                <tr>
+                    <th scope="col" class="px-6 py-3"></th>
+                    <th scope="col" class="px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="px-6 py-4 font-medium text-gray-900">Nombre</td>
+                    <td class="px-6 py-4">{{ current_user.nombre }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 font-medium text-gray-900">Email</td>
+                    <td class="px-6 py-4">{{ current_user.email }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 font-medium text-gray-900">Rol</td>
+                    <td class="px-6 py-4">{{ current_user.rol.nombre }}</td>
+                </tr>
+                <tr>
+                    <td class="px-6 py-4 font-medium text-gray-900">Estatus</td>
+                    <td class="px-6 py-4">{{ current_user.estatus }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="justify-center text-center flex items-center mt-4">
+            <a href="{{ url_for('controlador_principal.salir') }}"
+                class="w-full bg-[var(--color-dirt-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-latte-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-latte-default)] mt-4">
+                Salir
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}

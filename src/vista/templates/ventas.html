@@ -1,9 +1,8 @@
-{% extends "layouts/trabajador.html" %}
+{% extends "layouts/auth.html" %}
 
-{% block title %}Ventas - DON GALLETO{% endblock %}
+{% block title %}Ventas - DON{% endblock %}
 
 {% block content %}
-<!-- Barra de búsqueda -->
 <form action="{{ url_for('controlador_venta.ventas') }}" method="get" class="mb-6">
     <div class="relative">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -15,7 +14,6 @@
     </div>
 </form>
 
-<!-- Tarjetas de galletas -->
 <div class="grid grid-cols-1 w-full gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
     {% for inventario in inventarios %}
     <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
@@ -45,8 +43,8 @@
 
 <!-- Mensaje si no hay resultados -->
 {% if inventarios|length == 0 %}
-<div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
-    <span class="font-medium">No se encontraron galletas</span> con el término de búsqueda "{{ busqueda }}".
+<div class="p-4 mb-4 text-sm text-[var(--color-chocolate-default)]" role="alert">
+    <span class="font-medium">No se encontraron galletas.</span>
 </div>
 {% endif %}
 {% endblock %}

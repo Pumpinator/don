@@ -1,25 +1,29 @@
 from flask import Flask
 from config import DevelopmentConfig
 from bd import bd
-from repositorio import *
-from modelo.usuario import Usuario
 from controlador.usuario import controlador as controlador_usuario
 from controlador.galleta import controlador as controlador_galleta
 from controlador.insumo import controlador as controlador_insumo
 from controlador.principal import controlador as controlador_principal
 from controlador.venta import controlador as controlador_venta
-from repositorio import *
-import pymysql
+from flask_login import LoginManager
+from servicio.usuario import UsuarioServicio
 
 app = Flask(__name__, static_folder='vista/static', template_folder='vista/templates')
 app.config.from_object(DevelopmentConfig)
 
-connection = pymysql.connect(host='localhost', user='root', password='password')
-cursor = connection.cursor()
-cursor.execute("CREATE DATABASE IF NOT EXISTS dongalleto")
-cursor.close()
-connection.close()
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'controlador_usuario.ingresar'
 
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        usuario_servicio = UsuarioServicio(bd)
+        usuario = usuario_servicio.obtener_usuario(id=user_id)
+        return usuario
+    except:
+        return None
 
 app.register_blueprint(controlador_principal)
 app.register_blueprint(controlador_usuario)
