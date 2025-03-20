@@ -35,7 +35,7 @@ def registrar():
         if form.validate():
             usuario_servicio = UsuarioServicio(bd)
             try:
-                usuario = usuario_servicio.crear_usuario(form)
+                usuario = usuario_servicio.registrar_usuario(form)
                 login_user(usuario)
                 flash("Registro exitoso!", "success")
                 return redirect(url_for('controlador_principal.index'))

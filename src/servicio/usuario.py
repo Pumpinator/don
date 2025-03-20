@@ -18,7 +18,7 @@ class UsuarioServicio:
             return self.bd.session.query(Usuario).join(Rol).filter(Usuario.email == correo).first()
         return None
 
-    def crear_usuario(self, form):
+    def registrar_usuario(self, form):
         nombre = form.nombre.data
         email = form.email.data
         password = form.password.data
@@ -26,8 +26,10 @@ class UsuarioServicio:
         if self.obtener_usuario(correo=email):
             raise ValueError("El correo ya se encuentra registrado.")
         
+        rol = self.bd.session.query(Rol).filter(Rol.nombre == "COMPRADOR").first()
+            
         hashed = generate_password_hash(password)
-        usuario = Usuario(nombre=nombre, email=email, password=hashed, rol_id=1)
+        usuario = Usuario(nombre=nombre, email=email, password=hashed, rol_id=rol.id)
         
         self.bd.session.add(usuario)
         self.bd.session.commit()
