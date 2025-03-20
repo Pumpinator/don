@@ -212,3 +212,4 @@ VALUES ('2021-01-01', @receta_chispas_chocolate, 1);
 
 INSERT INTO galletas_inventarios (produccion_id, galleta_id, fecha_expiracion, costo, cantidad, medida_id)
 VALUES (1, 1, '2022-01-01', FLOOR(@receta_chispas_chocolate * 100), 100, 3);
+
