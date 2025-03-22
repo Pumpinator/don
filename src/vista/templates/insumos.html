@@ -22,6 +22,7 @@
 
     <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
         {% for insumo in insumos %}
+        {% set inventario = insumo.inventario %}
 
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
     shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
@@ -30,13 +31,13 @@
                     <div>
                         <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 
                     font-bold tracking-tight text-gray-900 dark:text-black">
-                            {{ insumo }}</h7>
+                            {{ insumo.nombre }}</h7>
                         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
                     </div>
                     <div class="justify-self-end ">
                         <h7
                             class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
-                            20</h7>
+                            {{inventario.cantidad}}</h7>
                         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
                     </div>
                 </div>
