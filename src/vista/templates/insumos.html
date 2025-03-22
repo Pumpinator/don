@@ -20,25 +20,32 @@
         </div>
     </form><br>
 
-    <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 ">
-        {% for insumo in insumos %}
-        {% set inventario = insumo.inventario %}
+    <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 p-10">
+        {% for inventario in inventarios %}
+
+        {% set insumo = insumos | selectattr('id', 'equalto', inventario.insumo_id) | first %}
+        {% set medida = medidas | selectattr('id', 'equalto', inventario.medida_id) | first %}
 
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
-    shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
             <a href="#">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>
                         <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 
                     font-bold tracking-tight text-gray-900 dark:text-black">
                             {{ insumo.nombre }}</h7>
+                        {%if inventario.cantidad > 0%}
                         <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
+                        {%else%}
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Agotado</p>
+                        {%endif%}
                     </div>
                     <div class="justify-self-end ">
                         <h7
                             class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
-                            {{inventario.cantidad}}</h7>
-                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
+                            {{ inventario.cantidad }}
+                        </h7>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{medida.nombre}}</p>
                     </div>
                 </div>
             </a>
@@ -49,7 +56,7 @@
         function filterInsumos() {
             const searchInput = document.getElementById('simple-search').value.toLowerCase();
             const insumos = document.querySelectorAll('.insumo-item');
-    
+
             insumos.forEach(insumo => {
                 const insumoText = insumo.textContent.toLowerCase();
                 if (insumoText.includes(searchInput)) {
@@ -61,4 +68,4 @@
         }
     </script>
 </div>
-    {% endblock %}
+{% endblock %}
