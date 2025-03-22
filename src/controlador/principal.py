@@ -103,3 +103,7 @@ def reportes():
 @trabajador_permission.require(http_exception=403)
 def clientes():
     return render_template('catalogo_cliente.html') 
+
+@controlador.route('/menu')
+def menu():
+    return render_template('menu.html') 

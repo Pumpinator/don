@@ -1,0 +1,13 @@
+{% if current_user.is_authenticated %}
+{% extends "layouts/auth.html" %}
+{% endif %}
+
+{% if current_user.is_anonymous %}
+{% extends "layouts/guest.html" %}
+{% endif %}
+
+{% block title %}Inicio - DON{% endblock %}
+
+{% block content %}
+Menú
+{% endblock %}
