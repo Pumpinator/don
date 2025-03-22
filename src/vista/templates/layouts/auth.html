@@ -43,6 +43,7 @@
         {% endblock %}
     </main>
 
+    {% if current_user.roles[0] == 'TRABAJADOR' %}
     <nav class="bg-white border-t border-gray-200">
         <div class="flex justify-around">
             <a href="{{ url_for('controlador_principal.index') }}"
@@ -75,6 +76,7 @@
             </a>
         </div>
     </nav>
+    {% endif %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}

@@ -9,7 +9,7 @@
 {% block title %}Inicio - DON{% endblock %}
 
 {% block content %}
-{% if current_user.is_authenticated %}
+{% if current_user.is_authenticated and current_user.roles[0] == 'TRABAJADOR' %}
 <div class="space-y-6">
     <a href="{{ url_for('controlador_principal.produccion') }}"
         class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
@@ -44,7 +44,7 @@
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="#"
+            <a href="{{ url_for('controlador_principal.menu') }}"
                 class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
@@ -53,6 +53,51 @@
                 Accede a tu Cuenta
             </a>
         </div>
+    </div>
+</div>
+{% endif %}
+
+{% if current_user.is_authenticated and current_user.roles[0] == 'COMPRADOR' %}
+<div class="flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-lg p-6">
+        <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
+        <p class="text-gray-600 text-center mt-2">
+            Ordena tus galletas favoritas y recógelas en sucursal.
+        </p>
+        <div class="mt-6">
+            <a href="{{ url_for('controlador_principal.menu') }}"
+                class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+                Ver el Menú
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% if current_user.is_authenticated and current_user.roles[0] == 'ADMIN' %}
+<div class="space-y-6 px-6">
+    <a href="{{ url_for('controlador_usuario.usuarios') }}"
+        class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
+        <p class="text-gray-500 text-3xl">
+            <i class="fas fa-users"></i>
+        </p>
+    </a>
+
+    <!-- Contenedores secundarios -->
+    <div class="grid grid-cols-2 gap-4">
+        <a href="#"
+        class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
+        <p class="text-gray-500 text-3xl">
+            <i class="fas fa-chart-line"></i>
+        </p>
+        <a href="#"
+            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
+            <p class="text-gray-500 text-3xl">
+                <i class="fas fa-key"></i>
+            </p>
+        </a>
+    </a>
     </div>
 </div>
 {% endif %}
