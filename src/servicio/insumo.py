@@ -1,4 +1,9 @@
 from modelo.insumo import Insumo
 
-def obtener_insumos():
-    return Insumo.query.all()
+class InsumoServicio:
+    
+    def __init__ (self, bd):
+        self.bd=bd
+    
+    def obtener_insumos():
+        return Insumo.query.all()
