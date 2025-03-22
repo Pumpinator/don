@@ -22,12 +22,23 @@
                 <div class="p-3">Medida</div>
                 <div class="p-3">Cantidad</div>
             </div>
-            <div class="grid grid-cols-4 mt-2 p-3 rounded-lg">
-                <div class="p-3">Insumos</div>
-                <div class="p-3">Harina</div>
-                <div class="p-3">Kilogramos</div>
-                <div class="p-3">1</div>
+            {% for merma in mermas %}
+            <div class="grid grid-cols-4 mt-2 p-3 rounded-lg bg-white">
+                <div class="p-3">
+                    {% if merma.insumo %} Insumo {% elif merma.galleta %} Galleta {% elif merma.produccion %} Producción {% else %} Sin tipo {% endif %}
+                </div>
+
+                <div class="p-3">
+                    {% if merma.insumo %} {{ merma.insumo.nombre }} {% else %} N/A {% endif %}
+                </div>
+
+                <div class="p-3">
+                    {% if merma.insumo %} kg {% elif merma.galleta %} unidades {% else %} N/A {% endif %}
+                </div>
+
+                <div class="p-3">{{ merma.total }}</div>
             </div>
+            {% endfor %}
         </div>
 
         <div class="mt-6 bg-gray-200 p-6 flex justify-center items-center rounded-lg cursor-pointer hover:bg-gray-300">
