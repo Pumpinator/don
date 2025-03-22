@@ -80,11 +80,11 @@ def recetas():
 def mermas():
     return render_template('mermas.html')
 
-@controlador.route('/agregarMerma')
+@controlador.route('/agregar_merma')
 @login_required
 @trabajador_permission.require(http_exception=403)
 def agregarMerma():
-    return render_template('agregarMerma.html')
+    return render_template('agregar_merma.html')
 
 @controlador.route('/produccion')
 @login_required
