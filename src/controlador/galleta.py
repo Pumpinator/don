@@ -17,4 +17,5 @@ comprador_permission = Permission(RoleNeed('COMPRADOR'))
 def galletas():
     servicio = GalletaServicio(bd)
     galletas = servicio.obtener_galletas()
-    return render_template('galletas.html', galletas=galletas)
+    inventarios = servicio.obtener_inventarios()
+    return render_template('galletas.html', galletas=galletas, inventarios=inventarios)
