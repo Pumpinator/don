@@ -49,6 +49,11 @@ SET @costo_coco = @precio_coco * @inventario_coco;
 
 SET @peso_galleta = 0.045;
 
+INSERT INTO roles (nombre)
+VALUES ('ADMIN'),
+       ('TRABAJADOR'),
+       ('COMPRADOR');
+
 INSERT INTO medidas (nombre)
 VALUES ('Kilogramo'),
        ('Litro'),
