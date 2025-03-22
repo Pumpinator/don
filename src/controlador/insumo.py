@@ -12,8 +12,10 @@ comprador_permission = Permission(RoleNeed('COMPRADOR'))
 
 @controlador.route('/insumos')
 @login_required
-@comprador_permission.require(http_exception=403)
+@trabajador_permission.require(http_exception=403)
 def insumos():
     insumo_servicio = InsumoServicio(bd)
+    medidas = insumo_servicio.obtener_medidas()
     insumos = insumo_servicio.obtener_insumos()
-    return render_template('insumos.html', insumos=insumos)
+    inventarios = insumo_servicio.obtener_inventario_insumos()
+    return render_template('insumos.html', inventarios=inventarios, insumos=insumos, medidas=medidas)
