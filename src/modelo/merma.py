@@ -9,6 +9,9 @@ class Merma(Medible, bd.Model):
     
     id = bd.Column(bd.Integer, primary_key=True)
     total = bd.Column(bd.Float, nullable=False)
+    cantidad = bd.Column(bd.Float, nullable=False)  
+    medida_id = bd.Column(bd.Integer, bd.ForeignKey('medidas.id'), nullable=False)
+    medida = bd.relationship('Medida', backref='mermas')  
     
     produccion_id = bd.Column(bd.Integer, bd.ForeignKey('producciones.id'), nullable=True)
     produccion = bd.relationship(Produccion, backref='mermas')
