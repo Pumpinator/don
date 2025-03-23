@@ -5,6 +5,7 @@ from formularios.registro import RegistroForm
 from bd import bd
 from flask_login import login_user, logout_user, login_required
 from flask_principal import Permission, RoleNeed, Identity, identity_changed, current_app, AnonymousIdentity
+from modelo.merma import Merma
 
 controlador = Blueprint('controlador_principal', __name__)
 
@@ -74,11 +75,12 @@ def compras():
 def recetas():
     return render_template('recetas.html')
 
-@controlador.route('/mermas')
+@controlador.route('/mermas',methods=['GET','POST'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def mermas():
-    return render_template('mermas.html')
+    mermas=Merma.query.all()
+    return render_template('mermas.html',mermas=mermas)
 
 @controlador.route('/agregar_merma')
 @login_required
