@@ -137,7 +137,7 @@ def agregar_merma():
 
 @controlador.route('/produccion')
 @login_required
-@admin_permission.require(http_exception=403)
+@trabajador_permission.require(http_exception=403)
 def produccion():
 	return render_template('produccion.html')
 
