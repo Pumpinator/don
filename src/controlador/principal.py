@@ -12,6 +12,7 @@ controlador = Blueprint('controlador_principal', __name__)
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 comprador_permission = Permission(RoleNeed('COMPRADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route("/")
 def index():
@@ -90,7 +91,7 @@ def agregarMerma():
 
 @controlador.route('/produccion')
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def produccion():
 	return render_template('produccion.html')
 
