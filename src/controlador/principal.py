@@ -87,6 +87,7 @@ def mermas():
     mermas=Merma.query.all()
     return render_template('mermas.html',mermas=mermas)
 
+
 @controlador.route('/agregar_merma', methods=['GET', 'POST'])
 @login_required
 @trabajador_permission.require(http_exception=403)
