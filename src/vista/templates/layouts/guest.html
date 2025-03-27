@@ -14,7 +14,7 @@
 <body class="flex flex-col h-screen">
     <header class="bg-[var(--color-dirt-default)] text-white p-4 flex justify-between items-center">
         <div class="w-8"></div>
-        <a href="{{ url_for('controlador_principal.index') }}" class="cursor-pointer">
+        <a href="{{ url_for('principal.index') }}" class="cursor-pointer">
             <img src="{{url_for('static',filename='img/logo.png')}}" alt="Logo" class="w-16">
         </a>
 
@@ -23,7 +23,7 @@
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </a>
-            <a href="{{url_for('controlador_principal.ingresar')}}"
+            <a href="{{url_for('principal.ingresar')}}"
                 class="hover:text-gray-200 cursor-pointer">
                 <i class="fas fa-user text-xl"></i>
             </a>

@@ -4,7 +4,7 @@
 
 {% block content %}
 <div>
-    <form class="max-w-md mx-auto">
+    <form class="max-w-md mx-auto p-6">
         <div class="relative">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="none"
@@ -20,10 +20,12 @@
         </div>
     </form><br>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
-        {% for galleta in galletas %}
+    <div class=" p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
+        {% for inv in inventarios %}
 
-        <div class="galleta-item bg-white border border-gray-200 rounded-lg 
+        
+
+        <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
             <a href="#">
                 <img class="rounded-t-lg w-50 md:w-full md:h-110 object-cover" src="../static/img/{{ galleta }}.png"
@@ -33,13 +35,17 @@
                 <div>
                     <h7 class="mb-2 md:text-2xl lg:text-2xl
                      text-lg font-bold tracking-tight text-gray-900 dark:text-black">
-                        {{ galleta }}</h7>
+                        {{ inv.galleta }}</h7>
+                        {%if inv.cantidad > 0 %}
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
+                    {%else%}
+                    <p class="mb-3 font-normal text-red-200 dark:text-red-400">Agotado</p>
+                    {%endif%}
                 </div>
                 <div class="justify-self-end ">
                     <h7
                         class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
-                        20</h7>
+                        {{inv.cantidad}}</h7>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
                 </div>
             </div>

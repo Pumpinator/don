@@ -11,7 +11,7 @@
 {% block content %}
 {% if current_user.is_authenticated and current_user.roles[0] == 'TRABAJADOR' %}
 <div class="space-y-6">
-    <a href="{{ url_for('controlador_principal.produccion') }}"
+    <a href="{{ url_for('principal.produccion.produccion') }}"
         class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
         <p class="text-gray-500 text-3xl">
             <i class="fas fa-cogs"></i>
@@ -20,13 +20,13 @@
 
     <!-- Contenedores secundarios -->
     <div class="grid grid-cols-2 gap-4">
-        <a href="{{ url_for('controlador_venta.ventas') }}"
+        <a href="{{ url_for('principal.venta.ventas') }}"
             class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
             <p class="text-gray-500 text-3xl">
                 <i class="fas fa-store"></i>
             </p>
         </a>
-        <a href="{{ url_for('controlador_principal.reportes') }}"
+        <a href="{{ url_for('principal.reportes.reportes') }}"
             class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
             <p class="text-gray-500 text-3xl">
                 <i class="fas fa-chart-line"></i>
@@ -44,11 +44,11 @@
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('controlador_principal.menu') }}"
+            <a href="#"
                 class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
-            <a href="{{ url_for('controlador_principal.ingresar') }}"
+            <a href="{{ url_for('principal.ingresar') }}"
                 class="block bg-gray-200 text-gray-800 text-center py-2 px-4 rounded-lg mt-4 hover:bg-gray-300">
                 Accede a tu Cuenta
             </a>
@@ -65,7 +65,7 @@
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('controlador_principal.menu') }}"
+            <a href="#"
                 class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
@@ -77,7 +77,7 @@
 
 {% if current_user.is_authenticated and current_user.roles[0] == 'ADMIN' %}
 <div class="space-y-6 px-6">
-    <a href="{{ url_for('controlador_usuario.usuarios') }}"
+    <a href="{{ url_for('principal.usuario.listar_usuarios', rol='administradores') }}"
         class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
         <p class="text-gray-500 text-3xl">
             <i class="fas fa-users"></i>

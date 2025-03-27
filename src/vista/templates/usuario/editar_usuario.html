@@ -1,0 +1,132 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Editar Usuario - {{ usuario.nombre }}{% endblock %}
+
+{% block header %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Editar Usuario</h2>
+    <form action="{{ url_for('principal.usuario.editar_usuario', rol=rol, id=usuario.id) }}" method="POST"
+      class="space-y-5" novalidate>
+      {{ form.csrf_token() }}
+      {{ form.id() }}
+      <div>
+        {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.nombre(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Tu nombre") }}
+        {% if form.nombre.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.nombre.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.email.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.email(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="correo@don.mx") }}
+        {% if form.email.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.email.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.password(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Nueva Contraseña")
+        }}
+        {% if form.password.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.password.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.confirm_password(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Confirmar Contraseña") }}
+        {% if form.confirm_password.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.confirm_password.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <div>
+        {{ form.rol.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.rol(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]") }}
+        {% if form.rol.errors %}
+        <p class="mt-1 text-sm text-red-600">{{ form.rol.errors[0] }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit"
+        class="w-full cursor-pointer bg-[var(--color-dirt-default)] text-white font-semibold py-2 px-4 rounded-md border border-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-dark)] focus:ring-[var(--color-dirt-light)]">
+        Actualizar
+      </button>
+
+    </form>
+    {% if usuario.estatus %}
+    <button data-modal-target="popup-modal-desactivar" data-modal-toggle="popup-modal-desactivar" type="button"
+      class="w-full mt-4 cursor-pointer bg-white text-[var(--color-red-default)] font-semibold py-2 px-4 rounded-md border border-[var(--color-red-default)] hover:text-white hover:bg-[var(--color-red-default)] focus:ring-[var(--color-red-default)]">
+      Desactivar
+    </button>
+    {% endif %}
+    {% if not usuario.estatus %}
+    <button data-modal-target="popup-modal-activar" data-modal-toggle="popup-modal-activar" type="button"
+      class="w-full mt-4 cursor-pointer bg-white text-green-500 font-semibold py-2 px-4 rounded-md border border-green-500 hover:text-white hover:bg-green-500 focus:ring-green-500">
+      Activar
+    </button>
+    {% endif %}
+
+    <!-- Desactivar Modal -->
+    <div id="popup-modal-desactivar" tabindex="-1"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+      <div class="relative p-4 w-full max-w-md">
+        <div class="relative bg-white rounded-lg shadow-sm p-6">
+          <div class="text-center">
+            <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro de que deseas desactivar este usuario?</h3>
+            <form id="form-desactivar"
+              action="{{ url_for('principal.usuario.desactivar_usuario', rol=rol, id=usuario.id) }}" method="POST">
+              {{ form.csrf_token() }}
+              <button type="submit" data-modal-hide="popup-modal-desactivar"
+                class="w-full cursor-pointer text-white bg-[var(--color-red-default)] hover:bg-[var(--color-red-dark)] font-medium rounded-lg text-sm px-5 py-2.5">
+                Sí
+              </button>
+            </form>
+            <button data-modal-hide="popup-modal-desactivar" type="button"
+              class="mt-3 w-full cursor-pointer text-sm font-medium text-[var(--color-dirt-default)] bg-white rounded-lg px-5 py-2.5">
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activar Modal -->
+    <div id="popup-modal-activar" tabindex="-1"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center overflow-y-auto">
+      <div class="relative p-4 w-full max-w-md">
+        <div class="relative bg-white rounded-lg shadow-sm p-6">
+          <div class="text-center">
+            <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro de que deseas activar este usuario?</h3>
+            <form id="form-activar"
+              action="{{ url_for('principal.usuario.activar_usuario', rol=rol, id=usuario.id) }}" method="POST">
+              {{ form.csrf_token() }}
+              <button type="submit" data-modal-hide="popup-modal-desactivar"
+                class="w-full cursor-pointer text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-5 py-2.5">
+                Sí
+              </button>
+            </form>
+            <button data-modal-hide="popup-modal-activar" type="button"
+              class="mt-3 w-full cursor-pointer text-sm font-medium text-[var(--color-dirt-default)] bg-white rounded-lg px-5 py-2.5">
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Include Flowbite JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+  </div>
+</div>
+{% endblock %}

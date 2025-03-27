@@ -1,0 +1,70 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Agregar Insumos - DON{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Agregar Insumo</h2>
+        <a class="p-3" href="{{ url_for('principal.insumo.insumos') }}">
+            <svg class="w-6 h-6 text-black-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 5H1m0 0 4 4M1 5l4-4" />
+            </svg>
+        </a>
+        <form action="{{ url_for('principal.insumo.crear_insumo') }}" method="post" class="space-y-5" novalidate>
+            {{ form.csrf_token() }}
+            <div>
+                {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.nombre(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]", placeholder="Insumo")
+                }}
+                {% if form.nombre.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.nombre.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.unidad_medida.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.unidad_medida(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]",
+                placeholder="Seleccionar") }}
+                {% if form.unidad_medida.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.unidad_medida.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.costo.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.costo(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]",
+                placeholder="Costo") }}
+                {% if form.costo.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.costo.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.fecha_expiracion.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.fecha_expiracion(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]",
+                placeholder="Fecha") }}
+                {% if form.fecha_expiracion.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.fecha_expiracion.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.cantidad.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.cantidad(class="mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]",
+                placeholder="Cantidad") }}
+                {% if form.cantidad.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.cantidad.errors[0] }}</p>
+                {% endif %}
+            </div>
+            <button type="submit"
+                class="w-full bg-[var(--color-latte-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]">
+                Agregar
+            </button>
+        </form>
+    </div>
+</div>
+{%endblock%}

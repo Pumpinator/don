@@ -1,0 +1,58 @@
+{% extends "layouts/auth.html" %} {% block title %}Mermas - DON GALLETO{% endblock %} {% block content %}
+<p class="text-gray-500 text-lg font-semibold text-center">Agregar Merma</p>
+
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <main class="flex flex-col items-center px-6">
+        <form action="/agregar_merma" method="POST" class="w-full max-w-sm space-y-4">
+            <div>
+                <label class="block text-gray-700 font-bold">Tipo de Merma</label>
+                <select name="tipo" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
+                    <option value="">Seleccione...</option>
+                    <option value="insumo">Insumo</option>
+                    <option value="galleta">Galleta</option>
+                    <option value="produccion">Producción</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-bold">Insumo/Galleta/Producción</label>
+                <select name="item_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
+                    <option value="">Seleccione...</option>
+                    {% if insumos %}
+                    {% for insumo in insumos %}
+                        <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                    {% endfor %}
+                    {% else %}
+                        <option value="">No hay insumos disponibles</option>
+                    {% endif %}
+                    {% for galleta in galletas %}
+                        <option value="{{ galleta.id }}" data-tipo="galleta">{{ galleta.nombre }}</option>
+                    {% endfor %}
+                    {% for produccion in producciones %}
+                        <option value="{{ produccion.id }}" data-tipo="produccion">{{ produccion.descripcion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-bold">Medida</label>
+                <select name="medida_id" class="w-full p-3 rounded-2xl focus:outline-none" required>
+                    <option value="" disabled selected>Seleccione...</option>
+                    {% for medida in medidas %}
+                        <option value="{{ medida.id }}">{{ medida.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-bold">Cantidad</label>
+                <input type="number" name="cantidad" class="w-full p-3 rounded-2xl focus:outline-none" placeholder="Ingrese cantidad" required>
+            </div>
+
+            <div class="space-y-2">
+                <button type="button" onclick="window.location.href='/mermas'" class="w-full bg-gray-300 p-3 rounded-2xl">Cancelar</button>
+                <button type="submit" class="w-full bg-gray-300 p-3 rounded-2xl">Agregar</button>
+            </div>
+        </form>
+    </main>
+</body>
+{% endblock %}
