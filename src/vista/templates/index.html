@@ -11,7 +11,7 @@
 {% block content %}
 {% if current_user.is_authenticated and current_user.roles[0] == 'TRABAJADOR' %}
 <div class="space-y-6">
-    <a href="{{ url_for('principal.produccion') }}"
+    <a href="{{ url_for('principal.produccion.produccion') }}"
         class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
         <p class="text-gray-500 text-3xl">
             <i class="fas fa-cogs"></i>
@@ -26,7 +26,7 @@
                 <i class="fas fa-store"></i>
             </p>
         </a>
-        <a href="{{ url_for('principal.reportes') }}"
+        <a href="{{ url_for('principal.reportes.reportes') }}"
             class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
             <p class="text-gray-500 text-3xl">
                 <i class="fas fa-chart-line"></i>
@@ -44,7 +44,7 @@
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('principal.menu') }}"
+            <a href="#"
                 class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
@@ -65,7 +65,7 @@
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('principal.menu') }}"
+            <a href="#"
                 class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>

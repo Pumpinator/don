@@ -1,11 +1,14 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from bd import bd
-from controlador.usuario import controlador as controlador_usuario
+from controlador.compra import controlador as controlador_compra
 from controlador.galleta import controlador as controlador_galleta
 from controlador.insumo import controlador as controlador_insumo
 from controlador.merma import controlador as controlador_merma
+from controlador.produccion import controlador as controlador_produccion
+from controlador.receta import controlador as controlador_receta
+from controlador.reportes import controlador as controlador_reportes
+from controlador.usuario import controlador as controlador_usuario
 from controlador.venta import controlador as controlador_venta
-from controlador.error import controlador as controlador_error
 from servicio.usuario import UsuarioServicio
 from formularios.ingreso import IngresoForm
 from formularios.registro import RegistroForm
@@ -14,12 +17,15 @@ from flask_principal import current_app, identity_loaded, RoleNeed, UserNeed, Pe
 
 controlador = Blueprint('principal', __name__)
 
-controlador.register_blueprint(controlador_usuario)
+controlador.register_blueprint(controlador_compra)
 controlador.register_blueprint(controlador_galleta)
 controlador.register_blueprint(controlador_insumo)
 controlador.register_blueprint(controlador_merma)
+controlador.register_blueprint(controlador_produccion)
+controlador.register_blueprint(controlador_receta)
+controlador.register_blueprint(controlador_reportes)
+controlador.register_blueprint(controlador_usuario)
 controlador.register_blueprint(controlador_venta)
-controlador.register_blueprint(controlador_error)
 
 login_manager = LoginManager()
 login_manager.login_view = 'principal.ingresar'
@@ -78,41 +84,6 @@ def salir():
     identity_changed.send(current_app._get_current_object(), identity=AnonymousIdentity())
     return redirect(url_for('principal.index'))
 
-@controlador.route('/compras')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def compras():
-    return render_template('compras.html')
-
-@controlador.route('/recetas')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def recetas():
-    return render_template('recetas.html')
-
-
-@controlador.route('/produccion')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def produccion():
-	return render_template('produccion.html')
-
-@controlador.route('/reportes')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def reportes():
-	return render_template('reportes.html')
-
-@controlador.route('/clientes')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def clientes():
-    return render_template('catalogo_cliente.html') 
-
-@controlador.route('/menu')
-def menu():
-    return render_template('menu.html') 
-
 @identity_loaded.connect
 def on_identity_loaded(sender, identity):
     identity.user = current_user
@@ -134,3 +105,11 @@ def load_user(user_id):
         return usuario
     except Exception as e:
         return None
+
+@controlador.errorhandler(404)
+def page_not_found(error):
+    return render_template('errors/404.html'), 404
+
+@controlador.errorhandler(403)
+def forbidden(error):
+    return render_template('errors/403.html'), 403

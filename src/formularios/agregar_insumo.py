@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import BooleanField, StringField, FloatField, SelectField, DateField
 from wtforms.validators import InputRequired, Length
 
-class Agregar_Insumo(FlaskForm):
+class AgregarInsumo(FlaskForm):
     nombre = StringField('Nombre del insumo', validators=[InputRequired(
         message="El nombre es requerido.")
     ])

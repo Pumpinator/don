@@ -13,7 +13,7 @@
                     d="M13 5H1m0 0 4 4M1 5l4-4" />
             </svg>
         </a>
-        <form action="{{ url_for('principal.registrar') }}" method="post" class="space-y-5" novalidate>
+        <form action="{{ url_for('principal.insumo.crear_insumo') }}" method="post" class="space-y-5" novalidate>
             {{ form.csrf_token() }}
             <div>
                 {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}

@@ -19,3 +19,11 @@ class CocinaServicio:
     
     def obtener_galletas(self):
         return self.bd.session.query(Galleta).all()
+
+    def agregar_insumo(self, form):
+        nombre = form.nombre.data
+        medida = form.unidad_medida.data
+        costo = form.costo.data
+        fecha_expiracion = form.fecha_expiracion.data
+        cantidad = form.cantidad.form
+        return self.bd.session.query(Insumo).all()   

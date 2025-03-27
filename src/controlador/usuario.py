@@ -8,8 +8,6 @@ from flask_principal import Permission, RoleNeed
 controlador = Blueprint('usuario', __name__)
 
 admin_permission = Permission(RoleNeed('ADMIN'))
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
-comprador_permission = Permission(RoleNeed('COMPRADOR'))
 
 @controlador.route('/<rol>/nuevo', methods=['GET', 'POST'])
 @login_required
@@ -26,7 +24,7 @@ def crear_usuario(rol):
                 return redirect(url_for('usuario.usuarios', rol=rol))
             except ValueError as e:
                 flash(str(e), "danger")
-    return render_template('crear_usuario.html', form=form, rol=rol)
+    return render_template('usuario/crear_usuario.html', form=form, rol=rol)
 
 @controlador.route('/<rol>', methods=['GET'])
 @login_required
@@ -34,7 +32,7 @@ def crear_usuario(rol):
 def listar_usuarios(rol):
     usuario_servicio = UsuarioServicio(bd)
     usuarios_list = usuario_servicio.obtener_usuarios(rol=rol)
-    return render_template('usuarios.html', usuarios=usuarios_list, rol=rol)
+    return render_template('usuario/usuarios.html', usuarios=usuarios_list, rol=rol)
 
 @controlador.route('/<rol>/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -56,7 +54,7 @@ def editar_usuario(rol, id):
             return redirect(url_for('usuario.listar_usuarios', rol=rol))
         except ValueError as e:
             flash(str(e), "danger")
-    return render_template('editar_usuario.html', form=form, usuario=usuario, rol=rol)
+    return render_template('usuario/editar_usuario.html', form=form, usuario=usuario, rol=rol)
 
 @controlador.route('/<rol>/desactivar/<int:id>', methods=['POST'])
 @login_required
