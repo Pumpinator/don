@@ -5,7 +5,7 @@ from bd import bd
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
 
-controlador = Blueprint('controlador_insumo', __name__)
+controlador = Blueprint('insumo', __name__)
 
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
@@ -30,5 +30,5 @@ def crear_insumo():
         insumo_servicio = InsumoServicio(bd)
         insumo = insumo_servicio.agregar_insumo(request.form)
         flash("Insumo creado exitosamente.", "success")
-        return redirect(url_for('controlador_insumo.insumos'))
+        return redirect(url_for('insumo.insumos'))
     return render_template('agregar_insumo.html', form=form)

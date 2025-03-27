@@ -62,9 +62,55 @@ class UsuarioServicio:
 
     def validar_usuario(self, correo, password):
         usuario = self.obtener_usuario(correo=correo)
-        if usuario and check_password_hash(usuario.password, password):
-            return usuario
-        raise ValueError("Credenciales inválidas.")
+        if not usuario:
+            raise ValueError("Usuario no encontrado.")
+        if not check_password_hash(usuario.password, password):
+            raise ValueError("Credenciales inválidas.")
+        if not usuario.estatus:
+            raise ValueError("Usuario desactivado.")
+        return usuario
+    
+    def editar_usuario(self, form):
+        id= form.id.data
+        nombre = form.nombre.data
+        email = form.email.data
+        password = form.password.data
+        rol = form.rol.data
+        print(rol)
+        
+        usuario = self.obtener_usuario(id=id)
+        
+        if not usuario:
+            raise ValueError("Usuario no encontrado.")
+        
+        if email != usuario.email and self.obtener_usuario(correo=email):
+            raise ValueError("El correo ya se encuentra registrado.")
+        
+        if password:
+            usuario.password = generate_password_hash(password)
+        
+        usuario.nombre = nombre
+        usuario.email = email
+        usuario.rol_id = self.bd.session.query(Rol).filter(Rol.nombre == rol).first().id
+        
+        self.bd.session.commit()
+        return usuario
+    
+    def desactivar_usuario(self, id):
+        usuario = self.obtener_usuario(id=id)
+        if not usuario:
+            raise ValueError("Usuario no encontrado.")
+        usuario.estatus = False
+        self.bd.session.commit()
+        return usuario.estatus
+    
+    def activar_usuario(self, id):
+        usuario = self.obtener_usuario(id=id)
+        if not usuario:
+            raise ValueError("Usuario no encontrado.")
+        usuario.estatus = True
+        self.bd.session.commit()
+        return usuario.estatus
 
 def cast_role(role):
     mapping = {

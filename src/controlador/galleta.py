@@ -4,7 +4,7 @@ from bd import bd
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
 
-controlador = Blueprint('controlador_galleta', __name__)
+controlador = Blueprint('galleta', __name__)
 
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))

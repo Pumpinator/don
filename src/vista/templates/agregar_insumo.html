@@ -6,14 +6,14 @@
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white rounded-lg p-6">
         <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Agregar Insumo</h2>
-        <a class="p-3" href="{{ url_for('controlador_insumo.insumos') }}">
+        <a class="p-3" href="{{ url_for('principal.insumo.insumos') }}">
             <svg class="w-6 h-6 text-black-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 fill="none" viewBox="0 0 14 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 5H1m0 0 4 4M1 5l4-4" />
             </svg>
         </a>
-        <form action="{{ url_for('controlador_principal.registrar') }}" method="post" class="space-y-5" novalidate>
+        <form action="{{ url_for('principal.registrar') }}" method="post" class="space-y-5" novalidate>
             {{ form.csrf_token() }}
             <div>
                 {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}

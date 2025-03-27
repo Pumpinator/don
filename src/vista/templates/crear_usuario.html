@@ -10,7 +10,7 @@ Nuevo Usuario
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white rounded-lg p-6">
       <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Creación de {{ rol }}</h2>
-      <form action="{{ url_for('controlador_usuario.nuevo', rol=rol) }}" method="post" class="space-y-5" novalidate>
+      <form action="{{ url_for('principal.usuario.crear_usuario', rol=rol) }}" method="post" class="space-y-5" novalidate>
         {{ form.csrf_token() }}
         
         <div>
@@ -51,9 +51,8 @@ Nuevo Usuario
               <p class="mt-1 text-sm text-red-600">{{ form.rol.errors[0] }}</p>
             {% endif %}
           </div>
-        
         <button type="submit"
-                class="w-full bg-[var(--color-latte-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]">
+                class="w-full cursor-pointer bg-[var(--color-dirt-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]">
           Crear
         </button>
       </form>

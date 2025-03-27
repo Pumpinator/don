@@ -6,7 +6,7 @@ from servicio.galleta import GalletaServicio
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
 
-controlador = Blueprint('controlador_venta', __name__)
+controlador = Blueprint('venta', __name__)
 
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
@@ -22,5 +22,5 @@ def ventas():
     if form.validate():
         venta_servicio = VentaServicio(bd)
         venta_servicio.generar_venta(form.data)
-        return redirect(url_for('controlador_venta.ventas'))
+        return redirect(url_for('venta.ventas'))
     return render_template('ventas.html', form=form, inventarios=inventarios)
