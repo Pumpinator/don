@@ -17,55 +17,61 @@
         </div>
 
         <!-- Contenido de Insumos -->
-        <div id="insumos-content" class="mt-6 bg-gray-200 p-6 rounded-lg text-center">
-            <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
-                <div class="p-3">Tipo de merma</div>
-                <div class="p-3">Insumos</div>
-                <div class="p-3">Medida</div>
-                <div class="p-3">Cantidad</div>
-            </div>
+        <div id="insumos-content" class="mt-6 hidden">
             {% for merma in mermas if merma.insumo %}
-            <div class="grid grid-cols-4 mt-2 p-3 rounded-lg">
-                <div class="p-3">Insumo</div>
-                <div class="p-3">{{ merma.insumo.nombre }}</div>
-                <div class="p-3">{{ merma.medida.nombre }}</div>
-                <div class="p-3">{{ merma.total }}</div>
+            <div class="mb-4 bg-gray-200 p-6 rounded-lg shadow-md">
+                <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
+                    <div class="p-3">Tipo de merma</div>
+                    <div class="p-3">Insumos</div>
+                    <div class="p-3">Medida</div>
+                    <div class="p-3">Cantidad</div>
+                </div>
+                <div class="grid grid-cols-4 p-3 rounded-lg text-center">
+                    <div class="p-3">Insumo</div>
+                    <div class="p-3">{{ merma.insumo.nombre }}</div>
+                    <div class="p-3">{{ merma.medida.nombre }}</div>
+                    <div class="p-3">{{ merma.total }}</div>
+                </div>
             </div>
             {% endfor %}
         </div>
 
         <!-- Contenido de Galletas -->
-        <div id="galletas-content" class="mt-6 bg-gray-200 p-6 rounded-lg text-center hidden">
-            <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
-                <div class="p-3">Tipo de merma</div>
-                <div class="p-3">Galletas</div>
-                <div class="p-3">Medida</div>
-                <div class="p-3">Cantidad</div>
-            </div>
+        <div id="galletas-content" class="mt-6 hidden">
             {% for merma in mermas if merma.galleta %}
-            <div class="grid grid-cols-4 mt-2 p-3 rounded-lg">
-                <div class="p-3">Galleta</div>
-                <div class="p-3">{{ merma.galleta.nombre }}</div>
-                <div class="p-3">{{ merma.medida.nombre }}</div>
-                <div class="p-3">{{ merma.total }}</div>
+            <div class="mb-4 bg-gray-200 p-6 rounded-lg shadow-md">
+                <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
+                    <div class="p-3">Tipo de merma</div>
+                    <div class="p-3">Galletas</div>
+                    <div class="p-3">Medida</div>
+                    <div class="p-3">Cantidad</div>
+                </div>
+                <div class="grid grid-cols-4 p-3 rounded-lg text-center">
+                    <div class="p-3">Galleta</div>
+                    <div class="p-3">{{ merma.galleta.nombre }}</div>
+                    <div class="p-3">{{ merma.medida.nombre }}</div>
+                    <div class="p-3">{{ merma.total }}</div>
+                </div>
             </div>
             {% endfor %}
         </div>
 
         <!-- Contenido de Producción -->
-        <div id="produccion-content" class="mt-6 bg-gray-200 p-6 rounded-lg text-center hidden">
-            <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
-                <div class="p-3">Tipo de merma</div>
-                <div class="p-3">Producción</div>
-                <div class="p-3">Medida</div>
-                <div class="p-3">Cantidad</div>
-            </div>
+        <div id="produccion-content" class="mt-6 hidden">
             {% for merma in mermas if merma.produccion %}
-            <div class="grid grid-cols-4 mt-2 p-3 rounded-lg">
-                <div class="p-3">Producción</div>
-                <div class="p-3">{{ merma.produccion.descripcion }}</div>
-                <div class="p-3">{{ merma.medida.nombre }}</div>
-                <div class="p-3">{{ merma.total }}</div>
+            <div class="mb-4 bg-gray-200 p-6 rounded-lg shadow-md">
+                <div class="grid grid-cols-4 font-bold text-sm text-gray-700 text-center">
+                    <div class="p-3">Tipo de merma</div>
+                    <div class="p-3">Producción</div>
+                    <div class="p-3">Medida</div>
+                    <div class="p-3">Cantidad</div>
+                </div>
+                <div class="grid grid-cols-4 p-3 rounded-lg text-center">
+                    <div class="p-3">Producción</div>
+                    <div class="p-3">{{ merma.produccion.descripcion }}</div>
+                    <div class="p-3">{{ merma.medida.nombre }}</div>
+                    <div class="p-3">{{ merma.total }}</div>
+                </div>
             </div>
             {% endfor %}
         </div>
