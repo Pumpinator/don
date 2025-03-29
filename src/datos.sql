@@ -143,17 +143,17 @@ SET @receta_mantequilla = @precio_harina +
                           @precio_azucar +
                           @precio_mantequilla;
 
-INSERT INTO galletas (nombre, precio)
-VALUES ('Chispas de Chocolate', FLOOR(@peso_galleta * @receta_chispas_chocolate * @margen_ganancia)),
-       ('Avena', FLOOR(@peso_galleta * @receta_avena * @margen_ganancia)),
-       ('Nuez', FLOOR(@peso_galleta * @receta_nuez * @margen_ganancia)),
-       ('Pasas', FLOOR(@peso_galleta * @receta_pasas * @margen_ganancia)),
-       ('Fresa', FLOOR(@peso_galleta * @receta_fresa * @margen_ganancia)),
-       ('Mantequilla', FLOOR(@peso_galleta * @receta_mantequilla * @margen_ganancia)),
-       ('Chocolate con Avellana', FLOOR(@peso_galleta * @receta_chocolate_avellana * @margen_ganancia)),
-       ('Almendra', FLOOR(@peso_galleta * @receta_almendra * @margen_ganancia)),
-       ('Cacahuate', FLOOR(@peso_galleta * @receta_cacahuate * @margen_ganancia)),
-       ('Coco', FLOOR(@peso_galleta * @receta_coco * @margen_ganancia));
+INSERT INTO galletas (nombre, precio, imagen, medida_id)
+VALUES ('Chispas de Chocolate', FLOOR(@peso_galleta * @receta_chispas_chocolate * @margen_ganancia), 'chispas.png', 3),
+       ('Avena', FLOOR(@peso_galleta * @receta_avena * @margen_ganancia), 'avena.png', 3),
+       ('Nuez', FLOOR(@peso_galleta * @receta_nuez * @margen_ganancia), 'nuez.png', 3),
+       ('Pasas', FLOOR(@peso_galleta * @receta_pasas * @margen_ganancia), 'pasas.png', 3),
+       ('Fresa', FLOOR(@peso_galleta * @receta_fresa * @margen_ganancia), 'fresa.png', 3),
+       ('Mantequilla', FLOOR(@peso_galleta * @receta_mantequilla * @margen_ganancia), 'mantequilla.png', 3),
+       ('Chocolate con Avellana', FLOOR(@peso_galleta * @receta_chocolate_avellana * @margen_ganancia), 'avellana.png', 3),
+       ('Almendra', FLOOR(@peso_galleta * @receta_almendra * @margen_ganancia), 'almendra.png', 3),
+       ('Cacahuate', FLOOR(@peso_galleta * @receta_cacahuate * @margen_ganancia), 'cacahuate.png', 3),
+       ('Coco', FLOOR(@peso_galleta * @receta_coco * @margen_ganancia), 'coco.png', 3);
 
 INSERT INTO proveedores (nombre, contacto)
 VALUES ('Harinera Beleño', '477 391 0598'),
@@ -213,8 +213,26 @@ VALUES ('Chispas de Chocolate', 1),
        ('Coco', 10);
 
 INSERT INTO producciones (fecha, costo, receta_id)
-VALUES ('2021-01-01', @receta_chispas_chocolate, 1);
+VALUES ('2021-01-01', @receta_chispas_chocolate, 1),
+       ('2021-01-01', @receta_avena, 2),
+       ('2021-01-01', @receta_nuez, 3),
+       ('2021-01-01', @receta_pasas, 4),
+       ('2021-01-01', @receta_fresa, 5),
+       ('2021-01-01', @receta_mantequilla, 6),
+       ('2021-01-01', @receta_chocolate_avellana, 7),
+       ('2021-01-01', @receta_almendra, 8),
+       ('2021-01-01', @receta_cacahuate, 9),
+       ('2021-01-01', @receta_coco, 10);
 
 INSERT INTO galletas_inventarios (produccion_id, galleta_id, fecha_expiracion, costo, cantidad, medida_id)
-VALUES (1, 1, '2022-01-01', FLOOR(@receta_chispas_chocolate * 100), 100, 3);
+VALUES (1, 1, '2022-01-01', FLOOR(@receta_chispas_chocolate * 100), 100, 3),
+       (2, 2, '2022-01-01', FLOOR(@receta_avena * 100), 100, 3),
+       (3, 3, '2022-01-01', FLOOR(@receta_nuez * 100), 100, 3),
+       (4, 4, '2022-01-01', FLOOR(@receta_pasas * 100), 100, 3),
+       (5, 5, '2022-01-01', FLOOR(@receta_fresa * 100), 100, 3),
+       (6, 6, '2022-01-01', FLOOR(@receta_mantequilla * 100), 100, 3),
+       (7, 7, '2022-01-01', FLOOR(@receta_chocolate_avellana * 100), 100, 3),
+       (8, 8, '2022-01-01', FLOOR(@receta_almendra * 100), 100, 3),
+       (9, 9, '2022-01-01', FLOOR(@receta_cacahuate * 100), 100, 3),
+       (10, 10, '2022-01-01', FLOOR(@receta_coco * 100), 100, 3);
 

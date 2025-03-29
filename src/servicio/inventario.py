@@ -8,6 +8,9 @@ from sqlalchemy import func
 class InventarioServicio:
     def __init__ (self, bd):
         self.bd = bd
+        
+    def obtener_galleta(self, id):
+        return self.bd.session.query(Galleta).get(id)
 
     def obtener_galletas(self):
         resultados = (
