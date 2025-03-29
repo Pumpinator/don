@@ -28,7 +28,11 @@ class InventarioServicio:
         ]
         return inventarios
     
+
     def obtener_insumos(self):
+        return self.bd.session.query(Insumo).all()
+    
+    def obtener_insumos_inventarios(self):
         resultados = (
             self.bd.session
             .query(

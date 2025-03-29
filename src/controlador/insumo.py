@@ -10,16 +10,24 @@ controlador = Blueprint('insumo', __name__)
 
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 
+@controlador.route('/insumos_inventario')
+@login_required
+@trabajador_permission.require(http_exception=403)
+def insumos_inventario():
+    inventario_servicio = InventarioServicio(bd)
+    inventarios = inventario_servicio.obtener_insumos_inventarios()
+    rol = 'inventario'
+    return render_template('insumo/insumos.html',rol=rol, inventarios=inventarios)
+
+
 @controlador.route('/insumos')
 @login_required
 @trabajador_permission.require(http_exception=403)
 def insumos():
-    cocina_servicio = CocinaServicio(bd)
     inventario_servicio = InventarioServicio(bd)
-    medidas = cocina_servicio.obtener_medidas()
-    insumos = cocina_servicio.obtener_insumos()
-    inventarios = inventario_servicio.obtener_insumos()
-    return render_template('insumo/insumos.html', inventarios=inventarios, insumos=insumos, medidas=medidas)
+    insumos = inventario_servicio.obtener_insumos()
+    rol = 'insumos'
+    return render_template('insumo/insumos.html', rol=rol, insumos=insumos)
 
 @controlador.route('/insumos/crear', methods=['GET', 'POST'])
 @login_required
@@ -30,5 +38,5 @@ def crear_insumo():
         cocina_servicio = CocinaServicio(bd)
         insumo = cocina_servicio.agregar_insumo(request.form)
         flash("Insumo creado exitosamente.", "success")
-        return redirect(url_for('insumo.insumos'))
+        return redirect(url_for('principal.insumo.insumos'))
     return render_template('insumo/agregar_insumo.html', form=form)

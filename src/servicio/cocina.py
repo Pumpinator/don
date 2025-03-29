@@ -1,7 +1,9 @@
 from modelo.medida import Medida
 from modelo.insumo import Insumo
-from modelo.produccion import Produccion
+from modelo.insumo_inventario import InsumoInventario
 from modelo.galleta import Galleta
+from modelo.produccion import Produccion
+from sqlalchemy import func
 
 class CocinaServicio:
     
@@ -9,7 +11,23 @@ class CocinaServicio:
         self.bd=bd
         
     def obtener_insumos(self):
-        return self.bd.session.query(Insumo).all()
+        resultados = (
+            self.bd.session.query(
+                Insumo.nombre,
+                func.sum(InsumoInventario.cantidad).label("cantidad_total"),
+                InsumoInventario.medida
+            )
+            .join(Insumo, Insumo.id == InsumoInventario.insumo_id)
+            .join(Medida, InsumoInventario.medida_id == Medida.id)
+            .group_by(Insumo.nombre, InsumoInventario.medida)
+            .all()
+        )
+        inventarios = [
+            {"insumo": nombre, "cantidad": int(cantidad_total), "medida": medida} 
+            for nombre, cantidad_total, medida in resultados
+        ]
+
+        return inventarios
     
     def obtener_medidas(self):
         return self.bd.session.query(Medida).distinct().all()
@@ -21,9 +39,7 @@ class CocinaServicio:
         return self.bd.session.query(Galleta).all()
 
     def agregar_insumo(self, form):
-        nombre = form.nombre.data
-        medida = form.unidad_medida.data
-        costo = form.costo.data
-        fecha_expiracion = form.fecha_expiracion.data
-        cantidad = form.cantidad.form
-        return self.bd.session.query(Insumo).all()   
+        nombre = form.get('nombre')
+        insumo = Insumo(nombre = nombre)
+        self.bd.session.add(insumo)  
+        self.bd.session.commit()

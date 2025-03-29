@@ -13,8 +13,6 @@ trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 @login_required
 @trabajador_permission.require(http_exception=403)
 def galletas():
-    cocina_servicio = CocinaServicio(bd)
     inventario_servicio = InventarioServicio(bd)
-    galletas = cocina_servicio.obtener_galletas()
     inventarios = inventario_servicio.obtener_galletas()
-    return render_template('galletas.html', galletas=galletas, inventarios=inventarios)
+    return render_template('galletas.html', inventarios=inventarios)
