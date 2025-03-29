@@ -16,7 +16,7 @@ trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 def mermas():
     merma_servicio = MermaServicio(bd)
     mermas = merma_servicio.obtener_mermas() # Obtiene todas las mermas mediante un método del servicio
-    return render_template('merma/mermas.html')
+    return render_template('merma/mermas.html',mermas=mermas)
 
 # '/agregar_merma' nombre modificado a '/merma/agregar' para seguir la convención de rutas
 @controlador.route('/merma/agregar', methods=['GET', 'POST'])
@@ -32,10 +32,10 @@ def agregar_merma():
         except ValueError as e:
             flash(str(e), "danger")
 
-        return redirect(url_for('principal.mermas'))
+        return redirect(url_for('principal.merma.mermas'))
 
     insumos = cocina_servicio.obtener_insumos()
     galletas = cocina_servicio.obtener_galletas()
     producciones = cocina_servicio.obtener_producciones()
     medidas = cocina_servicio.obtener_medidas()
-    return render_template('merma/agregar_merma.html', insumos=insumos, galletas=galletas, producciones=producciones, medidas=medidas)
+    return render_template('merma/agregar.html', insumos=insumos, galletas=galletas, producciones=producciones, medidas=medidas)

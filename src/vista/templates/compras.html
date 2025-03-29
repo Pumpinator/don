@@ -3,5 +3,86 @@
 {% block title %}Compras - DON{% endblock %}
 
 {% block content %}
-<p class="text-gray-500">Compras y proveedores</p>
+<div class="container mx-auto px-4 py-6">
+        <!-- Barra de búsqueda -->
+        <form class="max-w-md mx-auto mt-6">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                </div>
+                <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 
+                focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Búsqueda" required oninput="filterComprasProveedores()" />
+            </div>
+        </form>
+    
+    <!-- Pestañas -->
+    <div class="flex justify-center mt-6">
+        <div class="flex bg-gray-100 rounded-full p-1">
+            <button id="compras-tab" onclick="showTab('compras')" class="px-6 py-2 text-sm font-medium text-gray-700 bg-white rounded-full shadow">
+                Compras
+            </button>
+            <button id="proveedores-tab" onclick="showTab('proveedores')" class="px-6 py-2 text-sm font-medium text-gray-700 rounded-full">
+                Proveedores
+            </button>
+        </div>
+    </div>
+    <!-- Botón para agregar insumos -->
+    <div class="mt-6 bg-gray-200 p-6 flex justify-center items-center rounded-lg cursor-pointer hover:bg-gray-300">
+        <a href="{{ url_for('principal.insumo.crear_insumo') }}" class="flex justify-center items-center w-full h-full">
+            <span class="text-2xl">+</span>
+        </a>
+    </div>
+
+    <!-- Contenedor de compras -->
+    <div id="compras-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {% for compra in compras %}
+        <div class="bg-gray-100 border border-gray-200 rounded-lg shadow-sm p-4">
+            <h3 class="text-lg font-bold text-gray-800">{{ compra.insumo.nombre }}</h3>
+            <p class="text-sm text-gray-600 mt-2">Proveedor: {{ compra.proveedor.nombre }}</p>
+            <p class="text-sm text-gray-600 mt-2">Total: {{ compra.total }}</p>
+            <p class="text-sm text-gray-600 mt-2">Cantidad: {{ compra.cantidad }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Contenedor de proveedores (oculto por defecto) -->
+    <div id="proveedores-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    </div>
+<script>
+function showTab(tab) {
+    const comprasTab = document.getElementById('compras-tab');
+    const proveedoresTab = document.getElementById('proveedores-tab');
+    const comprasContainer = document.getElementById('compras-container');
+    const proveedoresContainer = document.getElementById('proveedores-container');
+
+    if (tab === 'compras') {
+        proveedoresTab.classList.add('bg-white', 'shadow');
+        comprasTab.classList.remove('bg-white', 'shadow');
+        comprasContainer.classList.remove('hidden');
+        proveedoresContainer.classList.add('hidden');
+    } else if (tab === 'proveedores') {
+        comprasTab.classList.add('bg-white', 'shadow');
+        proveedoresTab.classList.remove('bg-white', 'shadow');
+        proveedoresContainer.classList.remove('hidden');
+        comprasContainer.classList.add('hidden');
+    }
+}
+
+function filterRecetas() {
+    const searchInput = document.getElementById('simple-search').value.toLowerCase();
+    const recetas = document.querySelectorAll('#recetas-container > div');
+
+    recetas.forEach(receta => {
+        const recetaText = receta.textContent.toLowerCase();
+        if (recetaText.includes(searchInput)) {
+            receta.style.display = '';
+        } else {
+            receta.style.display = 'none';
+        }
+    });
+}
+</script>
 {% endblock %}

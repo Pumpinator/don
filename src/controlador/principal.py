@@ -33,6 +33,7 @@ login_manager.login_view = 'principal.ingresar'
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 comprador_permission = Permission(RoleNeed('COMPRADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route("/")
 def index():
@@ -109,6 +110,28 @@ def load_user(user_id):
 @controlador.errorhandler(404)
 def page_not_found(error):
     return render_template('errors/404.html'), 404
+
+@controlador.route('/produccion')
+@login_required
+@admin_or_trabajador_permission.require(http_exception=403)
+def produccion():
+	return render_template('produccion.html')
+
+@controlador.route('/reportes')
+@login_required
+@trabajador_permission.require(http_exception=403)
+def reportes():
+	return render_template('reportes.html')
+
+@controlador.route('/clientes')
+@login_required
+@trabajador_permission.require(http_exception=403)
+def clientes():
+    return render_template('catalogo_cliente.html') 
+
+@controlador.route('/menu')
+def menu():
+    return render_template('menu.html') 
 
 @controlador.errorhandler(403)
 def forbidden(error):
