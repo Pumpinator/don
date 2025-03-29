@@ -62,13 +62,16 @@
             </a>
         </div>
         {% endfor %}
+        
         {%else%}
-        {% for insumo in insumos %}
 
+
+
+        {% for insumo in insumos %}
         {%set id = insumo.id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
-            <a href="{{ url_for('principal.insumo.insumos_editar', id=id) }}">
+            <a href="{{ url_for('principal.insumo.insumos_editar', insumo_id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>
                         <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 

@@ -26,7 +26,6 @@ class CocinaServicio:
             {"insumo": nombre, "cantidad": int(cantidad_total), "medida": medida} 
             for nombre, cantidad_total, medida in resultados
         ]
-
         return inventarios
     
     def obtener_medidas(self):
