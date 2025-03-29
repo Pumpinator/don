@@ -111,20 +111,6 @@ def load_user(user_id):
 def page_not_found(error):
     return render_template('errors/404.html'), 404
 
-<<<<<<< HEAD
-@controlador.route('/mermas',methods=['GET','POST'])
-@login_required
-@trabajador_permission.require(http_exception=403)
-def mermas():
-    mermas=Merma.query.all()
-    return render_template('mermas.html',mermas=mermas)
-
-@controlador.route('/agregar_merma')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def agregarMerma():
-    return render_template('agregar_merma.html')
-
 @controlador.route('/produccion')
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
@@ -146,8 +132,7 @@ def clientes():
 @controlador.route('/menu')
 def menu():
     return render_template('menu.html') 
-=======
+
 @controlador.errorhandler(403)
 def forbidden(error):
     return render_template('errors/403.html'), 403
->>>>>>> 915c88a72e47495dea5d9593218cecb790f53421

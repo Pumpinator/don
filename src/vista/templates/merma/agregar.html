@@ -3,7 +3,7 @@
 
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between">
     <main class="flex flex-col items-center px-6">
-        <form action="/agregar_merma" method="POST" class="w-full max-w-sm space-y-4">
+        <form href="{{ url_for('principal.merma.agregar_merma') }}" method="POST" class="w-full max-w-sm space-y-4">
             <div>
                 <label class="block text-gray-700 font-bold">Tipo de Merma</label>
                 <select name="tipo" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">

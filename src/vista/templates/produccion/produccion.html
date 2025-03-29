@@ -57,11 +57,13 @@
 
 <script>
     function showTab(tab) {
+        // Obtén los elementos de las pestañas y los contenedores
         const recetasTab = document.getElementById('recetas-tab');
         const horneadoTab = document.getElementById('horneado-tab');
         const recetasContainer = document.getElementById('recetas-container');
         const horneadoContainer = document.getElementById('horneado-container');
 
+        // Cambia entre las pestañas
         if (tab === 'recetas') {
             recetasTab.classList.add('bg-white', 'shadow');
             horneadoTab.classList.remove('bg-white', 'shadow');

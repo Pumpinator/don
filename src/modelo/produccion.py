@@ -7,6 +7,6 @@ class Produccion(bd.Model):
     id = bd.Column(bd.Integer, primary_key=True)
     fecha = bd.Column(bd.Date, nullable=False)
     costo = bd.Column(bd.Float, nullable=False)
-    
+    estatus = bd.Column(bd.Integer, nullable=False)
     receta_id = bd.Column(bd.Integer, bd.ForeignKey('recetas.id'), nullable=False)
     receta = bd.relationship(Receta, backref='producciones')
