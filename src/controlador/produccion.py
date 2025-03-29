@@ -30,6 +30,6 @@ trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 
 @controlador.route('/produccion', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def produccion():
     return render_template('produccion.html')
