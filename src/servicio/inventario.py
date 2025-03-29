@@ -32,21 +32,46 @@ class InventarioServicio:
     def obtener_insumos(self):
         return self.bd.session.query(Insumo).all()
     
+    def obtener_insumo(self, id):
+        return self.bd.session.query(Insumo).filter(Insumo.id == id).first()
+    
+
+    def obtener_detalles_insumo(self, insumo_id):
+        insumos = (
+            self.bd.session.query(
+                Insumo.nombre, 
+                InsumoInventario.cantidad,
+                Medida.nombre,
+                InsumoInventario.fecha_expiracion
+            )
+            .join(Insumo, Insumo.id == InsumoInventario.insumo_id)
+            .join(Medida, InsumoInventario.medida_id == Medida.id)
+            .filter(InsumoInventario.insumo_id == insumo_id)  # Aplica el filtro aquí
+            .group_by(InsumoInventario.cantidad, Insumo.nombre, Medida.nombre, InsumoInventario.fecha_expiracion)
+            .all()
+        )
+        inventarios = [
+            {"insumo": nombre, "cantidad": int(total), "medida": medida, "caducidad": fecha_expiracion} 
+            for nombre, total, medida, fecha_expiracion in insumos
+        ]
+        return inventarios
+
     def obtener_insumos_inventarios(self):
         resultados = (
             self.bd.session
             .query(
+                InsumoInventario.insumo_id,
                 Insumo.nombre, 
                 func.sum(InsumoInventario.cantidad),
                 Medida.nombre
             )
             .join(Insumo, Insumo.id == InsumoInventario.insumo_id)
             .join(Medida, InsumoInventario.medida_id == Medida.id)
-            .group_by(Insumo.nombre, Medida.nombre)
+            .group_by(InsumoInventario.insumo_id, Insumo.nombre, Medida.nombre)
             .all()
         )
         inventarios = [
-            {"insumo": nombre, "cantidad": int(total), "medida": medida} 
-            for nombre, total, medida in resultados
+            {"insumo_id": insumo_id, "insumo": nombre, "cantidad": int(total), "medida": medida} 
+            for insumo_id, nombre, total, medida in resultados
         ]
         return inventarios

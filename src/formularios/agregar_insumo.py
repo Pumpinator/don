@@ -1,29 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, StringField, FloatField, SelectField, DateField
-from wtforms.validators import InputRequired, Length
+from wtforms import HiddenField, StringField
+from wtforms.validators import DataRequired, Length, InputRequired
 
 class AgregarInsumo(FlaskForm):
-    nombre = StringField('Nombre del insumo', validators=[InputRequired(
-        message="El nombre es requerido.")
+    nombre = StringField('Nombre', validators=[
+        DataRequired(message="El nombre del insumo es obligatorio."),
+        Length(min=1, max=50, message="El nombre debe tener entre 1 y 50 caracteres.")
     ])
-
-    unidad_medida = SelectField('Unidad de Medida', choices=[
-        ('1', 'Kilogramos'),
-        ('2', 'Litros'),
-        ('3', 'Unidades')
-    ], validators=[InputRequired(
-        message="La unidad de medida es requerida."
-    )])
-    
-    costo = StringField('Costo', validators=[InputRequired(
-        message="La costo es requerida."
-    )])
-    
-    fecha_expiracion = DateField('Fecha de expiración', validators=[
-        InputRequired(message="La fecha de expiración es requerida."),
-        Length(min=10, max=10, message="La fecha de expiración debe tener 10 caracteres.")
-        ])
-    
-    cantidad = FloatField('Cantidad', validators=[InputRequired(
-        message="La cantidad es requerida."
-    )])
+class EditarForm(FlaskForm):
+    id = HiddenField('Id')
+    nombre = StringField('Nombre', validators=[
+        InputRequired(message="El nombre es requerido"),
+        Length(min=2, max=50, message="El nombre debe tener entre 2 y 50 caracteres")
+    ])

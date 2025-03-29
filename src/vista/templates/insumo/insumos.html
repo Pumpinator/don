@@ -20,13 +20,13 @@
         </div>
     </form><br>
 
-    <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
+    <div class="flex max-w-2xl mx-auto overflow-hidden bg-gray-200 justify-center rounded-full mb-6 text-sm">
         <a href="{{ url_for('principal.insumo.insumos_inventario', rol='inventario') }}"
             class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'inventario' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Inventario
         </a>
-        <a href="{{ url_for('principal.insumo.insumos', rol='tipos') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'rol' %}bg-white border border-gray-200 shadow-md{% endif %}">
+        <a href="{{ url_for('principal.insumo.insumos', rol='insumos') }}"
+            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'insumos' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Tipos
         </a>
     </div><br>
@@ -36,9 +36,10 @@
         {%if rol == 'inventario'%}
         {% for inv in inventarios %}
 
+        {%set id = inv.insumo_id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
-            <a href="#">
+            <a href="{{ url_for('principal.insumo.insumos_detalles', insumo_id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>
                         <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 
@@ -64,9 +65,10 @@
         {%else%}
         {% for insumo in insumos %}
 
+        {%set id = insumo.id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
-            <a href="#">
+            <a href="{{ url_for('principal.insumo.insumos_editar', id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>
                         <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg 
