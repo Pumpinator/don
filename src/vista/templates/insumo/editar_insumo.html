@@ -1,19 +1,20 @@
 {% extends "layouts/auth.html" %}
 
-{% block title %}Agregar Insumos - DON{% endblock %}
+{% block title %}Editar Insumos - DON{% endblock %}
 
 {% block content %}
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white rounded-lg p-6">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Agregar Insumo</h2>
-        <a class="p-3 max-w-md w-full justify-self-end" href="{{ url_for('principal.insumo.insumos') }}">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Actualizar Insumo</h2>
+        <a class="max-w-md w-full p-3 justify-self-end" href="{{ url_for('principal.insumo.insumos') }}">
             <svg class="w-6 h-6 text-black-800 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 fill="none" viewBox="0 0 14 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 5H1m0 0 4 4M1 5l4-4" />
             </svg>
         </a>
-        <form action="{{ url_for('principal.insumo.crear_insumo') }}" method="post" class="space-y-5" novalidate>
+        {%set id = insumo_id%}
+        <form action="{{ url_for('principal.insumo.insumos_editar', insumo_id=id) }}" method="post" class="space-y-5" novalidate>
             {{ form.csrf_token() }}
             <div>
                 {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}
@@ -26,7 +27,7 @@
             </div>
             <button type="submit"
                 class="w-full bg-[var(--color-latte-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]">
-                Agregar
+                Actualizar
             </button>
         </form>
     </div>

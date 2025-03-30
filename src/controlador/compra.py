@@ -1,9 +1,13 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
+<<<<<<< HEAD
 from sqlalchemy import text
 from modelo.insumo import Insumo
 from modelo.medida import Medida
+=======
+import bd
+>>>>>>> 1031b46b66b4ca99506ac1e989221defd145b1db
 from servicio.compra import CompraServicio
 from bd import bd
 
@@ -19,6 +23,7 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 @admin_or_trabajador_permission.require(http_exception=403)
 def compras():
     compra_servicio = CompraServicio(bd)
+<<<<<<< HEAD
     compras = compra_servicio.obtener_compras()
     return render_template('compra/compras.html', compras=compras)
 
@@ -64,3 +69,6 @@ def crear_compra():
     insumos = bd.session.query(Insumo).all()
     medidas = bd.session.query(Medida).all()
     return render_template('compra/crear_compra.html', proveedores=proveedores, insumos=insumos, medidas=medidas)
+=======
+    return render_template('compras.html')
+>>>>>>> 1031b46b66b4ca99506ac1e989221defd145b1db
