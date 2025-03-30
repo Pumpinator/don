@@ -1,0 +1,97 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Editar Receta - DON GALLETO{% endblock %}
+
+{% block content %}
+<p class="text-gray-500 text-lg font-semibold text-center">Editar Receta</p>
+
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <main class="flex flex-col items-center px-6">
+        <form action="{{ url_for('principal.receta.editar_receta', receta_id=receta.id) }}" method="POST" class="w-full max-w-sm space-y-4" id="recetaForm">
+            <div>
+                <label class="block text-gray-700 font-bold">Nombre de la Receta</label>
+                <input type="text" name="nombre" class="w-full p-3 rounded-2xl focus:outline-none" 
+                    value="{{ receta.nombre }}" required>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-bold">Galleta</label>
+                <select name="galleta_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none" required>
+                    <option value="" disabled>Seleccione una galleta...</option>
+                    {% for galleta in galletas %}
+                        <option value="{{ galleta.id }}" 
+                            {% if galleta.id == receta.galleta_id %}selected{% endif %}>
+                            {{ galleta.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-bold">Procedimiento</label>
+                <textarea name="procedimiento" class="w-full p-3 rounded-2xl focus:outline-none" 
+                    rows="4" required>{{ receta.procedimiento }}</textarea>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-bold">Insumos</label>
+                <div id="insumos-container">
+                    {% for ingrediente in receta.ingredientes %}
+                    <div class="insumo-item flex space-x-2 mb-2">
+                        <select name="insumo_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                            <option value="" disabled>Seleccione un insumo</option>
+                            {% for insumo in insumos %}
+                                <option value="{{ insumo.id }}"
+                                    {% if insumo.id == ingrediente.insumo_id %}selected{% endif %}>
+                                    {{ insumo.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="cantidad[]" class="w-20 p-3 rounded-2xl focus:outline-none" 
+                            value="{{ ingrediente.cantidad }}" required>
+                        <select name="medida_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                            <option value="" disabled>Medida</option>
+                            {% for medida in medidas %}
+                                <option value="{{ medida.id }}"
+                                    {% if medida.id == ingrediente.medida_id %}selected{% endif %}>
+                                    {{ medida.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="eliminar-insumo bg-red-500 text-white p-3 rounded-2xl">-</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" class="agregar-insumo bg-green-500 text-white px-4 py-2 rounded-lg mt-2">Agregar Insumo</button>
+            </div>
+
+            <div class="space-y-2">
+                <a href="{{ url_for('principal.receta.detalles_receta', receta_id=receta.id) }}" 
+                   class="block w-full bg-gray-300 text-center p-3 rounded-2xl">
+                    Cancelar
+                </a>
+                <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-2xl">Guardar Cambios</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('insumos-container');
+            
+            document.querySelector('.agregar-insumo').addEventListener('click', function() {
+                const newItem = document.querySelector('.insumo-item').cloneNode(true);
+                newItem.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                newItem.querySelector('input').value = '';
+                container.appendChild(newItem);
+            });
+
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('eliminar-insumo') && container.children.length > 1) {
+                    e.target.closest('.insumo-item').remove();
+                }
+            });
+        });
+    </script>
+</body>
+{% endblock %}

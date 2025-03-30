@@ -23,7 +23,7 @@
         {% for item in produccion %}
         {% if item.estatus != 4 %}  <!-- Ocultamos las producciones con estatus 4 -->
         <div class="bg-white shadow-lg rounded-lg p-4">
-            <h3 class="text-lg font-bold">Producción #{{ item.id }}</h3>
+            <h3 class="text-lg font-bold">{{ item.receta.nombre }}</h3>
             <p class="text-gray-600">Fecha: {{ item.fecha.strftime('%d/%m/%Y') }}</p>
             <p class="text-gray-600">Costo: ${{ item.costo }}</p>
             <p class="text-gray-600">Estatus: 
@@ -35,8 +35,6 @@
                     ✅ Listo
                 {% endif %}
             </p>
-            <p class="text-gray-600">Receta: {{ item.receta.nombre }}</p>
-
             <!-- Botón Avanzar -->
             <form method="POST" action="{{ url_for('principal.produccion.avanzar_produccion', produccion_id=item.id) }}">
                 <button type="submit"

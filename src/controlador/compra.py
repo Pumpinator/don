@@ -3,6 +3,7 @@ from flask_login import login_required
 from flask_principal import Permission, RoleNeed
 from servicio.compra import CompraServicio
 from bd import bd
+from servicio.proveedor import ProveedorServicio
 
 controlador = Blueprint('compra', __name__)
 
@@ -10,13 +11,18 @@ admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
+# En controlador/compra.py
 @controlador.route('/compras')
 @login_required
-@admin_or_trabajador_permission.require(http_exception=403)
 def compras():
-    servicio = CompraServicio(bd)
-    compras = servicio.obtener_compras()
-    return render_template('compra/compras.html', compras=compras)
+    compra_servicio = CompraServicio(bd)
+    proveedor_servicio = ProveedorServicio(bd)  # Nuevo
+    
+    return render_template(
+        'compra/compras.html',
+        compras=compra_servicio.obtener_compras(),
+        proveedores=proveedor_servicio.obtener_proveedores()  # Nuevo
+    )
 
 @controlador.route('/compra/crear', methods=['GET', 'POST'])
 @login_required

@@ -1,0 +1,25 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Detalles del Proveedor - {{ proveedor.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Detalles del Proveedor</h1>
+    <div class="bg-gray-200 rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-gray-800">Nombre: {{ proveedor.nombre }}</h2>
+        <p class="text-sm text-gray-600">Contacto: {{ proveedor.contacto }}</p>
+        <p class="text-sm text-gray-600">Dirección: {{ proveedor.direccion }}</p>
+    </div>
+    <div class="mt-6 flex space-x-4">
+        <a href="{{ url_for('principal.proveedor.editar_proveedor', proveedor_id=proveedor.id) }}" 
+           class="bg-blue-500 text-white px-4 py-2 rounded-lg">Editar</a>
+        <form action="{{ url_for('principal.proveedor.eliminar_proveedor', proveedor_id=proveedor.id) }}" 
+              method="POST" 
+              onsubmit="return confirm('¿Seguro que deseas eliminar este proveedor?');">
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg">Eliminar</button>
+        </form>
+        <a href="{{ url_for('principal.proveedor.proveedores') }}" 
+           class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg">Volver</a>
+    </div>
+</div>
+{% endblock %}

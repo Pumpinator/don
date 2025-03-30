@@ -9,6 +9,7 @@ from controlador.reportes import controlador as controlador_reportes
 from controlador.usuario import controlador as controlador_usuario
 from controlador.venta import controlador as controlador_venta
 from controlador.receta import controlador as controlador_receta
+from controlador.proveedor import controlador as controlador_proveedor
 from modelo.compra import Compra
 from servicio.usuario import UsuarioServicio
 from formularios.ingreso import IngresoForm
@@ -19,6 +20,7 @@ from flask_principal import current_app, identity_loaded, RoleNeed, UserNeed, Pe
 controlador = Blueprint('principal', __name__)
 
 controlador.register_blueprint(controlador_compra)
+controlador.register_blueprint(controlador_proveedor)
 controlador.register_blueprint(controlador_receta)
 controlador.register_blueprint(controlador_galleta)
 controlador.register_blueprint(controlador_insumo)
@@ -132,6 +134,12 @@ def receta():
 @admin_or_trabajador_permission.require(http_exception=403)
 def compra():
     return render_template('compra.html')
+
+@controlador.route('/proveedor')
+@login_required
+@admin_or_trabajador_permission.require(http_exception=403)
+def proveedor():
+    return render_template('proveedores.html')
 
 @controlador.route('/menu')
 def menu():
