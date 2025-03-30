@@ -63,12 +63,14 @@ class VentaServicio:
         
         peso = presentaciones.get(presentacion)
         unidad = re.sub(r'^[0-9\s]+', '', presentacion).strip()
+        cuenta = int(re.sub(r'[^0-9]', '', presentacion))
         key_item = f"{galleta.nombre} {presentacion}"
         item = {
             'galleta_id': galleta_id,
             'nombre': galleta.nombre,
             'presentacion': presentacion,
             'unidad': unidad,
+            'cuenta': cuenta,
             'peso': peso,
             'precio': galleta.precio,
             'medida_id': medida_id,

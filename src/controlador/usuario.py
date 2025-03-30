@@ -1,34 +1,40 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from servicio.usuario import UsuarioServicio
 from formularios.usuario import CrearForm, EditarForm
 from bd import bd
-from flask_login import login_required
+from flask_login import login_required, current_user
 from flask_principal import Permission, RoleNeed
 
 controlador = Blueprint('usuario', __name__)
 
-admin_permission = Permission(RoleNeed('ADMIN'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
+
+@controlador.before_request
+def verificar_usuario():
+    rol = request.view_args.get('rol')
+    print(rol)
+    if rol == 'administradores' and current_user.rol.nombre != 'ADMIN':
+        abort(403)
 
 @controlador.route('/<rol>/nuevo', methods=['GET', 'POST'])
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def crear_usuario(rol):
     form = CrearForm()
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
         form = CrearForm(request.form)
-        if form.validate():
-            usuario_servicio = UsuarioServicio(bd)
-            try:
-                usuario = usuario_servicio.crear_usuario(form)
-                flash("Registro exitoso!", "success")
-                return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
-            except ValueError as e:
-                flash(str(e), "danger")
+        usuario_servicio = UsuarioServicio(bd)
+        try:
+            usuario = usuario_servicio.crear_usuario(form)
+            flash("Registro exitoso!", "success")
+            return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
+        except ValueError as e:
+            flash(str(e), "danger")
     return render_template('usuario/crear_usuario.html', form=form, rol=rol)
 
 @controlador.route('/<rol>', methods=['GET'])
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def listar_usuarios(rol):
     usuario_servicio = UsuarioServicio(bd)
     usuarios_list = usuario_servicio.obtener_usuarios(rol=rol)
@@ -36,7 +42,7 @@ def listar_usuarios(rol):
 
 @controlador.route('/<rol>/<int:id>', methods=['GET', 'POST'])
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def editar_usuario(rol, id):
     usuario_servicio = UsuarioServicio(bd)
     usuario = usuario_servicio.obtener_usuario(id=id)
@@ -58,7 +64,7 @@ def editar_usuario(rol, id):
 
 @controlador.route('/<rol>/desactivar/<int:id>', methods=['POST'])
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def desactivar_usuario(rol, id):
     usuario_servicio = UsuarioServicio(bd)
     try:
@@ -71,7 +77,7 @@ def desactivar_usuario(rol, id):
 
 @controlador.route('/<rol>/activar/<int:id>', methods=['POST'])
 @login_required
-@admin_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def activar_usuario(rol, id):
     usuario_servicio = UsuarioServicio(bd)
     try:
