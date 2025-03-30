@@ -1,0 +1,66 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Producción - DON{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Barra de búsqueda -->
+    <form class="max-w-md mx-auto">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+            </div>
+            <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-blue-500 
+            focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Búsqueda" required oninput="filterProduccion()" />
+        </div>
+    </form>
+
+    <!-- Tarjetas de producción -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {% for item in produccion %}
+        {% if item.estatus != 4 %}  <!-- Ocultamos las producciones con estatus 4 -->
+        <div class="bg-white shadow-lg rounded-lg p-4">
+            <h3 class="text-lg font-bold">Producción #{{ item.id }}</h3>
+            <p class="text-gray-600">Fecha: {{ item.fecha.strftime('%d/%m/%Y') }}</p>
+            <p class="text-gray-600">Costo: ${{ item.costo }}</p>
+            <p class="text-gray-600">Estatus: 
+                {% if item.estatus == 1 %}
+                    🛠 Haciendo
+                {% elif item.estatus == 2 %}
+                    🔥 Cocinando
+                {% elif item.estatus == 3 %}
+                    ✅ Listo
+                {% endif %}
+            </p>
+            <p class="text-gray-600">Receta: {{ item.receta.nombre }}</p>
+
+            <!-- Botón Avanzar -->
+            <form method="POST" action="{{ url_for('principal.produccion.avanzar_produccion', produccion_id=item.id) }}">
+                <button type="submit"
+                    class="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Avanzar
+                </button>
+            </form>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // Filtro de búsqueda
+    function filterProduccion() {
+        const searchInput = document.getElementById('simple-search').value.toLowerCase();
+        const cards = document.querySelectorAll('.bg-white');
+
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(searchInput) ? 'block' : 'none';
+        });
+    }
+</script>
+
+{% endblock %}
