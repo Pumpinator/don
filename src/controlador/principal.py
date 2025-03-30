@@ -117,11 +117,7 @@ def page_not_found(error):
 def produccion():
 	return render_template('produccion.html')
 
-@controlador.route('/reportes')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def reportes():
-	return render_template('reportes.html')
+
 
 @controlador.route('/clientes')
 @login_required
