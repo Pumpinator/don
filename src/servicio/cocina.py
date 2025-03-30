@@ -39,6 +39,13 @@ class CocinaServicio:
 
     def agregar_insumo(self, form):
         nombre = form.get('nombre')
-        insumo = Insumo(nombre = nombre)
-        self.bd.session.add(insumo)  
+        
+        # Verificar si ya existe un insumo con el mismo nombre
+        insumo_existente = self.bd.session.query(Insumo).filter_by(nombre=nombre).first()
+        if insumo_existente:
+            raise ValueError(f"Ya existe un insumo con el nombre '{nombre}'")
+        
+        # Agregar el nuevo insumo si no existe
+        insumo = Insumo(nombre=nombre)
+        self.bd.session.add(insumo)
         self.bd.session.commit()
