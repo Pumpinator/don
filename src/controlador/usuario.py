@@ -21,7 +21,7 @@ def crear_usuario(rol):
             try:
                 usuario = usuario_servicio.crear_usuario(form)
                 flash("Registro exitoso!", "success")
-                return redirect(url_for('usuario.usuarios', rol=rol))
+                return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
             except ValueError as e:
                 flash(str(e), "danger")
     return render_template('usuario/crear_usuario.html', form=form, rol=rol)
@@ -51,7 +51,7 @@ def editar_usuario(rol, id):
         try:
             usuario = usuario_servicio.editar_usuario(form)
             flash("Usuario actualizado exitosamente", "success")
-            return redirect(url_for('usuario.listar_usuarios', rol=rol))
+            return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
         except ValueError as e:
             flash(str(e), "danger")
     return render_template('usuario/editar_usuario.html', form=form, usuario=usuario, rol=rol)

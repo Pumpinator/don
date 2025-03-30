@@ -7,7 +7,12 @@
 {% block content %}
 <div class="flex items-center justify-center p-4">
   <div class="w-full max-w-md bg-white rounded-lg p-6">
-    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Editar Usuario</h2>
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Editar
+      {% if usuario.rol.nombre == 'ADMIN' %}Administrador
+      {% elif usuario.rol.nombre == 'TRABAJADOR' %}Trabajador
+      {% elif usuario.rol.nombre == 'COMPRADOR' %}Comprador
+      {% endif %}
+    </h2>
     <form action="{{ url_for('principal.usuario.editar_usuario', rol=rol, id=usuario.id) }}" method="POST"
       class="space-y-5" novalidate>
       {{ form.csrf_token() }}

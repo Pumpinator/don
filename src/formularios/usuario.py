@@ -61,5 +61,6 @@ class EditarForm(FlaskForm):
     ])
     rol = SelectField('Rol', validators=[InputRequired(message="El rol es requerido")], choices=[
         ('ADMIN', 'Administrador'),
-        ('TRABAJADOR', 'Trabajador')
+        ('TRABAJADOR', 'Trabajador'),
+        ('COMPRADOR', 'Comprador')
     ])
