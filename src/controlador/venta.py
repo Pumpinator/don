@@ -35,7 +35,23 @@ def agregar_galleta():
             flash(e.description, "danger")
         else:
             flash("Error al agregar galleta: " + str(e), "danger")
-        return redirect(url_for('principal.venta.mostrador'))
+        return redirect(request.referrer)
+    
+@controlador.route('/ventas/carrito/eliminar', methods=['POST'])
+@login_required
+@trabajador_permission.require(http_exception=403)
+def eliminar_galleta():
+    try:
+        venta_servicio = VentaServicio(bd)
+        carrito = venta_servicio.eliminar_galleta(request.form, session)
+        flash("Galleta removida del carrito", "success")
+        if len(carrito) != 0:
+            return redirect(url_for('principal.venta.ver_carrito'))
+        else:
+            return redirect(url_for('principal.venta.mostrador'))
+    except Exception as e:
+        flash("Error al eliminar galleta: " + str(e), "danger")
+        return redirect(url_for('principal.venta.ver_carrito'))
 
 @controlador.route('/ventas/carrito', methods=['GET'])
 @login_required
@@ -61,24 +77,6 @@ def vaciar_carrito():
     session.pop('precio_total', None)
     flash("Carrito vaciado", "info")
     return redirect(url_for('principal.venta.mostrador'))
-
-@controlador.route('/ventas/carrito/borrar', methods=['GET'])
-@login_required
-@trabajador_permission.require(http_exception=403)
-def borrar_item(galleta_id):
-    session.modified = True
-    if 'carrito' in session and galleta_id in session['carrito']:
-        session['carrito'].pop(galleta_id)
-        if session.get('carrito'):
-            cantidad_total = sum(item['cantidad'] for item in session['carrito'].values())
-            precio_total = sum(item['precio_total'] for item in session['carrito'].values())
-            session['cantidad_total'] = cantidad_total
-            session['precio_total'] = precio_total
-        else:
-            session.pop('cantidad_total', None)
-            session.pop('precio_total', None)
-    flash("Artículo eliminado", "info")
-    return redirect(url_for('principal.venta.ver_carrito'))
 
 @controlador.route('/ventas/cerrar', methods=['POST'])
 @login_required

@@ -16,7 +16,7 @@
         </svg>
     </a>
 </div>
-{% endif %} 
+{% endif %}
 
 <form action="{{ url_for('principal.venta.mostrador') }}" method="get" class="mb-6">
     <div class="relative">
@@ -36,7 +36,7 @@
 <div class="grid grid-cols-1 w-full gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
     {% for galleta in mostrador %}
     <div
-        class="flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100">
+        class="flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow-sm transition duration-75 hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1">
         {% if galleta.imagen %}
         <img src="{{ url_for('static', filename='img/' ~ galleta.imagen) }}" alt="{{ galleta.galleta }}"
             class="w-full h-48 object-contain rounded-t-lg">
@@ -55,10 +55,10 @@
                     {{ galleta.galleta }}
                 </h5>
                 <div class="flex flex-col">
-                    {% if galleta.cantidad > 0 %}
-                    <span class="text-sm font-normal text-green-600">En stock</span>
-                    {% elif galleta.cantidad > 0 and galleta.cantidad < 10 %} <span
-                        class="text-sm font-normal text-yellow-600">Pocas existencias</span>
+                    {% if galleta.cantidad > 0 and galleta.cantidad < 1 %} <span
+                        class="text-sm font-normal text-green-600">En stock</span>
+                        {% elif galleta.cantidad > 0 %}
+                        <span class="text-sm font-normal text-yellow-600">Bajo stock</span>
                         {% else %}
                         <span class="text-sm font-normal text-red-600">Agotado</span>
                         {% endif %}
@@ -73,12 +73,11 @@
                     class="mt-4 md:flex items-center">
                     <input type="hidden" name="galleta_id" value="{{ galleta.galleta_id }}">
                     <input type="hidden" name="medida_id" value="1">
-                    <select name="presentacion" class="border rounded-full px-3 py-2 w-full">
+                    <select name="presentacion"
+                        class="border rounded-full px-3 py-2 w-full focus:ring-[var(--color-red-default)] text-center focus:border-[var(--color-red-default)]">
                         <option value="1 pz">1 pz</option>
                         <option value="2 pz">2 pz</option>
                         <option value="5 pz">5 pz</option>
-                        <option value="100 g">100 g</option>
-                        <option value="250 g">250 g</option>
                         <option value="500 g">500 g</option>
                         <option value="700 g">700 g</option>
                         <option value="1 kg">1 kg</option>
