@@ -101,9 +101,17 @@ class InventarioServicio:
         return inventarios
     
     def editar_insumo(self, form, insumo_id):
+        # Verificar si el insumo existe
         insumo = self.bd.session.query(Insumo).filter_by(id=insumo_id).first()
         if not insumo:
             raise ValueError("Insumo not found")
-        # Update the insumo with form data
+        
+        # Verificar si ya existe otro insumo con el mismo nombre
+        nombre_existente = self.bd.session.query(Insumo).filter(Insumo.nombre == form.nombre.data, Insumo.id != insumo_id).first()
+        if nombre_existente:
+            raise ValueError(f"Ya existe un insumo con el nombre '{form.nombre.data}'")
+        
+        # Actualizar el insumo con los datos del formulario
         insumo.nombre = form.nombre.data
+        insumo.cantidad = form.cantidad.data
         self.bd.session.commit()

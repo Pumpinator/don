@@ -14,163 +14,82 @@ trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 @trabajador_permission.require(http_exception=403)
 def mostrador():
     venta_servicio = VentaServicio(bd)
+    carrito, total = venta_servicio.obtener_carrito(session)
     mostrador = venta_servicio.obtener_mostrador()
-    return render_template('venta/mostrador.html', mostrador=mostrador)
+    return render_template('venta/mostrador.html', mostrador=mostrador, carrito=carrito, total=total)
 
 @controlador.route('/ventas/carrito/agregar', methods=['POST'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def agregar_galleta():
     try:
-        cantidad = float(request.form.get('cantidad', 0))
-        galleta_id = int(request.form.get('galleta_id'))
-        medida_id = int(request.form.get('medida_id'))
-        
-        if cantidad > 0 and galleta_id and medida_id:
-            inventario_serv = InventarioServicio(bd)
-            galleta = inventario_serv.obtener_galleta(galleta_id)
-            if not galleta:
-                flash("Galleta no encontrada", "danger")
-                return redirect(url_for('venta.ventas'))
-            
-            # Usar el id de galleta como clave en el carrito
-            key_item = str(galleta_id)
-            item = {
-                'galleta_id': galleta_id,
-                'nombre': galleta.nombre,
-                'cantidad': cantidad,
-                'precio': galleta.precio,
-                'medida_id': medida_id,
-                'precio_total': cantidad * galleta.precio
-            }
-            session.modified = True
-            if 'item' in session:
-                if key_item in session['item']:
-                    old_qty = session['item'][key_item]['cantidad']
-                    new_qty = old_qty + cantidad
-                    session['item'][key_item]['cantidad'] = new_qty
-                    session['item'][key_item]['precio_total'] = new_qty * galleta.precio
-                else:
-                    session['item'][key_item] = item
-            else:
-                session['item'] = { key_item: item }
-            
-            # Calcular totales
-            cantidad_total = sum(item['cantidad'] for item in session['item'].values())
-            precio_total = sum(item['precio_total'] for item in session['item'].values())
-            session['cantidad_total'] = cantidad_total
-            session['precio_total'] = precio_total
-            
-            flash("Galleta agregada al carrito", "success")
-            return redirect(url_for('venta.ventas'))
-        else:
-            flash("Datos inválidos", "danger")
-            return redirect(url_for('venta.ventas'))
+        venta_servicio = VentaServicio(bd)
+        venta_servicio.agregar_galleta(request.form, session)
+        flash("Galleta agregada al carrito", "success")
+        return redirect(url_for('principal.venta.ver_carrito'))
     except Exception as e:
-        print(e)
-        flash("Error al agregar galleta", "danger")
-        return redirect(url_for('venta.ventas'))
-
+        print(e.__class__.__name__)
+        if hasattr(e, 'message'):
+            flash(e.message, "danger")
+        elif hasattr(e, 'description'):
+            flash(e.description, "danger")
+        else:
+            flash("Error al agregar galleta: " + str(e), "danger")
+        return redirect(request.referrer)
+    
+@controlador.route('/ventas/carrito/eliminar', methods=['POST'])
 @login_required
 @trabajador_permission.require(http_exception=403)
-def agregar_galleta():
+def eliminar_galleta():
     try:
-        cantidad = float(request.form.get('cantidad', 0))
-        galleta_id = int(request.form.get('galleta_id'))
-        medida_id = int(request.form.get('medida_id'))
-        
-        if cantidad > 0 and galleta_id and medida_id:
-            inventario_serv = InventarioServicio(bd)
-            galleta = inventario_serv.obtener_galleta(galleta_id)
-            if not galleta:
-                flash("Galleta no encontrada", "danger")
-                return redirect(url_for('venta.ventas'))
-            
-            # Usar el id de galleta como clave en el carrito
-            key_item = str(galleta_id)
-            item = {
-                'galleta_id': galleta_id,
-                'nombre': galleta.nombre,
-                'cantidad': cantidad,
-                'precio': galleta.precio,
-                'medida_id': medida_id,
-                'precio_total': cantidad * galleta.precio
-            }
-            session.modified = True
-            if 'item' in session:
-                if key_item in session['item']:
-                    old_qty = session['item'][key_item]['cantidad']
-                    new_qty = old_qty + cantidad
-                    session['item'][key_item]['cantidad'] = new_qty
-                    session['item'][key_item]['precio_total'] = new_qty * galleta.precio
-                else:
-                    session['item'][key_item] = item
-            else:
-                session['item'] = { key_item: item }
-            
-            # Calcular totales
-            cantidad_total = sum(item['cantidad'] for item in session['item'].values())
-            precio_total = sum(item['precio_total'] for item in session['item'].values())
-            session['cantidad_total'] = cantidad_total
-            session['precio_total'] = precio_total
-            
-            flash("Galleta agregada al carrito", "success")
-            return redirect(url_for('venta.ventas'))
+        venta_servicio = VentaServicio(bd)
+        carrito = venta_servicio.eliminar_galleta(request.form, session)
+        flash("Galleta removida del carrito", "success")
+        if len(carrito) != 0:
+            return redirect(url_for('principal.venta.ver_carrito'))
         else:
-            flash("Datos inválidos", "danger")
-            return redirect(url_for('venta.ventas'))
+            return redirect(url_for('principal.venta.mostrador'))
     except Exception as e:
-        print(e)
-        flash("Error al agregar galleta", "danger")
-        return redirect(url_for('venta.ventas'))
+        flash("Error al eliminar galleta: " + str(e), "danger")
+        return redirect(url_for('principal.venta.ver_carrito'))
 
 @controlador.route('/ventas/carrito', methods=['GET'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def ver_carrito():
-    # Muestra el contenido del carrito de compra
-    return render_template('carrito.html')
+    try:
+        venta_servicio = VentaServicio(bd)
+        carrito, total = venta_servicio.obtener_carrito(session)
+        session['carrito'] = carrito
+        session['total'] = total
+        session.modified = True
+        return render_template('venta/carrito.html', carrito=carrito, total=total)
+    except Exception as e:
+        flash("Error al obtener el carrito: " + str(e), "danger")
+        return redirect(url_for('principal.venta.mostrador'))
 
 @controlador.route('/ventas/carrito/vaciar', methods=['GET'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def vaciar_carrito():
-    session.pop('item', None)
+    session.pop('carrito', None)
     session.pop('cantidad_total', None)
     session.pop('precio_total', None)
     flash("Carrito vaciado", "info")
-    return redirect(url_for('venta.ventas'))
-
-@controlador.route('/ventas/carrito/borrar/<int:galleta_id>', methods=['GET'])
-@login_required
-@trabajador_permission.require(http_exception=403)
-def borrar_item(galleta_id):
-    session.modified = True
-    if 'item' in session and galleta_id in session['item']:
-        session['item'].pop(galleta_id)
-        if session.get('item'):
-            cantidad_total = sum(item['cantidad'] for item in session['item'].values())
-            precio_total = sum(item['precio_total'] for item in session['item'].values())
-            session['cantidad_total'] = cantidad_total
-            session['precio_total'] = precio_total
-        else:
-            session.pop('cantidad_total', None)
-            session.pop('precio_total', None)
-    flash("Artículo eliminado", "info")
-    return redirect(url_for('venta.ver_carrito'))
+    return redirect(url_for('principal.venta.mostrador'))
 
 @controlador.route('/ventas/cerrar', methods=['POST'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def cerrar_venta():
     try:
-        if 'item' not in session or not session['item']:
+        if 'carrito' not in session or not session['carrito']:
             flash("El carrito está vacío", "warning")
-            return redirect(url_for('venta.ventas'))
+            return redirect(url_for('venta.mostrador'))
         
         # Preparar los detalles de la venta
         detalles = []
-        for item in session['item'].values():
+        for item in session['carrito'].values():
             detalles.append({
                 'galleta_id': item['galleta_id'],
                 'cantidad': item['cantidad'],
@@ -198,13 +117,13 @@ def cerrar_venta():
             inventario_serv.reducir_stock(det['galleta_id'], det['cantidad'])
             
         # Vaciar el carrito
-        session.pop('item', None)
+        session.pop('carrito', None)
         session.pop('cantidad_total', None)
         session.pop('precio_total', None)
         
         flash("Venta finalizada exitosamente", "success")
-        return redirect(url_for('venta.ventas'))
+        return redirect(url_for('principal.venta.mostrador'))
     except Exception as e:
         print(e)
         flash("Error al finalizar la venta", "danger")
-        return redirect(url_for('venta.ver_carrito'))
+        return redirect(url_for('principal.venta.ver_carrito'))

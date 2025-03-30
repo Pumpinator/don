@@ -51,10 +51,13 @@ def insumos_detalles(insumo_id):
 def crear_insumo():
     form = AgregarInsumo(request.form)
     if request.method == 'POST' and form.validate_on_submit():
-        cocina_servicio = CocinaServicio(bd)
-        cocina_servicio.agregar_insumo(request.form)
-        flash("Insumo creado exitosamente.", "success")
-        return redirect(url_for('principal.insumo.insumos'))
+        try:
+            cocina_servicio = CocinaServicio(bd)
+            cocina_servicio.agregar_insumo(request.form)
+            flash("Insumo creado exitosamente.", "success")
+            return redirect(url_for('principal.insumo.insumos'))
+        except ValueError as e:
+            flash(str(e), "danger")
     elif request.method == 'POST':
         flash("Por favor, corrige los errores en el formulario.", "danger")
     return render_template('insumo/agregar_insumo.html', form=form)
@@ -67,9 +70,12 @@ def insumos_editar(insumo_id):
     insumo = inv_servicio.obtener_insumo(insumo_id)
     form = AgregarInsumo(obj=insumo)
     if request.method == 'POST' and form.validate_on_submit():
-        inv_servicio.editar_insumo(form, insumo_id)
-        flash("Insumo editado exitosamente.", "success")
-        return redirect(url_for('principal.insumo.insumos'))
+        try:
+            inv_servicio.editar_insumo(form, insumo_id)
+            flash("Insumo editado exitosamente.", "success")
+            return redirect(url_for('principal.insumo.insumos'))
+        except ValueError as e:
+            flash(str(e), "danger")
     elif request.method == 'POST':
         flash("Por favor, corrige los errores en el formulario.", "danger")
     return render_template('insumo/editar_insumo.html', form=form, insumo_id=insumo_id)

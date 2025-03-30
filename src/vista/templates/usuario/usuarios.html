@@ -7,10 +7,12 @@
 {% block content %}
 <div class="px-2">
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
+        {% if rol == 'administradores' %}
         <a href="{{ url_for('principal.usuario.listar_usuarios', rol='administradores') }}"
             class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'administradores' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Administradores
         </a>
+        {% endif %}
         <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
             class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'trabajadores' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Trabajadores
@@ -52,16 +54,17 @@
                     <h5 class="mb-1 text-xl font-bold tracking-tight text-gray-900">{{ usuario.nombre }}</h5>
                     <p class="text-sm font-normal text-gray-700">{{ usuario.email }}</p>
                     {% if usuario.estatus %}
-                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">Activo</span>
+                    <span
+                        class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">Activo</span>
                     {% else %}
-                    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">Inactivo</span>
+                    <span
+                        class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">Inactivo</span>
                     {% endif %}
                 </div>
             </div>
         </a>
         {% endfor %}
 
-        {% if rol != 'compradores' %}
         <a href="{{ url_for('principal.usuario.crear_usuario', rol=rol) }}"
             class="block p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
             <div class="flex items-center justify-center h-12">
@@ -71,7 +74,6 @@
                 </svg>
             </div>
         </a>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

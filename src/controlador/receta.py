@@ -1,8 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
-from servicio.produccion import ProduccionServicio
+from flask import Blueprint, render_template, request, redirect, url_for
 from bd import bd
+from modelo.galleta import Galleta
+from modelo.insumo import Insumo
+from modelo.medida import Medida
+from modelo.receta import Receta
+from modelo.ingrediente import Ingrediente
+from flask_login import login_required
+from flask_principal import Permission, RoleNeed
+from servicio.produccion import ProduccionServicio
 from servicio.receta import RecetaServicio
 
 controlador = Blueprint('receta', __name__)
@@ -17,8 +25,9 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def recetas():
-    servicio = RecetaServicio(bd)
-    recetas = servicio.obtener_recetas()
+    receta = RecetaServicio(bd)
+    recetas = receta.obtener_recetas()
+    print(recetas)
     return render_template('receta/recetas.html', recetas=recetas)
 
 # Ruta para crear una receta

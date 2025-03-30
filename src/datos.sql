@@ -47,7 +47,7 @@ SET @costo_almendra = @precio_almendra * @inventario_almendra;
 SET @costo_cacahuate = @precio_cacahuate * @inventario_cacahuate;
 SET @costo_coco = @precio_coco * @inventario_coco;
 
-SET @peso_galleta = 0.045;
+SET @peso_galleta = 0.05;
 
 INSERT INTO roles (nombre)
 VALUES ('ADMIN'),
@@ -155,6 +155,36 @@ VALUES ('Chispas de Chocolate', FLOOR(@peso_galleta * @receta_chispas_chocolate 
        ('Cacahuate', FLOOR(@peso_galleta * @receta_cacahuate * @margen_ganancia), 'cacahuate.png', 3),
        ('Coco', FLOOR(@peso_galleta * @receta_coco * @margen_ganancia), 'coco.png', 3);
 
+/*
+INSERT INTO presentaciones (cantidad, peso, precio, medida_id, galleta_id)
+VALUES (1, @peso_galleta, FLOOR(@peso_galleta * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (2, @peso_galleta * 2, FLOOR(@peso_galleta * 2 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (5, @peso_galleta * 5, FLOOR(@peso_galleta * 5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1).
+        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (1, 0.001, FLOOR((@peso_galleta * @receta_chispas_chocolate * @margen_ganancia) / (@peso_galleta * 1000)), 1, 1);
+
+¿Deberíamos generar una tabla de presentaciones para cada galleta?
+
+from bd import bd
+from modelo.medida import Medida
+from modelo.galleta import Galleta
+
+class Presentacion(bd.Model):
+    __tablename__ = 'presentaciones'
+    
+    id = bd.Column(bd.Integer, primary_key=True)
+    cantidad = bd.Column(bd.Integer, nullable=False)
+    peso = bd.Column(bd.Float, nullable=False)
+    precio = bd.Column(bd.Float, nullable=False)
+    
+    medida_id = bd.Column(bd.Integer, bd.ForeignKey('medidas.id'), nullable=False)
+    medida = bd.relationship(Medida, backref='presentaciones')
+    
+    galleta_id = bd.Column(bd.Integer, bd.ForeignKey('galletas.id'), nullable=False)
+    galleta = bd.relationship(Galleta, backref='presentaciones')
+*/
+
 INSERT INTO proveedores (nombre, contacto)
 VALUES ('Harinera Beleño', '477 391 0598'),
        ('Huevo San Juan', '477 707 0099'),
@@ -235,4 +265,23 @@ VALUES (1, 1, '2022-01-01', FLOOR(@receta_chispas_chocolate * 100), 100, 3),
        (8, 8, '2022-01-01', FLOOR(@receta_almendra * 100), 100, 3),
        (9, 9, '2022-01-01', FLOOR(@receta_cacahuate * 100), 100, 3),
        (10, 10, '2022-01-01', FLOOR(@receta_coco * 100), 100, 3);
+
+INSERT INTO ingrediente(receta_id, insumo_id, medida_id, cantidad) VALUES 
+(1, 3, 1, 20)
+, (1, 5, 2, 50)
+, (2, 7, 3, 10)
+, (2, 2, 1, 30)
+, (3, 9, 2, 15)
+, (3, 1, 3, 40)
+, (4, 4, 1, 25)
+, (4, 6, 2, 35)
+, (5, 8, 3, 12)
+, (5, 10, 1, 22)
+, (6, 11, 2, 18)
+, (6, 12, 3, 28)
+, (7, 13, 1, 32)
+, (8, 14, 2, 45)
+, (9, 5, 3, 27);
+
+
 
