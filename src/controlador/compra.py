@@ -1,15 +1,12 @@
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, render_template
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
-import bd
-from servicio.compra import CompraServicio
+from servicio.compra import CompraServicio # Usar el servicio de compra para manejar la lógica
+from flask_principal import Permission, RoleNeed
 from bd import bd
 
 controlador = Blueprint('compra', __name__)
 
-admin_permission = Permission(RoleNeed('ADMIN'))
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
-comprador_permission = Permission(RoleNeed('COMPRADOR'))
 admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route('/compras')
