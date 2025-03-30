@@ -7,18 +7,19 @@ from modelo.insumo import Insumo
 from modelo.galleta import Galleta
 from modelo.medida import Medida
 
-class RecetaServicio:    
-    
+class RecetaServicio:
+    def __init__(self, bd):
+        self.bd = bd
+
     def obtener_recetas(self):
         resultados = (
             self.bd.session
             .query(
                 Receta.nombre,
-                Receta.procedimiento,  # Traer procedimiento
-                Galleta.nombre.label('galleta_nombre'),  # Traer nombre de galleta
+                Galleta.nombre.label('galleta_nombre'),
                 Ingrediente.cantidad,
-                Insumo.nombre.label('insumo_nombre'),  # Traer nombre del insumo
-                Medida.nombre.label('medida_nombre')  # Traer nombre de la medida
+                Insumo.nombre.label('insumo_nombre'),
+                Medida.nombre.label('medida_nombre')
             )
             .join(Receta.galleta)
             .join(Ingrediente, Ingrediente.receta_id == Receta.id)
@@ -28,7 +29,7 @@ class RecetaServicio:
         )
     
         recetas = []
-        for nombre, procedimiento, galleta_nombre, cantidad, insumo_nombre, medida_nombre in resultados:
+        for nombre, galleta_nombre, cantidad, insumo_nombre, medida_nombre in resultados:
             # Si la receta ya existe en la lista, agregar el ingrediente
             receta_existente = next((r for r in recetas if r['receta'] == nombre), None)
             
@@ -42,7 +43,6 @@ class RecetaServicio:
                 # Si no existe la receta, agregarla con los primeros ingredientes
                 recetas.append({
                     'receta': nombre,
-                    'procedimiento': procedimiento,
                     'galleta': galleta_nombre,
                     'ingredientes': [{
                         'insumo': insumo_nombre,
