@@ -49,6 +49,8 @@ def editar_usuario(rol, id):
     
     form = EditarForm(obj=usuario)
     form.rol.choices.insert(0, [None, "Selecciona un rol..."])
+    if (current_user.rol != 'ADMIN'):
+        form.rol.choices.remove(('ADMIN', 'Administrador'))
     form.rol.data = usuario.rol.nombre
     
     if request.method == 'POST' and form.validate():
