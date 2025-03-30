@@ -23,52 +23,78 @@
             <input type="date" name="fecha" class="w-full p-3 rounded-lg border" required>
         </div>
 
+        <!-- Insumos Dinámicos -->
+        <div>
+            <label class="block text-gray-700 font-bold">Insumos</label>
+            <div id="insumos-container">
+                <div class="insumo-item flex space-x-2 mb-2">
+                    <select name="insumo_id[]" class="flex-1 p-3 rounded-lg border" required>
+                        <option value="" disabled selected>Seleccione un insumo</option>
+                        {% for insumo in insumos %}
+                            <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" name="cantidad[]" class="w-20 p-3 rounded-lg border cantidad" placeholder="Cant" required>
+                    <input type="number" step="0.01" name="precio[]" class="w-20 p-3 rounded-lg border precio" placeholder="Precio" required>
+                    <select name="medida_id[]" class="flex-1 p-3 rounded-lg border" required>
+                        <option value="" disabled selected>Medida</option>
+                        {% for medida in medidas %}
+                            <option value="{{ medida.id }}">{{ medida.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <div>
+                        <input type="date" name="fecha_expiracion[]" class="w-32 p-3 rounded-lg border" required>
+                    </div>
+                    <button type="button" class="agregar-insumo bg-green-500 text-white px-3 py-2 rounded-lg">+</button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Total -->
         <div>
             <label class="block text-gray-700 font-bold">Total</label>
-            <input type="number" step="0.01" name="total" class="w-full p-3 rounded-lg border" placeholder="Ingrese el total de la compra" required>
+            <input type="number" step="0.01" name="total" id="total" class="w-full p-3 rounded-lg border" placeholder="Total de la compra" readonly>
         </div>
-
-        <!-- Insumos -->
-        <div>
-            <label class="block text-gray-700 font-bold">Insumos</label>
-            <select name="insumo_id[]" class="w-full p-3 rounded-lg border" multiple required>
-                {% for insumo in insumos %}
-                <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Cantidades -->
-        <div>
-            <label class="block text-gray-700 font-bold">Cantidades</label>
-            <input type="text" name="cantidades" class="w-full p-3 rounded-lg border" placeholder="Ingrese cantidades separadas por comas (e.g., 10,5,20)" required>
-        </div>
-
-        <!-- Precios Unitarios -->
-        <div>
-            <label class="block text-gray-700 font-bold">Precios Unitarios</label>
-            <input type="text" name="precios_unitarios" class="w-full p-3 rounded-lg border" placeholder="Ingrese precios unitarios separados por comas (e.g., 50.00,30.00,20.00)" required>
-        </div>
-
-        <!-- Medidas -->
-        <div>
-            <label class="block text-gray-700 font-bold">Medidas</label>
-            <select name="medida_id[]" class="w-full p-3 rounded-lg border" multiple required>
-                {% for medida in medidas %}
-                <option value="{{ medida.id }}">{{ medida.nombre }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Fechas de Expiración -->
-        <div>
-            <label class="block text-gray-700 font-bold">Fechas de Expiración</label>
-            <input type="text" name="fechas_expiracion" class="w-full p-3 rounded-lg border" placeholder="Ingrese fechas separadas por comas (e.g., 2025-12-01,2026-01-15,2024-10-10)" required>
-        </div>
-
-        <!-- Botones -->
+        
+        <!-- Botones de acción -->
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('insumos-container');
+        const totalInput = document.getElementById('total');
+
+        function calcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.insumo-item').forEach(item => {
+                const cantidad = parseFloat(item.querySelector('.cantidad').value) || 0;
+                const precio = parseFloat(item.querySelector('.precio').value) || 0;
+                total += cantidad * precio;
+            });
+            totalInput.value = total.toFixed(2);
+        }
+
+        container.addEventListener('input', function(e) {
+            if (e.target.classList.contains('cantidad') || e.target.classList.contains('precio')) {
+                calcularTotal();
+            }
+        });
+
+        container.addEventListener('click', function(e) {
+            if (e.target.classList.contains('agregar-insumo')) {
+                const newItem = document.querySelector('.insumo-item').cloneNode(true);
+                newItem.querySelectorAll('select, input').forEach(input => {
+                    if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    } else {
+                        input.value = '';
+                    }
+                });
+                container.appendChild(newItem);
+            }
+        });
+    });
+</script>
 {% endblock %}

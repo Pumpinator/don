@@ -23,5 +23,5 @@ class CompraDetalle(TransaccionDetalle, bd.Model):
         self.insumo_id = insumo_id
         self.cantidad = cantidad
         self.precio_unitario = precio_unitario
-        self.precio_total = cantidad * precio_unitario 
+        self.precio_total = float(cantidad) * float(precio_unitario),
         self.medida_id = medida_id

@@ -1,0 +1,25 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Detalles de Compra - DON GALLETO{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Detalles de Compra</h1>
+    <div class="bg-gray-200 rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-gray-800">Proveedor: {{ compra.proveedor }}</h2>
+        <p class="text-sm text-gray-600">Fecha: {{ compra.fecha }}</p>
+        <p class="text-sm text-gray-600">Total: ${{ compra.total }}</p>
+        <h3 class="text-lg font-semibold text-gray-800 mt-4">Detalles:</h3>
+        <ul class="mt-2">
+            {% for detalle in compra.detalles %}
+            <li class="text-sm text-gray-600">
+                {{ detalle.insumo }} - {{ detalle.cantidad }} - ${{ detalle.precio_unitario }} c/u - Total: ${{ detalle.precio_total }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mt-6">
+        <a href="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Editar Compra</a>
+    </div>
+</div>
+{% endblock %}

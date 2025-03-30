@@ -1,71 +1,78 @@
-from flask import Blueprint, render_template
-from sqlalchemy import text
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
+from flask_principal import Permission, RoleNeed
 from servicio.produccion import ProduccionServicio
 from bd import bd
-from flask_login import login_required
-from flask_principal import Permission, RoleNeed
-from flask import Blueprint, render_template, request, redirect, url_for
-from modelo.galleta import Galleta
-from modelo.insumo import Insumo
-from modelo.medida import Medida
-from modelo.receta import Receta
-from modelo.ingrediente import Ingrediente
-from flask_login import login_required
-from flask_principal import Permission, RoleNeed
+from servicio.receta import RecetaServicio
 
 controlador = Blueprint('receta', __name__)
 
+# Permisos
 admin_permission = Permission(RoleNeed('ADMIN'))
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
-comprador_permission = Permission(RoleNeed('COMPRADOR'))
 admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 
-
-@controlador.route('/recetas', methods=['GET', 'POST'])
+# Ruta para mostrar las recetas
+@controlador.route('/recetas', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def recetas():
-    return render_template('receta/recetas.html')
+    servicio = RecetaServicio(bd)
+    recetas = servicio.obtener_recetas()
+    return render_template('receta/recetas.html', recetas=recetas)
 
-@controlador.route('/receta/crear', methods=['GET', 'POST'])
+# Ruta para crear una receta
+@controlador.route('/receta/crear', methods=['POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def crear_receta():
-    if request.method == 'POST':
+    try:
+        # Obtener los datos del formulario
         nombre = request.form['nombre']
         galleta_id = request.form['galleta_id']
         procedimiento = request.form['procedimiento']
         
-        # Obtener arrays de insumos, cantidades y medidas
+        # Obtener los arrays de insumos, cantidades y medidas
         insumo_ids = request.form.getlist('insumo_id[]')
         cantidades = request.form.getlist('cantidad[]')
         medida_ids = request.form.getlist('medida_id[]')
         
-        # Convertir a cadenas separadas por comas
-        insumos_str = ','.join(insumo_ids)
-        cantidades_str = ','.join(cantidades)
-        medidas_str = ','.join(medida_ids)
+        # Llamar al servicio para crear la receta
+        produccion_servicio = ProduccionServicio(bd)
+        produccion_servicio.crear_receta(nombre, galleta_id, procedimiento, insumo_ids, cantidades, medida_ids)
 
-        # Llamar al procedimiento almacenado
-        query = text("CALL SP_InsertarReceta(:nombre, :galleta_id, :procedimiento, :insumos, :cantidades, :medidas)")
-        bd.session.execute(query, {
-            'nombre': nombre,
-            'galleta_id': galleta_id,
-            'procedimiento': procedimiento,
-            'insumos': insumos_str,
-            'cantidades': cantidades_str,
-            'medidas': medidas_str
-        })
-        bd.session.commit()
-
+        # Mostrar mensaje de éxito
+        flash("Receta creada exitosamente.", "success")
         return redirect(url_for('principal.receta.recetas'))
     
-    # Obtener datos para el formulario
-    galletas = bd.session.query(Galleta).all()
-    insumos = bd.session.query(Insumo).all()
-    medidas = bd.session.query(Medida).all()
-    return render_template('receta/crear_receta.html', 
-                         galletas=galletas, 
-                         insumos=insumos, 
-                         medidas=medidas)
+    except Exception as e:
+        flash(f"Error al crear la receta: {str(e)}", "danger")
+        return redirect(url_for('principal.receta.recetas'))
+
+# Ruta para editar una receta
+@controlador.route('/receta/editar/<int:receta_id>', methods=['POST'])
+@login_required
+@admin_or_trabajador_permission.require(http_exception=403)
+def editar_receta(receta_id):
+    try:
+        # Obtener los datos del formulario
+        nombre = request.form['nombre']
+        galleta_id = request.form['galleta_id']
+        procedimiento = request.form['procedimiento']
+        
+        # Obtener los arrays de insumos, cantidades y medidas
+        insumo_ids = request.form.getlist('insumo_id[]')
+        cantidades = request.form.getlist('cantidad[]')
+        medida_ids = request.form.getlist('medida_id[]')
+        
+        # Llamar al servicio para editar la receta
+        produccion_servicio = ProduccionServicio(bd)
+        produccion_servicio.editar_receta(receta_id, nombre, galleta_id, procedimiento, insumo_ids, cantidades, medida_ids)
+
+        # Mostrar mensaje de éxito
+        flash("Receta editada exitosamente.", "success")
+        return redirect(url_for('principal.receta.recetas'))
+    
+    except Exception as e:
+        flash(f"Error al editar la receta: {str(e)}", "danger")
+        return redirect(url_for('principal.receta.recetas'))

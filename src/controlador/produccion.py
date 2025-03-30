@@ -4,12 +4,7 @@ from servicio.produccion import ProduccionServicio
 from bd import bd
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
-from flask import Blueprint, render_template, request, redirect, url_for
-from modelo.galleta import Galleta
-from modelo.insumo import Insumo
-from modelo.medida import Medida
-from modelo.receta import Receta
-from modelo.ingrediente import Ingrediente
+from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
 

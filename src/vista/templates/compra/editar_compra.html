@@ -1,0 +1,132 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Editar Compra - DON GALLETO{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Editar Compra</h1>
+    <form action="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}" method="POST" class="space-y-4">
+        <!-- Proveedor -->
+        <div>
+            <label class="block text-gray-700 font-bold">Proveedor</label>
+            <select name="proveedor_id" class="w-full p-3 rounded-lg border" required>
+                <option value="" disabled>Seleccione un proveedor...</option>
+                {% for proveedor in proveedores %}
+                <option value="{{ proveedor.id }}" {% if proveedor.nombre == compra.proveedor %}selected{% endif %}>
+                    {{ proveedor.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Fecha -->
+        <div>
+            <label class="block text-gray-700 font-bold">Fecha</label>
+            <input type="date" name="fecha" class="w-full p-3 rounded-lg border" value="{{ compra.fecha }}" required>
+        </div>
+
+        <!-- Insumos Dinámicos -->
+        <div>
+            <label class="block text-gray-700 font-bold">Insumos</label>
+            <div id="insumos-container">
+                {% for detalle in compra.detalles %}
+                <div class="insumo-item flex space-x-2 mb-2">
+                    <select name="insumo_id[]" class="flex-1 p-3 rounded-lg border" required>
+                        <option value="" disabled>Seleccione un insumo</option>
+                        {% for insumo in insumos %}
+                        <option value="{{ insumo.id }}" {% if insumo.nombre == detalle.insumo %}selected{% endif %}>
+                            {{ insumo.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" name="cantidad[]" class="w-20 p-3 rounded-lg border cantidad" placeholder="Cant" value="{{ detalle.cantidad}}" required>
+                    <input type="number" step="0.01" name="precio[]" class="w-20 p-3 rounded-lg border precio" placeholder="Precio" value="{{ detalle.precio_unitario }}" required>
+                    <select name="medida_id[]" class="flex-1 p-3 rounded-lg border" required>
+                        <option value="" disabled>Medida</option>
+                        {% for medida in medidas %}
+                        <option value="{{ medida.id }}" {% if detalle.cantidad == medida.id %}selected{% endif %}>
+                            {{ medida.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div>
+                        <input type="date" name="fecha_expiracion[]" class="w-32 p-3 rounded-lg border" value="{{ detalle.fecha_expiracion or '' }}" required>
+                    </div>
+                    <button type="button" class="eliminar-insumo bg-red-500 text-white px-3 py-2 rounded-lg">-</button>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="agregar-insumo bg-green-500 text-white px-4 py-2 rounded-lg mt-2">Agregar Insumo</button>
+        </div>
+
+        <!-- Total -->
+        <div>
+            <label class="block text-gray-700 font-bold">Total</label>
+            <input type="number" step="0.01" name="total" id="total" class="w-full p-3 rounded-lg border bg-gray-100" value="{{ compra.total }}" readonly>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex justify-end space-x-4">
+            <a href="{{ url_for('principal.compra.compras') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg">Cancelar</a>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('insumos-container');
+        const totalInput = document.getElementById('total');
+
+        // Función para calcular el total
+        function calcularTotal() {
+            let total = 0;
+            document.querySelectorAll('.insumo-item').forEach(item => {
+                const cantidad = parseFloat(item.querySelector('.cantidad').value) || 0;
+                const precio = parseFloat(item.querySelector('.precio').value) || 0;
+                total += cantidad * precio;
+            });
+            totalInput.value = total.toFixed(2);
+        }
+
+        // Evento para recalcular el total al cambiar cantidad o precio
+        container.addEventListener('input', function(e) {
+            if (e.target.classList.contains('cantidad') || e.target.classList.contains('precio')) {
+                calcularTotal();
+            }
+        });
+
+        // Evento para manejar agregar y eliminar insumos
+        container.addEventListener('click', function(e) {
+            // Agregar un nuevo insumo
+            if (e.target.classList.contains('agregar-insumo')) {
+                const newItem = document.querySelector('.insumo-item').cloneNode(true);
+
+                // Limpiar los valores del nuevo insumo
+                newItem.querySelectorAll('select, input').forEach(input => {
+                    if (input.tagName === 'SELECT') {
+                        input.selectedIndex = 0;
+                    } else {
+                        input.value = '';
+                    }
+                });
+
+                // Agregar el nuevo insumo al contenedor
+                container.appendChild(newItem);
+                calcularTotal(); // Recalcular el total
+            }
+
+            // Eliminar un insumo
+            if (e.target.classList.contains('eliminar-insumo')) {
+                if (container.children.length > 1) {
+                    e.target.closest('.insumo-item').remove();
+                    calcularTotal(); // Recalcular el total después de eliminar
+                }
+            }
+        });
+
+        // Inicializa el total al cargar la página
+        calcularTotal();
+    });
+</script>
+{% endblock %}
