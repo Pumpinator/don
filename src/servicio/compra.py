@@ -1,4 +1,5 @@
 from modelo.compra import Compra
+from modelo.proveedor import Proveedor
 from modelo.compra_detalle import CompraDetalle
 
 class CompraServicio:
@@ -14,5 +15,16 @@ class CompraServicio:
     
     def obtener_compra_detalles(self, compra_id):
         return self.bd.session.query(CompraDetalle).filter(CompraDetalle.compra_id == compra_id).all()
+    
+    def obtener_proveedores(self):
+        return self.bd.session.query(Proveedor).all()
+    
+    def obtener_proveedor(self, proveedor_id):
+        return self.bd.session.query(Proveedor).get(proveedor_id)
+    
+    def crear_compra(self, compra):
+        self.bd.session.add(compra)
+        self.bd.session.commit()
+        return compra
     
     

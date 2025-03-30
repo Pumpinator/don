@@ -1,0 +1,84 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Agregar Receta - DON GALLETO{% endblock %}
+
+{% block content %}
+<p class="text-gray-500 text-lg font-semibold text-center">Agregar Receta</p>
+
+<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+    <main class="flex flex-col items-center px-6">
+        <form action="{{ url_for('principal.receta.crear_receta') }}" method="POST" class="w-full max-w-sm space-y-4" id="recetaForm">
+            <!-- Nombre de la receta -->
+            <div>
+                <label class="block text-gray-700 font-bold">Nombre de la Receta</label>
+                <input type="text" name="nombre" class="w-full p-3 rounded-2xl focus:outline-none" placeholder="Ingrese el nombre de la receta" required>
+            </div>
+
+            <!-- Selección de galleta -->
+            <div>
+                <label class="block text-gray-700 font-bold">Galleta</label>
+                <select name="galleta_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none" required>
+                    <option value="" disabled selected>Seleccione una galleta...</option>
+                    {% for galleta in galletas %}
+                        <option value="{{ galleta.id }}">{{ galleta.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Procedimiento -->
+            <div>
+                <label class="block text-gray-700 font-bold">Procedimiento</label>
+                <textarea name="procedimiento" class="w-full p-3 rounded-2xl focus:outline-none" rows="4" placeholder="Describa el procedimiento de la receta" required></textarea>
+            </div>
+
+            <!-- Insumos (Sección dinámica) -->
+            <div>
+                <label class="block text-gray-700 font-bold">Insumos</label>
+                <div id="insumos-container">
+                    <!-- Primer conjunto de campos -->
+                    <div class="insumo-item flex space-x-2 mb-2">
+                        <select name="insumo_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                            <option value="" disabled selected>Seleccione un insumo</option>
+                            {% for insumo in insumos %}
+                                <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="cantidad[]" class="w-20 p-3 rounded-2xl focus:outline-none" placeholder="Cant" required>
+                        <select name="medida_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                            <option value="" disabled selected>Medida</option>
+                            {% for medida in medidas %}
+                                <option value="{{ medida.id }}">{{ medida.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="agregar-insumo bg-green-500 text-white p-3 rounded-2xl">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="space-y-2">
+                <button type="button" onclick="window.location.href='/produccion'" class="w-full bg-gray-300 p-3 rounded-2xl">Cancelar</button>
+                <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-2xl">Agregar</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- JavaScript para manejar insumos dinámicos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('insumos-container');
+            
+            // Agregar nuevo conjunto de campos
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('agregar-insumo')) {
+                    const newItem = document.querySelector('.insumo-item').cloneNode(true);
+                    // Limpiar los valores seleccionados
+                    newItem.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                    newItem.querySelector('input').value = '';
+                    container.appendChild(newItem);
+                }
+            });
+        });
+    </script>
+</body>
+{% endblock %}
