@@ -1,0 +1,78 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Mi Cuenta - DON GALLETO{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-3xl font-bold mb-8">Mi Cuenta</h1>
+    <!-- Información del usuario -->
+    <div class="space-y-4">
+        <!-- Nombre -->
+        <a href="{{ url_for('principal.usuario.editar_cuenta', campo='nombre') }}" class="block bg-white rounded-lg shadow-sm">
+            <div class="p-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-sm font-medium text-gray-700">Name</h2>
+                    <p class="text-lg text-gray-900">{{ current_user.nombre }}</p>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+        </a>
+
+        <!-- Email -->
+        <a href="{{ url_for('principal.usuario.editar_cuenta', campo='email') }}" class="block bg-white rounded-lg shadow-sm">
+            <div class="p-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-sm font-medium text-gray-700">Email</h2>
+                    <div class="flex items-center">
+                        <p class="text-lg text-gray-900 break-all">{{ current_user.email }}</p>
+                        {% if current_user.email_verificado %}
+                        <span class="ml-2 text-green-500 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 flex-shrink-0" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+        </a>
+
+        <!-- Rol (solo visible, no editable) -->
+        <div class="block bg-white rounded-lg shadow-sm">
+            <div class="p-4">
+                <h2 class="text-sm font-medium text-gray-700">Rol</h2>
+                <p class="text-lg text-gray-900">{{ current_user.rol.nombre }}</p>
+            </div>
+        </div>
+
+        <!-- Estatus (solo visible, no editable) -->
+        <div class="block bg-white rounded-lg shadow-sm">
+            <div class="p-4">
+                <h2 class="text-sm font-medium text-gray-700">Estatus</h2>
+                {% if current_user.estatus %}
+                <p class="text-lg">Activo</p>
+                {% else %}
+                <p class="text-lg">Inactivo</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de cerrar sesión -->
+    <div class="mt-8">
+        <a href="{{ url_for('principal.salir') }}"
+            class="block w-full bg-[var(--color-dirt-default)] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[var(--color-latte-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-latte-default)] text-center">
+            Cerrar Sesión
+        </a>
+    </div>
+</div>
+{% endblock %}

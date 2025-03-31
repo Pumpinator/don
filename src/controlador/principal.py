@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from bd import bd
 from controlador.compra import controlador as controlador_compra
 from controlador.galleta import controlador as controlador_galleta
@@ -75,11 +75,6 @@ def registrar():
             except ValueError as e:
                 flash(str(e), "danger")
     return render_template('registrar.html', form=form)
-
-@controlador.route('/cuenta')
-@login_required
-def cuenta():
-    return render_template('cuenta.html')
 
 @controlador.route('/salir')
 @login_required

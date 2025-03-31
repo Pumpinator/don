@@ -31,7 +31,7 @@
                 <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </button>
             {% endif %}
-            <a href="{{url_for('principal.cuenta')}}"
+            <a href="{{url_for('principal.usuario.cuenta')}}"
                 class="hover:text-[var(--color-chocolate-default)] cursor-pointer">
                 <i class="fas fa-user text-xl"></i>
             </a>
@@ -44,38 +44,82 @@
     </main>
 
     {% if current_user.roles[0] == 'TRABAJADOR' %}
-    <nav class="bg-white border-t border-gray-200">
-        <div class="flex justify-around">
+    <div
+        class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2">
+        <div class="grid h-full max-w-lg grid-cols-7 mx-auto text-[var(--color-chocolate-default)]">
             <a href="{{ url_for('principal.index') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'index' else 'text-gray-700' }}">
+                class="inline-flex flex-col items-center justify-center px-5 rounded-s-full transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-home text-xl"></i>
+                <span class="sr-only">Inicio</span>
+            </a>
+            <a href="{{ url_for('principal.index') }}"
+                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                Inicio
+                <div class="tooltip-arrow" data-popper-arrow></div>
             </a>
             <a href="{{ url_for('principal.compra.compras') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'compras' else 'text-gray-700' }}">
+                class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-truck text-xl"></i>
-            </a>
-            <a href="{{ url_for('principal.insumo.insumos') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'insumos' else 'text-gray-700' }}">
-                <i class="fas fa-egg text-xl"></i>
-            </a>
-            <a href="{{ url_for('principal.receta.recetas') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'recetas' else 'text-gray-700' }}">
-                <i class="fas fa-receipt text-xl"></i>
-            </a>
-            <a href="{{ url_for('principal.galleta.galletas') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'galletas' else 'text-gray-700' }}">
-                <i class="fas fa-cookie text-xl"></i>
-            </a>
-            <a href="{{ url_for('principal.merma.mermas') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'mermas' else 'text-gray-700' }}">
-                <i class="fas fa-arrow-trend-down text-xl"></i>
-            </a>
-            <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
-                class="flex flex-col items-center justify-center p-4 {{ 'bg-[var(--color-chocolate-default)] text-white rounded-t-none rounded-b-lg' if request.endpoint == 'usuarios' else 'text-gray-700' }}">
-                <i class="fas fa-users text-xl"></i>
-            </a>
+                <span class="sr-only">Compras</span>
+                </button>
+                <a href="{{ url_for('principal.compra.compras') }}"
+                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                    Compras
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                </a>
+                <a href="{{ url_for('principal.insumo.insumos') }}"
+                    class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                    <i class="fas fa-egg text-xl"></i>
+                    <span class="sr-only">Compras</span>
+                    </button>
+                    <a href="{{ url_for('principal.insumo.insumos') }}"
+                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                        Compras
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </a>
+                    <a href="{{ url_for('principal.receta.recetas') }}"
+                        class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                        <i class="fas fa-receipt text-xl"></i>
+                        <span class="sr-only">Recetas</span>
+                        </button>
+                        <a href="{{ url_for('principal.receta.recetas') }}"
+                            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                            Recetas
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </a>
+                        <a href="{{ url_for('principal.galleta.galletas') }}"
+                            class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                            <i class="fas fa-cookie text-xl"></i>
+                            <span class="sr-only">Galletas</span>
+                            </button>
+                            <a href="{{ url_for('principal.galleta.galletas') }}"
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                Galletas
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </a>
+                            <a href="{{ url_for('principal.merma.mermas') }}"
+                                class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                                <i class="fas fa-arrow-trend-down text-xl"></i>
+                                <span class="sr-only">Mermas</span>
+                                </button>
+                                <a href="{{ url_for('principal.merma.mermas') }}"
+                                    class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                    Mermas
+                                    <div class="tooltip-arrow" data-popper-arrow></div>
+                                </a>
+                                <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
+                                    class="inline-flex flex-col items-center justify-center px-5 rounded-e-full transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                                    <i class="fas fa-users text-xl"></i>
+                                    <span class="sr-only">Usuarios</span>
+                                    </button>
+                                    <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                        Usuarios
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </a>
         </div>
-    </nav>
+    </div>
+
     {% endif %}
 
     {% with messages = get_flashed_messages(with_categories=true) %}

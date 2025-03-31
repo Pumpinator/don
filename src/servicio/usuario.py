@@ -46,7 +46,6 @@ class UsuarioServicio:
         nombre = form.nombre.data
         email = form.email.data
         password = form.password.data
-        print(form.rol.data)
         
         if self.obtener_usuario(email=email):
             raise ValueError("El correo ya se encuentra registrado.")
@@ -70,13 +69,25 @@ class UsuarioServicio:
             raise ValueError("Usuario desactivado.")
         return usuario
     
+    def editar_cuenta(self, current_user, request, campo):
+        if campo == 'nombre':
+            current_user.nombre = request.form.get('nombre')
+        elif campo == 'email':
+            nuevo_email = request.form.get('email')
+            if nuevo_email != current_user.email:
+                if self.obtener_usuario(email=nuevo_email):
+                    raise ValueError("El correo ya se encuentra registrado.")
+                current_user.email = nuevo_email
+                current_user.email_verificado = False
+        self.bd.session.commit()
+        
+    
     def editar_usuario(self, form):
         id= form.id.data
         nombre = form.nombre.data
         email = form.email.data
         password = form.password.data
         rol = form.rol.data
-        print(rol)
         
         usuario = self.obtener_usuario(id=id)
         

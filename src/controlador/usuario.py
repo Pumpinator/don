@@ -12,7 +12,6 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 @controlador.before_request
 def verificar_usuario():
     rol = request.view_args.get('rol')
-    print(rol)
     if rol == 'administradores' and current_user.rol.nombre != 'ADMIN':
         abort(403)
 
@@ -49,8 +48,7 @@ def editar_usuario(rol, id):
     
     form = EditarForm(obj=usuario)
     form.rol.choices.insert(0, [None, "Selecciona un rol..."])
-    if (current_user.rol != 'ADMIN'):
-        form.rol.choices.remove(('ADMIN', 'Administrador'))
+    if (current_user.rol != 'ADMIN'): form.rol.choices.remove(('ADMIN', 'Administrador'))
     form.rol.data = usuario.rol.nombre
     
     if request.method == 'POST' and form.validate():
@@ -75,7 +73,7 @@ def desactivar_usuario(rol, id):
         return redirect(url_for('usuario.listar_usuarios', rol=rol))
     except ValueError as e:
         flash(str(e), "danger")
-    return redirect(url_for('usuario.listar_usuarios', rol=rol))
+    return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
 
 @controlador.route('/<rol>/activar/<int:id>', methods=['POST'])
 @login_required
@@ -88,4 +86,30 @@ def activar_usuario(rol, id):
         return redirect(url_for('usuario.listar_usuarios', rol=rol))
     except ValueError as e:
         flash(str(e), "danger")
-    return redirect(url_for('usuario.listar_usuarios', rol=rol))
+    return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
+
+@controlador.route('/cuenta')
+@login_required
+def cuenta():
+    return render_template('usuario/cuenta.html')
+
+@controlador.route('/cuenta/<campo>', methods=['GET', 'POST'])
+@login_required
+def editar_cuenta(campo):
+    campos_permitidos = {
+        'nombre': 'Nombre',
+        'email': 'Email'
+    }
+    
+    if campo not in campos_permitidos:
+        abort(404)
+    
+    if request.method == 'POST':
+        try:
+            usuario_servicio = UsuarioServicio(bd)
+            usuario_servicio.editar_cuenta(current_user, request, campo)
+            flash('Perfil actualizado correctamente', 'success')
+            return redirect(url_for('principal.usuario.cuenta'))
+        except ValueError as e:
+            flash(str(e), 'danger')    
+    return render_template('usuario/editar_cuenta.html', campo=campo, campo_nombre=campos_permitidos[campo])
