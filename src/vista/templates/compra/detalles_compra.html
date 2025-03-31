@@ -6,20 +6,37 @@
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold mb-4">Detalles de Compra</h1>
     <div class="bg-gray-200 rounded-lg p-6">
-        <h2 class="text-lg font-semibold text-gray-800">Proveedor: {{ compra.proveedor }}</h2>
+        <h2 class="text-lg font-semibold text-gray-800">Proveedor {{ compra.proveedor }}</h2>
         <p class="text-sm text-gray-600">Fecha: {{ compra.fecha }}</p>
         <p class="text-sm text-gray-600">Total: ${{ compra.total }}</p>
-        <h3 class="text-lg font-semibold text-gray-800 mt-4">Detalles:</h3>
-        <ul class="mt-2">
+        <h3 class="text-lg font-semibold text-gray-800 mt-4">Insumos</h3>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             {% for detalle in compra.detalles %}
-            <li class="text-sm text-gray-600">
-                {{ detalle.insumo }} - {{ detalle.cantidad }} - ${{ detalle.precio_unitario }} c/u - Total: ${{ detalle.precio_total }}
+            <li class="mb-3 sm:pb-4">
+                <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">
+                            {{ detalle.insumo }}
+                        </p>
+                        <p class="text-sm text-gray-500 truncate">
+                            ${{ detalle.precio_unitario }} {{ detalle.medida_abreviatura }}
+                        </p>
+                    </div>
+                    <div class="flex-1 items-center text-base font-semibold text-gray-900">
+                        {{ detalle.cantidad }} {{ detalle.medida_abreviatura }}
+                    </div>
+                    <div class="inline-flex items-center text-base font-semibold text-gray-900">
+                        ${{ detalle.precio_total }}
+                    </div>
+                </div>
             </li>
             {% endfor %}
+
         </ul>
     </div>
     <div class="mt-6">
-        <a href="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Editar Compra</a>
+        <a href="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}"
+            class="bg-[var(--color-dirt-default)] text-white px-4 py-2 rounded-lg">Editar Compra</a>
     </div>
 </div>
 {% endblock %}

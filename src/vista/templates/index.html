@@ -29,7 +29,7 @@ and current_user.roles[0] == 'TRABAJADOR' %}
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="#" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+            <a href="{{ url_for('principal.pedido.menu') }}" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
             <a href="{{ url_for('principal.ingresar') }}" class="block bg-gray-200 text-gray-800 text-center py-2 px-4 rounded-lg mt-4 hover:bg-gray-300">
@@ -46,7 +46,7 @@ and current_user.roles[0] == 'TRABAJADOR' %}
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="#" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+            <a href="{{ url_for('principal.pedido.menu') }}" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
         </div>

@@ -102,7 +102,7 @@ def editar_compra(compra_id):
         medidas=medidas
     )
 
-@controlador.route('/compra/detalles/<int:compra_id>', methods=['GET'])
+@controlador.route('/compra/<int:compra_id>', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def detalles_compra(compra_id):

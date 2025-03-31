@@ -5,3 +5,4 @@ class Medida(bd.Model):
     
     id = bd.Column(bd.Integer, primary_key=True)
     nombre = bd.Column(bd.String(50), nullable=False)
+    abreviatura = bd.Column(bd.String(10), nullable=False)
