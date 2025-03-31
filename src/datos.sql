@@ -191,11 +191,11 @@ VALUES ('Harinera Beleño', '477 391 0598'),
        ('Leche León', '477 152 2100'),
        ('Costco Wholesale', '477 788 1300');
 
-INSERT INTO compras (proveedor_id, fecha)
-VALUES (1, '2021-01-01'),
-       (2, '2021-01-01'),
-       (3, '2021-01-01'),
-       (4, '2021-01-01');
+INSERT INTO compras (proveedor_id, fecha, total)
+VALUES (1, '2021-01-01', 0),
+       (2, '2021-01-01', 0),
+       (3, '2021-01-01', 0),
+       (4, '2021-01-01', 0);
 
 INSERT INTO compras_detalles (compra_id, insumo_id, precio_unitario, precio_total, cantidad, medida_id)
 VALUES (1, 1, @precio_harina, @costo_harina, @inventario_harina, 1),
@@ -230,29 +230,29 @@ VALUES (1, 1, '2022-01-01', @precio_harina, @inventario_harina, 1),
        (4, 13, '2022-01-01', @precio_cacahuate, @inventario_cacahuate, 1),
        (4, 14, '2022-01-01', @precio_coco, @inventario_coco, 1);
 
-INSERT INTO recetas (nombre, galleta_id)
-VALUES ('Chispas de Chocolate', 1),
-       ('Avena', 2),
-       ('Nuez', 3),
-       ('Pasas', 4),
-       ('Fresa', 5),
-       ('Mantequilla', 6),
-       ('Chocolate con Avellana', 7),
-       ('Almendra', 8),
-       ('Cacahuate', 9),
-       ('Coco', 10);
+INSERT INTO recetas (nombre, procedimiento, galleta_id)
+VALUES ('Chispas de Chocolate', 'Mezclar los ingredientes y hornear', 1),
+       ('Avena', 'Mezclar los ingredientes y hornear', 2),
+       ('Nuez', 'Mezclar los ingredientes y hornear', 3),
+       ('Pasas', 'Mezclar los ingredientes y hornear', 4),
+       ('Fresa', 'Mezclar los ingredientes y hornear', 5),
+       ('Mantequilla', 'Mezclar los ingredientes y hornear', 6),
+       ('Chocolate con Avellana', 'Mezclar los ingredientes y hornear', 7),
+       ('Almendra', 'Mezclar los ingredientes y hornear', 8),
+       ('Cacahuate', 'Mezclar los ingredientes y hornear', 9),
+       ('Coco', 'Mezclar los ingredientes y hornear', 10);
 
-INSERT INTO producciones (fecha, costo, receta_id)
-VALUES ('2021-01-01', @receta_chispas_chocolate, 1),
-       ('2021-01-01', @receta_avena, 2),
-       ('2021-01-01', @receta_nuez, 3),
-       ('2021-01-01', @receta_pasas, 4),
-       ('2021-01-01', @receta_fresa, 5),
-       ('2021-01-01', @receta_mantequilla, 6),
-       ('2021-01-01', @receta_chocolate_avellana, 7),
-       ('2021-01-01', @receta_almendra, 8),
-       ('2021-01-01', @receta_cacahuate, 9),
-       ('2021-01-01', @receta_coco, 10);
+INSERT INTO producciones (fecha, costo, estatus, receta_id)
+VALUES ('2021-01-01', @receta_chispas_chocolate, 0, 1),
+       ('2021-01-01', @receta_avena, 0, 2),
+       ('2021-01-01', @receta_nuez, 0, 3),
+       ('2021-01-01', @receta_pasas, 0, 4),
+       ('2021-01-01', @receta_fresa, 0, 5),
+       ('2021-01-01', @receta_mantequilla, 0, 6),
+       ('2021-01-01', @receta_chocolate_avellana, 0, 7),
+       ('2021-01-01', @receta_almendra, 0, 8),
+       ('2021-01-01', @receta_cacahuate, 0, 9),
+       ('2021-01-01', @receta_coco, 0, 10);
 
 INSERT INTO galletas_inventarios (produccion_id, galleta_id, fecha_expiracion, costo, cantidad, medida_id)
 VALUES (1, 1, '2022-01-01', FLOOR(@receta_chispas_chocolate * 100), 100, 3),

@@ -11,3 +11,4 @@ class TransaccionDetalle(Medible):
     @declared_attr
     def precio_total(cls):
         return bd.Column(bd.Float, nullable=False)
+    

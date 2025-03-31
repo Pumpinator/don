@@ -9,7 +9,7 @@ class Venta(Transaccion, bd.Model):
     pagado = bd.Column(bd.Boolean, default=False, nullable=False)
     fecha_entrega = bd.Column(bd.Date, nullable=False)
     
-    comprador_id = bd.Column(bd.Integer, bd.ForeignKey('usuarios.id'), nullable=False)
+    comprador_id = bd.Column(bd.Integer, bd.ForeignKey('usuarios.id'), nullable=True)
     comprador = bd.relationship(Usuario, foreign_keys=[comprador_id], backref='compras_realizadas')
     
     vendedor_id = bd.Column(bd.Integer, bd.ForeignKey('usuarios.id'), nullable=False)
