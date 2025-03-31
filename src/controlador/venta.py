@@ -14,11 +14,12 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def mostrador():
+    busqueda = request.args.get('busqueda', None)
     venta_servicio = VentaServicio(bd)
-    carrito, total, comprador = venta_servicio.obtener_carrito(session)
-    mostrador = venta_servicio.obtener_mostrador()
+    carrito, total, _ = venta_servicio.obtener_carrito(session)
+    mostrador = venta_servicio.obtener_mostrador(busqueda)
     session['comprador'] = None
-    return render_template('venta/mostrador.html', mostrador=mostrador, carrito=carrito, total=total)
+    return render_template('venta/mostrador.html', mostrador=mostrador, carrito=carrito, total=total, busqueda=busqueda)
 
 @controlador.route('/ventas/carrito/agregar', methods=['POST'])
 @login_required

@@ -3,98 +3,99 @@
 {% block title %}Ventas - DON{% endblock %}
 
 {% block content %}
-
-{% if carrito and total %}
-<div class="p-4 mb-4 text-sm text-[var(--color-chocolate-default)]" role="alert">
-    <span class="font-medium">Total: ${{ total }}</span>
-    <a href="{{ url_for('principal.venta.ver_carrito') }}"
-        class="inline-flex items-center font-medium text-[var(--color-chocolate-default)] hover:underline">
-        Ver carrito
-        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 12H5m14 0-4 4m4-4-4-4" />
-        </svg>
-    </a>
-</div>
-{% endif %}
-
-<form action="{{ url_for('principal.venta.mostrador') }}" method="get" class="mb-6">
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+          <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
+            <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+          </a>
+          <h2 class="ml-4 text-2xl font-bold text-gray-800">Mostrador de Venta</h2>
         </div>
-        <input type="search" name="busqueda" value="{{ busqueda }}"
-            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Buscar galletas..." required>
-    </div>
-</form>
-
-<div class="grid grid-cols-1 w-full gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-    {% for galleta in mostrador %}
-    <div
-        class="flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow-sm transition duration-75 hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1">
-        {% if galleta.imagen %}
-        <img src="{{ url_for('static', filename='img/' ~ galleta.imagen) }}" alt="{{ galleta.galleta }}"
-            class="w-full h-48 object-contain rounded-t-lg">
-        {% else %}
-        <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded-t-lg">
-            <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                fill="currentColor" viewBox="0 0 640 512">
-                <path
-                    d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
-            </svg>
-        </div>
+        {% if carrito and total %}
+        <a href="{{ url_for('principal.venta.ver_carrito') }}" class="flex items-center space-x-2 text-[var(--color-dirt-default)] hover:text-[var(--color-dirt-dark)]">
+          <i class="fa-solid fa-cart-shopping text-xl"></i>
+          <span class="text-lg font-semibold">${{ total }}</span>
+        </a>
         {% endif %}
-        <div class="grid grid-cols-2 justify-between p-4 leading-normal w-full">
-            <div class="flex flex-col">
-                <h5 class="mb-2 text-xl break-words font-bold tracking-tight text-gray-900">
-                    {{ galleta.galleta }}
-                </h5>
-                <div class="flex flex-col">
-                    {% if galleta.cantidad|float > 0 and galleta.cantidad|float <= 1 %} <span
-                        class="text-sm font-normal text-yellow-600">Bajo stock</span>
-                        {% elif galleta.cantidad|float == 0 %}
-                        <span class="text-sm font-normal text-red-600">Sin stock</span>
-                        {% else %}
-                        <span class="text-sm font-normal text-green-600">En stock</span>
-                        {% endif %}
-                </div>
+      </div>
+    <form action="{{ url_for('principal.venta.mostrador') }}" method="get" class="mb-6">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
             </div>
-            <div class="flex flex-col items-end">
-                <span class="text-2xl font-bold text-gray-900">${{ galleta.precio }}</span>
-                <p class="text-sm font-normal text-gray-700">pz</p>
-            </div>
-            <div class="flex flex-col col-span-2">
-                <form action="{{ url_for('principal.venta.agregar_galleta') }}" method="post"
-                    class="mt-4 md:flex items-center">
-                    <input type="hidden" name="galleta_id" value="{{ galleta.galleta_id }}">
-                    <input type="hidden" name="medida_id" value="1">
-                    <select name="presentacion"
-                        class="border rounded-full px-3 py-2 w-full focus:ring-[var(--color-red-default)] text-center focus:border-[var(--color-red-default)]">
-                        <option value="1 pz">1 pz</option>
-                        <option value="2 pz">2 pz</option>
-                        <option value="5 pz">5 pz</option>
-                        <option value="500 g">500 g</option>
-                        <option value="700 g">700 g</option>
-                        <option value="1 kg">1 kg</option>
-                    </select>
-                    <button type="submit"
-                        class="hover:bg-[var(--color-dirt-default)] hover:text-white mt-2 md:mt-0 transition duration-150 cursor-pointer w-full text-[var(--color-dirt-default)] px-2 py-2 rounded md:ml-2">Agregar</button>
-            </div>
-            </form>
+            <input type="search" name="busqueda" value="{{ busqueda }}"
+                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Buscar galletas...">
         </div>
-    </div>
-    {% endfor %}
-</div>
+    </form>
 
-<!-- Mensaje si no hay resultados -->
-{% if mostrador|length == 0 %}
-<div class="p-4 mb-4 text-sm text-[var(--color-chocolate-default)]" role="alert">
-    <span class="font-medium">No se encontraron galletas.</span>
+    <div class="grid grid-cols-1 w-full gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        {% for galleta in mostrador %}
+        <div
+            class="flex flex-col items-start bg-white border border-gray-200 rounded-lg shadow-sm transition duration-75 hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1">
+            {% if galleta.imagen %}
+            <img src="{{ url_for('static', filename='img/' ~ galleta.imagen) }}" alt="{{ galleta.galleta }}"
+                class="w-full h-48 object-contain rounded-t-lg">
+            {% else %}
+            <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded-t-lg">
+                <svg class="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                    fill="currentColor" viewBox="0 0 640 512">
+                    <path
+                        d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z" />
+                </svg>
+            </div>
+            {% endif %}
+            <div class="grid grid-cols-2 justify-between p-4 leading-normal w-full">
+                <div class="flex flex-col">
+                    <h5 class="mb-2 text-xl break-words font-bold tracking-tight text-gray-900">
+                        {{ galleta.galleta }}
+                    </h5>
+                    <div class="flex flex-col">
+                        {% if galleta.cantidad|float > 0 and galleta.cantidad|float <= 1 %} <span
+                            class="text-sm font-normal text-yellow-600">Bajo stock</span>
+                            {% elif galleta.cantidad|float == 0 %}
+                            <span class="text-sm font-normal text-red-600">Sin stock</span>
+                            {% else %}
+                            <span class="text-sm font-normal text-green-600">En stock</span>
+                            {% endif %}
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-2xl font-bold text-gray-900">${{ galleta.precio }}</span>
+                    <p class="text-sm font-normal text-gray-700">pz</p>
+                </div>
+                <div class="flex flex-col col-span-2">
+                    <form action="{{ url_for('principal.venta.agregar_galleta') }}" method="post"
+                        class="mt-4 md:flex items-center">
+                        <input type="hidden" name="galleta_id" value="{{ galleta.galleta_id }}">
+                        <input type="hidden" name="medida_id" value="1">
+                        <select name="presentacion"
+                            class="border rounded-full px-3 py-2 w-full focus:ring-[var(--color-red-default)] text-center focus:border-[var(--color-red-default)]">
+                            <option value="1 pz">1 pz</option>
+                            <option value="2 pz">2 pz</option>
+                            <option value="5 pz">5 pz</option>
+                            <option value="500 g">500 g</option>
+                            <option value="700 g">700 g</option>
+                            <option value="1 kg">1 kg</option>
+                        </select>
+                        <button type="submit"
+                            class="hover:bg-[var(--color-dirt-default)] hover:text-white mt-2 md:mt-0 transition duration-150 cursor-pointer w-full text-[var(--color-dirt-default)] px-2 py-2 rounded md:ml-2">Agregar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Mensaje si no hay resultados -->
+    {% if mostrador|length == 0 %}
+    <div class="p-4 mb-4 text-sm text-[var(--color-chocolate-default)]" role="alert">
+        <span class="font-medium">No se encontraron galletas.</span>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 {% endblock %}

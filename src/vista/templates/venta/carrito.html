@@ -4,8 +4,14 @@
 
 {% block content %}
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
-    <h2 class="text-xl font-semibold text-gray-900 sm:text-2xl">Carrito de Venta <span
-            class="text-xs font-normal text-gray-500">({{ carrito|length }} productos)</span></h2>
+    <div class="flex items-center">
+        <a href="{{ url_for('principal.venta.mostrador') }}" class="flex-shrink-0">
+            <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+        </a>
+        <h2 class="ml-4 text-2xl font-bold text-gray-800">Carrito de Venta <span
+                class="text-xs font-normal text-gray-500">({{ carrito|length }} {% if carrito|length == 1 %}producto{%
+                else %}productos{% endif %})</span></h2>
+    </div>
 
     <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
         <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
@@ -78,7 +84,7 @@
                 {% if carrito|length > 0 %}
                 <div class="flex items-end justify-end">
                     <a href="{{ url_for('principal.venta.vaciar_carrito') }}"
-                        class="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium hover:text-white transition duration-75 hover:bg-[var(--color-dirt-default)] focus:outline-none focus:ring-4 focus:ring-[var(--color-dirt-default)]">
+                        class="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-[var(--color-red-default)] hover:text-white transition duration-75 hover:bg-[var(--color-red-default)] focus:outline-none focus:ring-4 focus:ring-[var(--color-red-default)]">
                         <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -99,14 +105,18 @@
                 <div class="space-y-4">
                     <div class="space-y-1">
                         {% for key, item in carrito.items() %}
-                        <dl class="flex justify-between gap-4 ">
-                            <dt class="text-base font-normal text-gray-500">{{ item.nombre }}</dt>
-                            <dt class="text-base font-normal text-gray-500">{{ item.cantidad }}</dt>
-                            <dd class="text-base font-medium text-gray-900">${{ item.subtotal }}</dd>
-                        </dl>
-                        <dl class="flex justify-between gap-4">
-                            <dt class="text-xs font-normal text-gray-500">{{ item.presentacion }}</dt>
-                        </dl>
+                        <div class="grid grid-cols-3 justify-between gap-4">
+                            <div class="flex flex-col text-start space-x-4">
+                                <p class="text-base font-normal text-gray-500">{{ item.nombre }}</p>
+                                <p class="text-xs font-normal text-gray-500">{{ item.presentacion }}</p>
+                            </div>
+                            <div class="text-center space-x-4">
+                                <p class="text-base font-normal text-gray-500">{{ item.cantidad }}</p>
+                            </div>
+                            <div class="text-end space-x-4">
+                                <p class="text-base font-medium text-gray-900">${{ item.subtotal }}</p>
+                            </div>
+                        </div>
                         {% endfor %}
                         <!-- <dl class="flex items-center justify-between gap-4">
                             <dt class="text-base font-normal text-gray-500">Entrega</dt>
@@ -179,16 +189,18 @@
                 <h3 class="mb-5 text-lg font-normal text-gray-500">
                     ¿Está seguro que desea generar el ticket de compra y cerrar la venta?
                 </h3>
-                <a href="{{ url_for('principal.venta.cerrar_venta', ticket=1) }}"
-                    class="text-white bg-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-default)] focus:ring-4 focus:outline-none focus:ring-[var(--color-dirt-default)] font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                    <i class="fa-solid fa-check mr-2"></i>
-                    Sí, generar
-                </a>
-                <a href="{{ url_for('principal.venta.cerrar_venta', ticket=0) }}"
-                    class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
-                    <i class="fa-solid fa-xmark mr-2"></i>
-                    No generar
-                </a>
+                <div class="flex items-center justify-center gap-2">
+                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=1) }}"
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
+                        <i class="fa-solid fa-check mr-2"></i>
+                        Sí, generar
+                    </a>
+                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=0) }}"
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
+                        <i class="fa-solid fa-xmark mr-2"></i>
+                        No generar
+                    </a>
+                </div>
             </div>
         </div>
     </div>

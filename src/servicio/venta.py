@@ -24,6 +24,42 @@ class VentaServicio:
     
     def obtener_inventario(self, galleta_id):
         return self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta_id).first()
+    
+    def obtener_mostrador(self, busqueda=None):
+        query = (
+            self.bd.session
+            .query(
+                Galleta.id,
+                Galleta.nombre,
+                func.sum(GalletaInventario.cantidad).label("cantidad_total"),
+                func.min(Galleta.precio).label("precio"),
+                Galleta.imagen,
+                Medida.nombre
+            )
+            .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
+            .join(Medida, GalletaInventario.medida_id == Medida.id)
+        )
+        
+        if busqueda:
+            # Búsqueda insensible a mayúsculas
+            query = query.filter(Galleta.nombre.ilike(f"%{busqueda}%"))
+        
+        query = query.group_by(Galleta.id, Galleta.nombre, Medida.nombre)
+        query = query.order_by(func.sum(GalletaInventario.cantidad).desc())
+        resultados = query.all()
+        
+        mostrador = [
+            {
+                "galleta_id": galleta_id,
+                "galleta": nombre,
+                "cantidad": float(cantidad_total),
+                "precio": precio,
+                "imagen": imagen,
+                "medida": medida
+            }
+            for galleta_id, nombre, cantidad_total, precio, imagen, medida in resultados
+        ]
+        return mostrador
         
     def cerrar_venta(self, session, current_user):
         carrito = session.get('carrito', {})
@@ -70,36 +106,6 @@ class VentaServicio:
         session.pop('cantidad_total', None)
         session.pop('comprador', None)
         session.modified = True
-            
-    
-    def obtener_mostrador(self):
-        resultados = (
-            self.bd.session
-            .query(
-                Galleta.id,
-                Galleta.nombre, 
-                func.sum(GalletaInventario.cantidad).label("cantidad_total"),
-                func.min(Galleta.precio).label("precio"),
-                Galleta.imagen,
-                Medida.nombre
-            )
-            .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
-            .join(Medida, GalletaInventario.medida_id == Medida.id)
-            .group_by(Galleta.id, Galleta.nombre, Medida.nombre)
-            .all()
-        )
-        mostrador = [
-            {
-                "galleta": nombre,
-                "galleta_id": galleta_id,
-                "cantidad": float(cantidad_total),
-                "precio": precio,
-                "medida": medida,
-                "imagen": imagen,
-            }
-            for galleta_id, nombre, cantidad_total, precio, imagen, medida in resultados
-        ]
-        return mostrador
     
     def agregar_galleta(self, form, session):
         print("Formulario recibido:", form)
