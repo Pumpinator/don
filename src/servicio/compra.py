@@ -22,7 +22,8 @@ class CompraServicio:
                 Insumo.nombre.label('insumo_nombre'),
                 CompraDetalle.cantidad,
                 CompraDetalle.precio_unitario,
-                Medida.nombre.label('medida_nombre')
+                Medida.nombre.label('medida_nombre'),
+                Medida.abreviatura.label('medida_abreviatura')
             )
             .join(Compra.proveedor)
             .join(CompraDetalle, Compra.detalles)
@@ -47,7 +48,7 @@ class CompraServicio:
                 
             compras_dict[compra_id]['insumos'].append({
                 'nombre': row.insumo_nombre,
-                'cantidad': f"{row.cantidad} {row.medida_nombre}"
+                'cantidad': f"{row.cantidad} {row.medida_abreviatura}",
             })
 
         return list(compras_dict.values())
@@ -98,46 +99,53 @@ class CompraServicio:
             raise e
 
     def obtener_compra(self, compra_id):
-        compra = (
-            self.bd.session.query(Compra)
-            .options(
-                joinedload(Compra.proveedor),
-                joinedload(Compra.detalles)
-                    .joinedload(CompraDetalle.insumo),
-                joinedload(Compra.detalles)
-                    .joinedload(CompraDetalle.medida)
+        query = (
+            self.bd.session
+            .query(
+                Insumo.nombre,
+                CompraDetalle.cantidad,
+                CompraDetalle.precio_unitario,
+                CompraDetalle.insumo_id,
+                CompraDetalle.precio_total,
+                Medida.nombre,
+                Medida.abreviatura
             )
+            .select_from(Compra)
+            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)
+            .join(Insumo, CompraDetalle.insumo_id == Insumo.id)
+            .join(Medida, CompraDetalle.medida_id == Medida.id)
             .filter(Compra.id == compra_id)
-            .first()
         )
         
-        inventarios = self.bd.session.query(InsumoInventario) \
-            .filter(InsumoInventario.compra_id == compra_id) \
-            .all()
+        resultados = query.all()
         
-        inventario_map = {inv.insumo_id: inv.fecha_expiracion for inv in inventarios}
+        detalles = [
+            {
+                "insumo": insumo,
+                "cantidad": cantidad,
+                "precio_unitario": precio_unitario,
+                "insumo_id": insumo_id,
+                "precio_total": precio_total,
+                "medida_nombre": medida,
+                "medida_abreviatura": medida_abreviatura
+            }
+            for insumo, cantidad, precio_unitario, insumo_id, precio_total, medida, medida_abreviatura in resultados
+        ]
         
-        detalles_formateados = []
-        for detalle in compra.detalles:
-            precio_total = detalle.cantidad * detalle.precio_unitario
-            detalles_formateados.append({
-                'insumo': detalle.insumo.nombre,
-                'insumo_id': detalle.insumo.id,
-                'cantidad': detalle.cantidad,  
-                'cantidad_formateada': f"{detalle.cantidad} {detalle.medida.nombre}", 
-                'medida_id': detalle.medida.id,
-                'precio_total': precio_total,
-                'precio_unitario': detalle.precio_unitario,
-                'fecha_expiracion': inventario_map.get(detalle.insumo_id, '')
-            })
-        
-        return {
-            'id': compra.id,
-            'fecha': compra.fecha.strftime('%Y-%m-%d'),
-            'total': compra.total,
-            'proveedor': compra.proveedor.nombre,
-            'detalles': detalles_formateados
+        query = (
+            self.bd.session
+            .query(Compra.fecha, Proveedor.nombre)
+            .join(Proveedor, Compra.proveedor_id == Proveedor.id)
+            .filter(Compra.id == compra_id)
+        )
+        fecha, proveedor = query.first()
+        compra = {
+            "id": compra_id,
+            "fecha": fecha.strftime('%d/%m/%Y'),
+            "proveedor": proveedor,
+            "detalles": detalles
         }
+        return compra
 
     def editar_compra(self, compra_id, compra_data):
         try:            

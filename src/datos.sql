@@ -54,10 +54,10 @@ VALUES ('ADMIN'),
        ('TRABAJADOR'),
        ('COMPRADOR');
 
-INSERT INTO medidas (nombre)
-VALUES ('Kilogramo'),
-       ('Litro'),
-       ('Pieza');
+INSERT INTO medidas (nombre, abreviatura)
+VALUES ('Kilogramo', 'kg'),
+       ('Litro', 'lt'),
+       ('Pieza', 'pz');
 
 INSERT INTO insumos (nombre)
 VALUES ('Harina'),
