@@ -16,11 +16,11 @@ class UsuarioServicio:
                 return []
         return self.bd.session.query(Usuario).all()
 
-    def obtener_usuario(self, id=None, correo=None):
+    def obtener_usuario(self, id=None, email=None):
         if id:
             return self.bd.session.query(Usuario).join(Rol).filter(Usuario.id == id).first()
-        if correo:
-            return self.bd.session.query(Usuario).join(Rol).filter(Usuario.email == correo).first()
+        if email:
+            return self.bd.session.query(Usuario).join(Rol).filter(Usuario.email == email).first()
         return None
 
     def crear_comprador(self, form):
@@ -28,7 +28,7 @@ class UsuarioServicio:
         email = form.email.data
         password = form.password.data
         
-        if self.obtener_usuario(correo=email):
+        if self.obtener_usuario(email=email):
             raise ValueError("El correo ya se encuentra registrado.")
         
         rol = self.bd.session.query(Rol).filter(Rol.nombre == "COMPRADOR").first()
@@ -48,7 +48,7 @@ class UsuarioServicio:
         password = form.password.data
         print(form.rol.data)
         
-        if self.obtener_usuario(correo=email):
+        if self.obtener_usuario(email=email):
             raise ValueError("El correo ya se encuentra registrado.")
         
         hash = generate_password_hash(password)
@@ -60,8 +60,8 @@ class UsuarioServicio:
         
         return usuario
 
-    def validar_usuario(self, correo, password):
-        usuario = self.obtener_usuario(correo=correo)
+    def validar_usuario(self, email, password):
+        usuario = self.obtener_usuario(email=email)
         if not usuario:
             raise ValueError("Usuario no encontrado.")
         if not check_password_hash(usuario.password, password):

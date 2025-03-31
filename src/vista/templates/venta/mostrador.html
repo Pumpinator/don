@@ -55,12 +55,12 @@
                     {{ galleta.galleta }}
                 </h5>
                 <div class="flex flex-col">
-                    {% if galleta.cantidad > 0 and galleta.cantidad < 1 %} <span
-                        class="text-sm font-normal text-green-600">En stock</span>
-                        {% elif galleta.cantidad > 0 %}
-                        <span class="text-sm font-normal text-yellow-600">Bajo stock</span>
+                    {% if galleta.cantidad|float > 0 and galleta.cantidad|float <= 1 %} <span
+                        class="text-sm font-normal text-yellow-600">Bajo stock</span>
+                        {% elif galleta.cantidad|float == 0 %}
+                        <span class="text-sm font-normal text-red-600">Sin stock</span>
                         {% else %}
-                        <span class="text-sm font-normal text-red-600">Agotado</span>
+                        <span class="text-sm font-normal text-green-600">En stock</span>
                         {% endif %}
                 </div>
             </div>
