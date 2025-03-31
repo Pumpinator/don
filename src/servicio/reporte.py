@@ -3,24 +3,25 @@ from modelo.venta_detalle import VentaDetalle
 from modelo.compra import Compra
 from modelo.compra_detalle import CompraDetalle
 from bd import bd
+from modelo.galleta import Galleta
+from modelo.medida import Medida
 
 
 class ReporteVentas:
-    
+
     def __init__(self):
         self.bd = bd  
 
     def obtener_mas_vendidos(self):
-        from modelo.galleta import Galleta
-        from modelo.venta_detalle import VentaDetalle
-
         productos_mas_vendidos = (
             self.bd.session.query(
                 Galleta.nombre, 
+                Medida.nombre.label('medida_mas_vendida'),  # Agregar la medida
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_vendido')
             )
             .join(VentaDetalle, Galleta.id == VentaDetalle.galleta_id)
-            .group_by(Galleta.nombre)
+            .join(Medida, Galleta.medida_id == Medida.id)  # Unir con la tabla de medida
+            .group_by(Galleta.nombre, Medida.nombre)  # Agrupar también por la medida
             .order_by(self.bd.desc('total_vendido'))
             .limit(10)
             .all()

@@ -51,6 +51,9 @@
         <p class="text-xs text-gray-500">
             {{ productos_mas_vendidos[0]['categoria'] if productos_mas_vendidos else "-" }}
         </p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-dark">
+            {{ productos_mas_vendidos[0]['medida_mas_vendida'] if productos_mas_vendidos else "-" }}
+        </p>
     </div>
 
 </div>
