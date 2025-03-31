@@ -7,17 +7,14 @@ from flask import Blueprint, render_template, request
 controlador = Blueprint('reportes', __name__)
 trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
 
+
 @controlador.route('/reportes', methods=['GET'])
 @login_required
 @trabajador_permission.require(http_exception=403)
 def reportes():
-    resumen_ventas = ReporteVentas.obtener_resumen()
-    productos_mas_vendidos = ReporteVentas.obtener_mas_vendidos()
-    
-    print("Resumen de Ventas:", resumen_ventas)
-    print("Productos Más Vendidos:", productos_mas_vendidos)
-
-    
+    reporte_ventas = ReporteVentas()  
+    resumen_ventas = reporte_ventas.obtener_resumen()
+    productos_mas_vendidos = reporte_ventas.obtener_mas_vendidos()
 
     return render_template(
         'reportes.html', 

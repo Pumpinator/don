@@ -4,49 +4,55 @@
 <!-- Card de Ventas Totales -->
 <div class="bg-white rounded-lg shadow p-6 mb-6">
     <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Ventas Totales</h2>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-dark">Ventas Totales</h2>
         <div class="relative inline-block text-left">
-            <div>
-                <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
-                    id="menu-button" aria-expanded="true" aria-haspopup="true">
-                    Mensual
-                    <svg class="-mr-1 h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
+            <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+                id="menu-button" aria-expanded="true" aria-haspopup="true">
+                Mensual
+                <svg class="-mr-1 h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
     </div>
-    <p class="text-3xl font-bold text-gray-900 dark:text-white">$ {{ "{:,.2f}".format(resumen_ventas[0]['total_ventas']) if resumen_ventas else "0.00" }}</p>
+    <p class="text-3xl font-bold text-gray-900 dark:text-dark">
+        $ {{ "{:,.2f}".format(resumen_ventas[0]['ingresos_totales']) if resumen_ventas else "0.00" }}
+    </p>
 </div>
 
 <!-- Grid de métricas -->
 <div class="grid grid-cols-2 gap-4">
     <div class="bg-gray-100 rounded-lg p-4 text-center">
         <p class="text-sm font-medium text-gray-500">Ventas</p>
-        <p class="text-2xl font-bold text-gray-800">$ {{ "{:,.2f}".format(resumen_ventas[0]['total_ventas']) if resumen_ventas else "0.00" }}</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-dark">
+            $ {{ "{:,.2f}".format(resumen_ventas[0]['ingresos_totales']) if resumen_ventas else "0.00" }}
+        </p>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4 text-center">
         <p class="text-sm font-medium text-gray-500">Gastos</p>
-        <p class="text-2xl font-bold text-gray-800">$ {{ "{:,.2f}".format(resumen_ventas[0]['total_gastos'] or 0) if resumen_ventas else "0.00" }}</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-dark">
+            $ {{ "{:,.2f}".format(resumen_ventas[0]['total_gastos']) if resumen_ventas else "0.00" }}
+        </p>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4 text-center">
         <p class="text-sm font-medium text-gray-500">Ganancias</p>
-        <p class="text-2xl font-bold text-gray-800">$ {{ "{:,.2f}".format(resumen_ventas[0]['total_gastos'] or 0) if resumen_ventas else "0.00" }}</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-dark">
+            $ {{ "{:,.2f}".format(resumen_ventas[0]['ganancias']) if resumen_ventas else "0.00" }}
+        </p>
     </div>
 
     <div class="bg-gray-100 rounded-lg p-4 text-center">
         <p class="text-sm font-medium text-gray-500">Más Vendido</p>
-        {% if productos_mas_vendidos %}
-        <p class="text-2xl font-bold text-gray-800">{{ productos_mas_vendidos[0]['nombre'] }}</p>
-        <p class="text-xs text-gray-500">{{ productos_mas_vendidos[0]['categoria'] }}</p>
-        {% else %}
-        <p class="text-2xl font-bold text-gray-800">-</p>
-        <p class="text-xs text-gray-500">Sin datos</p>
-        {% endif %}
+        <p class="text-2xl font-bold text-gray-900 dark:text-dark">
+            {{ productos_mas_vendidos[0]['nombre'] if productos_mas_vendidos else "Sin datos" }}
+        </p>
+        <p class="text-xs text-gray-500">
+            {{ productos_mas_vendidos[0]['categoria'] if productos_mas_vendidos else "-" }}
+        </p>
     </div>
+
 </div>
 
 {% endblock %}
