@@ -283,5 +283,133 @@ INSERT INTO ingrediente(receta_id, insumo_id, medida_id, cantidad) VALUES
 , (8, 14, 2, 45)
 , (9, 5, 3, 27);
 
+/*
+DELIMITER $$
+
+CREATE PROCEDURE SP_InsertarReceta(
+    IN p_nombre VARCHAR(255),
+    IN p_galleta_id INT,
+    IN p_procedimiento TEXT,
+    IN p_insumos TEXT, -- IDs de insumos separados por comas ('1,2,3')
+    IN p_cantidades TEXT, -- Cantidades separadas por comas ('200,100,3')
+    IN p_medidas TEXT -- IDs de medidas separadas por comas ('1,2,3')
+)
+BEGIN
+    DECLARE v_receta_id INT;
+    DECLARE v_insumo_id INT;
+    DECLARE v_cantidad FLOAT;
+    DECLARE v_medida_id INT;
+    DECLARE v_pos_insumo INT;
+    DECLARE v_pos_cantidad INT;
+    DECLARE v_pos_medida INT;
+    
+    -- Insertar la receta en la tabla recetas
+    INSERT INTO recetas (nombre, galleta_id, procedimiento)
+    VALUES (p_nombre, p_galleta_id, p_procedimiento);
+    
+    -- Obtener el ID de la receta recién insertada
+    SET v_receta_id = LAST_INSERT_ID();
+    
+    -- Bucle para recorrer los insumos, cantidades y medidas
+    WHILE LENGTH(p_insumos) > 0 DO
+        -- Extraer el primer insumo, cantidad y medida
+        SET v_pos_insumo = IF(LOCATE(',', p_insumos) > 0, LOCATE(',', p_insumos), LENGTH(p_insumos) + 1);
+        SET v_pos_cantidad = IF(LOCATE(',', p_cantidades) > 0, LOCATE(',', p_cantidades), LENGTH(p_cantidades) + 1);
+        SET v_pos_medida = IF(LOCATE(',', p_medidas) > 0, LOCATE(',', p_medidas), LENGTH(p_medidas) + 1);
+        
+        SET v_insumo_id = CAST(SUBSTRING(p_insumos, 1, v_pos_insumo - 1) AS UNSIGNED);
+        SET v_cantidad = CAST(SUBSTRING(p_cantidades, 1, v_pos_cantidad - 1) AS FLOAT);
+        SET v_medida_id = CAST(SUBSTRING(p_medidas, 1, v_pos_medida - 1) AS UNSIGNED);
+        
+        -- Insertar en la tabla ingrediente (singular)
+        INSERT INTO ingrediente (cantidad, medida_id, receta_id, insumo_id)
+        VALUES (v_cantidad, v_medida_id, v_receta_id, v_insumo_id);
+        
+        -- Remover el primer insumo, cantidad y medida procesados
+        SET p_insumos = IF(v_pos_insumo < LENGTH(p_insumos), SUBSTRING(p_insumos, v_pos_insumo + 1), '');
+        SET p_cantidades = IF(v_pos_cantidad < LENGTH(p_cantidades), SUBSTRING(p_cantidades, v_pos_cantidad + 1), '');
+        SET p_medidas = IF(v_pos_medida < LENGTH(p_medidas), SUBSTRING(p_medidas, v_pos_medida + 1), '');
+    END WHILE;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE SP_CrearCompra(
+    IN p_proveedor_id INT,
+    IN p_fecha DATE,
+    IN p_total DECIMAL(10,2),
+    IN p_insumos TEXT,  -- Lista de insumos separados por comas ('1,2,3')
+    IN p_cantidades TEXT,  -- Cantidades separadas por comas ('10,5,20')
+    IN p_precios_unitarios TEXT,  -- Precios unitarios ('50.00,30.00,20.00')
+    IN p_medidas TEXT, -- IDs de medidas ('1,2,3')
+    IN p_fechas_expiracion TEXT -- Fechas de expiración ('2025-12-01,2026-01-15,2024-10-10')
+)
+BEGIN
+    DECLARE v_compra_id INT;
+    DECLARE v_index INT DEFAULT 1;
+    DECLARE v_insumo_id INT;
+    DECLARE v_cantidad DECIMAL(10,2);
+    DECLARE v_precio_unitario DECIMAL(10,2);
+    DECLARE v_precio_total DECIMAL(10,2);
+    DECLARE v_medida_id INT;
+    DECLARE v_fecha_expiracion DATE;
+    
+    -- Insertar la compra en la tabla principal
+    INSERT INTO compras (proveedor_id, fecha, total) 
+    VALUES (p_proveedor_id, p_fecha, p_total);
+    
+    -- Obtener el ID de la compra recién insertada
+    SET v_compra_id = LAST_INSERT_ID();
+
+    -- Bucle para insertar cada detalle de compra
+    WHILE LOCATE(',', p_insumos) > 0 DO
+        -- Extraer el primer insumo y sus datos correspondientes
+        SET v_insumo_id = CAST(SUBSTRING_INDEX(p_insumos, ',', 1) AS UNSIGNED);
+        SET v_cantidad = CAST(SUBSTRING_INDEX(p_cantidades, ',', 1) AS DECIMAL(10,2));
+        SET v_precio_unitario = CAST(SUBSTRING_INDEX(p_precios_unitarios, ',', 1) AS DECIMAL(10,2));
+        SET v_medida_id = CAST(SUBSTRING_INDEX(p_medidas, ',', 1) AS UNSIGNED);
+        SET v_fecha_expiracion = STR_TO_DATE(SUBSTRING_INDEX(p_fechas_expiracion, ',', 1), '%Y-%m-%d');
+
+        -- Calcular el precio total
+        SET v_precio_total = v_precio_unitario * v_cantidad;
+
+        -- Insertar en compras_detalles
+        INSERT INTO compras_detalles (compra_id, insumo_id, cantidad, precio_unitario, precio_total, medida_id) 
+        VALUES (v_compra_id, v_insumo_id, v_cantidad, v_precio_unitario, v_precio_total, v_medida_id);
+
+        -- Actualizar el inventario de insumos
+        INSERT INTO insumos_inventarios (insumo_id, compra_id, cantidad, costo, medida_id, fecha_expiracion)
+        VALUES (v_insumo_id, v_compra_id, v_cantidad, v_precio_unitario, v_medida_id, v_fecha_expiracion)
+        ON DUPLICATE KEY UPDATE cantidad = cantidad + v_cantidad;
+
+        -- Eliminar el primer valor de las listas
+        SET p_insumos = SUBSTRING(p_insumos, LOCATE(',', p_insumos) + 1);
+        SET p_cantidades = SUBSTRING(p_cantidades, LOCATE(',', p_cantidades) + 1);
+        SET p_precios_unitarios = SUBSTRING(p_precios_unitarios, LOCATE(',', p_precios_unitarios) + 1);
+        SET p_medidas = SUBSTRING(p_medidas, LOCATE(',', p_medidas) + 1);
+        SET p_fechas_expiracion = SUBSTRING(p_fechas_expiracion, LOCATE(',', p_fechas_expiracion) + 1);
+    END WHILE;
+
+    -- Insertar el último insumo (ya que no tiene coma al final)
+    INSERT INTO compras_detalles (compra_id, insumo_id, cantidad, precio_unitario, precio_total, medida_id) 
+    VALUES (v_compra_id, CAST(p_insumos AS UNSIGNED), CAST(p_cantidades AS DECIMAL(10,2)), 
+            CAST(p_precios_unitarios AS DECIMAL(10,2)), 
+            CAST(p_precios_unitarios AS DECIMAL(10,2)) * CAST(p_cantidades AS DECIMAL(10,2)), 
+            CAST(p_medidas AS UNSIGNED));
+
+    -- Insertar en insumos_inventarios
+    INSERT INTO insumos_inventarios (insumo_id, compra_id, cantidad, costo, medida_id, fecha_expiracion)
+    VALUES (CAST(p_insumos AS UNSIGNED), v_compra_id, CAST(p_cantidades AS DECIMAL(10,2)), 
+            CAST(p_precios_unitarios AS DECIMAL(10,2)), 
+            CAST(p_medidas AS UNSIGNED), STR_TO_DATE(p_fechas_expiracion, '%Y-%m-%d'))
+    ON DUPLICATE KEY UPDATE cantidad = cantidad + CAST(p_cantidades AS DECIMAL(10,2));
+
+END$$
+
+DELIMITER ;
+
+*/
 
 
