@@ -1,6 +1,12 @@
+{% if current_user.is_authenticated %}
 {% extends "layouts/auth.html" %}
+{% endif %} 
 
-{% block title %}Ventas - DON{% endblock %}
+{% if current_user.is_anonymous %} 
+{% extends "layouts/guest.html" %}
+{% endif %}
+
+{% block title %}Menu - DON{% endblock %}
 
 {% block content %}
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
@@ -9,16 +15,16 @@
           <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
             <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
           </a>
-          <h2 class="ml-4 text-2xl font-bold text-gray-800">Mostrador de Venta</h2>
+          <h2 class="ml-4 text-2xl font-bold text-gray-800">Menú de Galletas</h2>
         </div>
         {% if carrito and total %}
-        <a href="{{ url_for('principal.venta.ver_carrito') }}" class="flex items-center space-x-2 text-[var(--color-dirt-default)] hover:text-[var(--color-dirt-dark)]">
+        <a href="{{ url_for('principal.pedido.ver_carrito') }}" class="flex items-center space-x-2 text-[var(--color-dirt-default)] hover:text-[var(--color-dirt-dark)]">
           <i class="fa-solid fa-cart-shopping text-xl"></i>
           <span class="text-lg font-semibold">${{ total }}</span>
         </a>
         {% endif %}
       </div>
-    <form action="{{ url_for('principal.venta.mostrador') }}" method="get" class="mb-6">
+    <form action="{{ url_for('principal.pedido.menu') }}" method="get" class="mb-6">
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -69,7 +75,7 @@
                     <p class="text-sm font-normal text-gray-700">pz</p>
                 </div>
                 <div class="flex flex-col col-span-2">
-                    <form action="{{ url_for('principal.venta.agregar_galleta') }}" method="post"
+                    <form action="{{ url_for('principal.pedido.agregar_galleta') }}" method="post"
                         class="mt-4 md:flex items-center">
                         <input type="hidden" name="galleta_id" value="{{ galleta.galleta_id }}">
                         <input type="hidden" name="medida_id" value="1">

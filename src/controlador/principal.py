@@ -10,6 +10,7 @@ from controlador.usuario import controlador as controlador_usuario
 from controlador.venta import controlador as controlador_venta
 from controlador.receta import controlador as controlador_receta
 from controlador.proveedor import controlador as controlador_proveedor
+from controlador.pedido import controlador as controlador_pedido
 from modelo.compra import Compra
 from servicio.usuario import UsuarioServicio
 from formularios.ingreso import IngresoForm
@@ -29,6 +30,7 @@ controlador.register_blueprint(controlador_produccion)
 controlador.register_blueprint(controlador_reportes)
 controlador.register_blueprint(controlador_usuario)
 controlador.register_blueprint(controlador_venta)
+controlador.register_blueprint(controlador_pedido)
 
 login_manager = LoginManager()
 login_manager.login_view = 'principal.ingresar'
@@ -108,37 +110,6 @@ def load_user(user_id):
 @controlador.errorhandler(404)
 def page_not_found(error):
     return render_template('errors/404.html'), 404
-
-
-
-
-@controlador.route('/clientes')
-@login_required
-@trabajador_permission.require(http_exception=403)
-def clientes():
-    return render_template('catalogo_cliente.html') 
-
-@controlador.route('/receta')
-@login_required
-@admin_or_trabajador_permission.require(http_exception=403)
-def receta():
-    return render_template('receta.html')
-
-@controlador.route('/compra')
-@login_required
-@admin_or_trabajador_permission.require(http_exception=403)
-def compra():
-    return render_template('compra.html')
-
-@controlador.route('/proveedor')
-@login_required
-@admin_or_trabajador_permission.require(http_exception=403)
-def proveedor():
-    return render_template('proveedores.html')
-
-@controlador.route('/menu')
-def menu():
-    return render_template('menu.html') 
 
 @controlador.errorhandler(403)
 def forbidden(error):

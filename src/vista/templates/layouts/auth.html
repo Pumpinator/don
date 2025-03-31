@@ -26,10 +26,10 @@
             </button>
             {% endif %}
             {% if current_user.rol.nombre == "COMPRADOR" %}
-            <button type="button" class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
+            <a href="{{ url_for('principal.pedido.ver_carrito') }}" class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-            </button>
+            </a>
             {% endif %}
             <a href="{{url_for('principal.usuario.cuenta')}}"
                 class="hover:text-[var(--color-chocolate-default)] cursor-pointer">

@@ -15,7 +15,7 @@
         </h2>
     </div>
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
-        {% if rol == 'administradores' %}
+        {% if current_user.rol.nombre == 'ADMIN' %}
         <a href="{{ url_for('principal.usuario.listar_usuarios', rol='administradores') }}"
             class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'administradores' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Administradores

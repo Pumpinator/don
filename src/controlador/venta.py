@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, abort
 from bd import bd
-from servicio.inventario import InventarioServicio
 from servicio.venta import VentaServicio
 from formularios.venta import VentaForm
 from flask_login import login_required, current_user
@@ -10,18 +9,18 @@ controlador = Blueprint('venta', __name__)
 
 admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
-@controlador.route('/ventas/mostrador', methods=['GET'])
+@controlador.route('/mostrador', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def mostrador():
     busqueda = request.args.get('busqueda', '')
     venta_servicio = VentaServicio(bd)
     carrito, total, _ = venta_servicio.obtener_carrito(session)
-    mostrador = venta_servicio.obtener_mostrador(busqueda)
+    galletas = venta_servicio.obtener_mostrador(busqueda)
     session['comprador'] = None
-    return render_template('venta/mostrador.html', mostrador=mostrador, carrito=carrito, total=total, busqueda=busqueda)
+    return render_template('venta/mostrador.html', galletas=galletas, carrito=carrito, total=total, busqueda=busqueda)
 
-@controlador.route('/ventas/carrito/agregar', methods=['POST'])
+@controlador.route('/venta/agregar', methods=['POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def agregar_galleta():
@@ -40,7 +39,7 @@ def agregar_galleta():
             flash(str(e), "danger")
         return redirect(request.referrer)
     
-@controlador.route('/ventas/carrito/modificar', methods=['POST'])
+@controlador.route('/venta/modificar', methods=['POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def modificar_cantidad():
@@ -53,7 +52,7 @@ def modificar_cantidad():
         flash("Error actualizando la cantidad: " + str(e), "danger")
         return redirect(url_for('principal.venta.ver_carrito'))
     
-@controlador.route('/ventas/carrito/eliminar', methods=['POST'])
+@controlador.route('/venta/eliminar', methods=['POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def eliminar_galleta():
@@ -69,7 +68,7 @@ def eliminar_galleta():
         flash("Error al eliminar galleta: " + str(e), "danger")
         return redirect(url_for('principal.venta.ver_carrito'))
 
-@controlador.route('/ventas/carrito', methods=['GET'])
+@controlador.route('/venta', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def ver_carrito():
@@ -80,12 +79,12 @@ def ver_carrito():
         session['carrito'] = carrito
         session['precio_total'] = total
         session.modified = True
-        return render_template('venta/carrito.html', carrito=carrito, total=total, form=venta_formulario)
+        return render_template('venta/venta.html', carrito=carrito, total=total, form=venta_formulario)
     except Exception as e:
         flash("Error al obtener el carrito: " + str(e), "danger")
         return redirect(url_for('principal.venta.mostrador'))
 
-@controlador.route('/ventas/carrito/vaciar', methods=['GET'])
+@controlador.route('/venta/vaciar', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def vaciar_carrito():
@@ -95,7 +94,7 @@ def vaciar_carrito():
     flash("Carrito vaciado", "info")
     return redirect(url_for('principal.venta.mostrador'))
 
-@controlador.route('/ventas/comprador', methods=['POST'])
+@controlador.route('/comprador', methods=['POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def buscar_comprador():
@@ -112,15 +111,16 @@ def buscar_comprador():
             session['comprador'] = None
             session.modified = True
             form.email_comprador.errors.append("Comprador no encontrado")
-    return render_template('venta/carrito.html', carrito=carrito, total=total, form=form)
+    return render_template('venta/venta.html', carrito=carrito, total=total, form=form)
 
-@controlador.route('/ventas/cerrar', methods=['GET'])
+@controlador.route('/venta/pagar', methods=['GET'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def cerrar_venta():
     try:
         venta_servicio = VentaServicio(bd)
-        venta_servicio.cerrar_venta(session, current_user)
+        form = VentaForm()
+        venta_servicio.cerrar_venta(session, form, current_user)
         flash("Venta cerrada con éxito", "success")
     except Exception as e:
         print(e.__class__.__name__)
