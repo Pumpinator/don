@@ -111,7 +111,6 @@ class CompraServicio:
             .first()
         )
         
-        # Obtener inventarios para fechas de expiración
         inventarios = self.bd.session.query(InsumoInventario) \
             .filter(InsumoInventario.compra_id == compra_id) \
             .all()
@@ -120,12 +119,14 @@ class CompraServicio:
         
         detalles_formateados = []
         for detalle in compra.detalles:
+            precio_total = detalle.cantidad * detalle.precio_unitario
             detalles_formateados.append({
                 'insumo': detalle.insumo.nombre,
                 'insumo_id': detalle.insumo.id,
-                'cantidad': detalle.cantidad,  # Mantenemos como float
-                'cantidad_formateada': f"{detalle.cantidad} {detalle.medida.nombre}",  # Para mostrar
+                'cantidad': detalle.cantidad,  
+                'cantidad_formateada': f"{detalle.cantidad} {detalle.medida.nombre}", 
                 'medida_id': detalle.medida.id,
+                'precio_total': precio_total,
                 'precio_unitario': detalle.precio_unitario,
                 'fecha_expiracion': inventario_map.get(detalle.insumo_id, '')
             })
@@ -139,50 +140,73 @@ class CompraServicio:
         }
 
     def editar_compra(self, compra_id, compra_data):
-        try:
-            # Actualizar compra principal
+        try:            
             compra = self.bd.session.query(Compra).get(compra_id)
             compra.proveedor_id = compra_data['proveedor_id']
             compra.fecha = compra_data['fecha']
             
-            # Eliminar detalles antiguos
-            self.bd.session.query(CompraDetalle).filter(CompraDetalle.compra_id == compra_id).delete()
+            existing_details = {d.insumo_id: d for d in compra.detalles}
+            nuevo_total = 0
             
-            # Crear nuevos detalles
-            nuevos_detalles = []
             for i in range(len(compra_data['insumos'])):
-                detalle = CompraDetalle(
-                    compra_id=compra_id,
-                    insumo_id=compra_data['insumos'][i],
-                    cantidad=compra_data['cantidades'][i],
-                    precio_unitario=compra_data['precios_unitarios'][i],
-                    medida_id=compra_data['medidas'][i]
-                )
-                nuevos_detalles.append(detalle)
-            
-            self.bd.session.bulk_save_objects(nuevos_detalles)
-            
-            # Actualizar inventarios (fechas de expiración)
-            for i in range(len(compra_data['insumos'])):
+                insumo_id = int(compra_data['insumos'][i])
+                cantidad = float(compra_data['cantidades'][i])
+                precio = float(compra_data['precios_unitarios'][i])
+                medida_id = int(compra_data['medidas'][i])
+                
+                subtotal = cantidad * precio
+                nuevo_total += subtotal
+                
+                if insumo_id in existing_details:
+                    detalle = existing_details[insumo_id]
+                    detalle.cantidad = cantidad
+                    detalle.precio_unitario = precio
+                    detalle.medida_id = medida_id
+                else:
+                    detalle = CompraDetalle(
+                        compra_id=compra_id,
+                        insumo_id=insumo_id,
+                        cantidad=cantidad,
+                        precio_unitario=precio,
+                        medida_id=medida_id
+                    )
+                    self.bd.session.add(detalle)
+                
                 inventario = self.bd.session.query(InsumoInventario).filter_by(
                     compra_id=compra_id,
-                    insumo_id=compra_data['insumos'][i]
+                    insumo_id=insumo_id
                 ).first()
                 
                 if inventario:
                     inventario.fecha_expiracion = compra_data['fechas_expiracion'][i] or None
+                    inventario.costo = precio
+                    inventario.cantidad = cantidad
+                    inventario.medida_id = medida_id
                 else:
                     nuevo_inventario = InsumoInventario(
                         compra_id=compra_id,
-                        insumo_id=compra_data['insumos'][i],
+                        insumo_id=insumo_id,
                         fecha_expiracion=compra_data['fechas_expiracion'][i] or None,
-                        cantidad=compra_data['cantidades'][i],
-                        medida_id=compra_data['medidas'][i]
+                        costo=precio,
+                        cantidad=cantidad,
+                        medida_id=medida_id
                     )
                     self.bd.session.add(nuevo_inventario)
             
+            compra.total = nuevo_total
+            
+            submitted_insumo_ids = {int(id) for id in compra_data['insumos']}
+            for detalle in compra.detalles:
+                if detalle.insumo_id not in submitted_insumo_ids:
+                    self.bd.session.delete(detalle)
+                    self.bd.session.query(InsumoInventario).filter_by(
+                        compra_id=compra_id,
+                        insumo_id=detalle.insumo_id
+                    ).delete()
+            
             self.bd.session.commit()
             return True
+            
         except Exception as e:
             self.bd.session.rollback()
             raise e

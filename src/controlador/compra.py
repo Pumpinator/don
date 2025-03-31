@@ -81,7 +81,7 @@ def editar_compra(compra_id):
                 'fecha': request.form['fecha'],
                 'insumos': request.form.getlist('insumo_id[]'),
                 'cantidades': request.form.getlist('cantidad[]'),
-                'precios_unitarios': request.form.getlist('precio[]'),
+                'precios_unitarios': request.form.getlist('costo[]'),
                 'medidas': request.form.getlist('medida_id[]'),
                 'fechas_expiracion': request.form.getlist('fecha_expiracion[]')
             }

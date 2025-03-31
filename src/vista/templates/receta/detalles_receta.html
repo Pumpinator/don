@@ -1,53 +1,41 @@
 {% extends "layouts/auth.html" %}
 
-{% block title %}Detalles de {{ receta.nombre }}{% endblock %}
+{% block title %}Detalles de Receta - {{ receta.nombre }}{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-    <div class="bg-white rounded-lg shadow p-6">
-        <h1 class="text-2xl font-bold mb-4">{{ receta.nombre }}</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <p class="font-semibold">Galleta:</p>
-                <p>{{ receta.galleta }}</p>
-            </div>
-            <div>
-                <p class="font-semibold">Procedimiento:</p>
-                <p class="whitespace-pre-wrap">{{ receta.procedimiento }}</p>
-            </div>
-        </div>
-        
-        <div class="mt-6">
-            <h2 class="text-xl font-semibold mb-2">Ingredientes</h2>
-            <div class="space-y-2">
-                {% for ingrediente in receta.ingredientes %}
-                <div class="flex justify-between items-center bg-gray-50 p-3 rounded">
-                    <span>{{ ingrediente.insumo }}</span>
-                    <span>{{ ingrediente.cantidad }} {{ ingrediente.medida }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="mt-6 flex gap-4">
-            <a href="{{ url_for('principal.receta.editar_receta', receta_id=receta.id) }}" 
-               class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                Editar
-            </a>
-            <form action="{{ url_for('principal.receta.eliminar_receta', receta_id=receta.id) }}" 
-          method="POST"
-          onsubmit="return confirm('¿Estás seguro de querer eliminar esta receta?');">
-        <button type="submit" 
-                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-            Eliminar
-        </button>
-    </form>
-            <a href="{{ url_for('principal.receta.recetas') }}" 
-               class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
-                Volver
-            </a>
-
-        </div>
+    <h1 class="text-2xl font-bold mb-4">Detalles de Receta</h1>
+    <div class="bg-gray-200 rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-gray-800">Nombre: {{ receta.nombre }}</h2>
+        <p class="text-sm text-gray-600">Galleta: {{ receta.galleta }}</p>
+        <h3 class="text-lg font-semibold text-gray-800 mt-4">Procedimiento:</h3>
+        <p class="text-sm text-gray-600 whitespace-pre-wrap">{{ receta.procedimiento }}</p>
+        <h3 class="text-lg font-semibold text-gray-800 mt-4">Ingredientes:</h3>
+        <ul class="mt-2">
+            {% for ingrediente in receta.ingredientes %}
+            <li class="text-sm text-gray-600">
+                {{ ingrediente.insumo }} - {{ ingrediente.cantidad }} {{ ingrediente.medida }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="mt-6 flex gap-4">
+        <a href="{{ url_for('principal.receta.editar_receta', receta_id=receta.id) }}" 
+           class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+            Editar Receta
+        </a>
+        <form action="{{ url_for('principal.receta.eliminar_receta', receta_id=receta.id) }}" 
+              method="POST" 
+              onsubmit="return confirm('¿Estás seguro de querer eliminar esta receta?');">
+            <button type="submit" 
+                    class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                Eliminar Receta
+            </button>
+        </form>
+        <a href="{{ url_for('principal.receta.recetas') }}" 
+           class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
+            Volver
+        </a>
     </div>
 </div>
 {% endblock %}
