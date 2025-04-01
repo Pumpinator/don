@@ -8,6 +8,7 @@ from flask_principal import Permission, RoleNeed
 controlador = Blueprint('pedido', __name__)
 
 comprador_permission = Permission(RoleNeed('COMPRADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.before_request
 def before_request():
@@ -17,14 +18,14 @@ def before_request():
         else:
             pass
     else:
-        session['comprador'] = None
+        session['email_comprador'] = None
     session.modified = True
 
 @controlador.route('/menu', methods=['GET'])
 def menu():
     busqueda = request.args.get('busqueda', '')
     venta_servicio = VentaServicio(bd)
-    carrito, total, _ = venta_servicio.obtener_carrito(session)
+    carrito, total, email_comprador, venta_id = venta_servicio.obtener_carrito(session)
     galletas = venta_servicio.obtener_menu(busqueda)
     return render_template('venta/menu.html', galletas=galletas, carrito=carrito, total=total, busqueda=busqueda)
 
@@ -32,7 +33,7 @@ def menu():
 def ver_carrito():
     venta_formulario = VentaForm()
     venta_servicio = VentaServicio(bd)
-    carrito, total, buscar_comprador = venta_servicio.obtener_carrito(session)
+    carrito, total, email_comprador, venta_id = venta_servicio.obtener_carrito(session)
     try:
         session['carrito'] = carrito
         session['precio_total'] = total
@@ -86,9 +87,8 @@ def eliminar_galleta():
 
 @controlador.route('/carrito/vaciar', methods=['GET'])
 def vaciar_carrito():
-    session.pop('carrito', None)
-    session.pop('cantidad_total', None)
-    session.pop('precio_total', None)
+    venta_servicio = VentaServicio(bd)
+    venta_servicio.vaciar_carrito(session)
     flash("Carrito vaciado", "info")
     return redirect(url_for('principal.pedido.menu'))
 
@@ -96,12 +96,12 @@ def vaciar_carrito():
 @controlador.route('/carrito/pagar', methods=['POST'])
 @login_required
 @comprador_permission.require(http_exception=403)
-def cerrar_venta():
+def cerrar_pedido():
     try:
         venta_servicio = VentaServicio(bd)
         form = VentaForm(request.form)
-        venta_servicio.cerrar_venta(session, form, current_user)
-        flash("Venta cerrada con éxito", "success")
+        venta_servicio.cerrar_pedido(session, form, current_user)
+        flash("Pedido generado con éxito", "success")
     except Exception as e:
         print(e.__class__.__name__)
         if hasattr(e, 'message'):

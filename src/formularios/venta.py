@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import EmailField, DateTimeLocalField
+from wtforms import EmailField, DateTimeLocalField, HiddenField
 from wtforms.validators import Optional, Length
 from datetime import datetime, time
 
 class VentaForm(FlaskForm):
+    venta_id = HiddenField('ID de Venta', validators=[Optional()])
+    
     email_comprador = EmailField('Correo del Comprador', validators=[Length(min=5, max=50), Optional()])
 
     fecha_entrega = DateTimeLocalField(

@@ -6,6 +6,7 @@ from modelo.venta_detalle import VentaDetalle
 from modelo.galleta_inventario import GalletaInventario
 from modelo.medida import Medida
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 import re
 import math
 from datetime import datetime
@@ -15,7 +16,7 @@ class VentaServicio:
     def __init__(self, bd):
         self.bd = bd
         
-    def buscar_comprador(self, form):
+    def validar_comprador(self, form):
         email = form.email_comprador.data
         return self.bd.session.query(Usuario).filter_by(email=email).first()
         
@@ -24,6 +25,103 @@ class VentaServicio:
     
     def obtener_inventario(self, galleta_id):
         return self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta_id).first()
+    
+    def obtener_venta(self, venta_id, session):
+        venta = (
+            self.bd.session.query(Venta)
+            .options(joinedload(Venta.comprador))
+            .filter(Venta.id == venta_id)
+            .first()
+        )
+        if not venta:
+            raise ValueError("Venta no encontrada")
+        
+        # Query the order details for this sale
+        detalles_query = (
+            self.bd.session.query(VentaDetalle)
+            .options(joinedload(VentaDetalle.galleta))
+            .options(joinedload(VentaDetalle.medida))
+            .filter(VentaDetalle.venta_id == venta_id)
+        )
+        
+        detalles = [self._construir_detalle_item(
+            detalle.galleta,
+            detalle.presentacion,
+            int(detalle.cantidad),
+            detalle.medida,
+            detalle.precio_unitario,
+            detalle.precio_total)
+        for detalle in detalles_query.all()]
+
+        if not venta.pagado:
+            carrito = self.poblar_carrito_desde_venta({'detalles': detalles})
+            session['carrito'] = carrito
+            session['total'] = venta.total
+            session['venta_id'] = venta.id
+            session['email_comprador'] = venta.comprador.email
+            session.modified = True
+        
+        return {
+            "venta_id": venta.id,
+            "comprador": venta.comprador.email,
+            "fecha": venta.fecha.strftime('%d/%m/%Y'),
+            "fecha_entrega": venta.fecha_entrega.strftime('%d/%m/%Y') if venta.fecha_entrega else None,
+            "pagado": venta.pagado,
+            "total": venta.total,
+            "detalles": detalles
+        }
+        
+    def poblar_carrito_desde_venta(self, venta_data):
+        carrito = {}
+        for detalle in venta_data['detalles']:
+            key = f"{detalle['nombre']} {detalle['presentacion']}"
+            carrito[key] = detalle
+        return carrito
+    
+    def obtener_ventas(self, busqueda=None, pagado=True):
+        query = (
+            self.bd.session.query(Venta)
+            .options(joinedload(Venta.comprador))
+            .filter(Venta.pagado == pagado)
+        )
+        if busqueda:
+            query = query.filter(Venta.fecha.ilike(f"%{busqueda}%"))
+            
+        query = query.order_by(Venta.fecha.desc())
+        resultados = query.all()
+        ventas = [
+            {
+                "id": venta.id,
+                "fecha": venta.fecha.strftime('%d/%m/%Y'),
+                "fecha_entrega": venta.fecha_entrega.strftime('%d/%m/%Y') if venta.fecha_entrega else None,
+                "pagado": venta.pagado,
+                "total": venta.total,
+                "comprador": venta.comprador   # Now comprador attributes are loaded via joinedload
+            }
+            for venta in resultados
+        ]
+        for venta in ventas:
+            detalles = self.bd.session.query(
+                VentaDetalle.galleta,
+                VentaDetalle.presentacion,
+                VentaDetalle.cantidad,
+                VentaDetalle.medida,
+                VentaDetalle.precio_unitario,
+                VentaDetalle.precio_total
+            ).join(Galleta, Galleta.id == VentaDetalle.galleta_id).join(Medida, Medida.id == VentaDetalle.medida_id).filter(VentaDetalle.venta_id == venta['id']).all()
+            
+            venta['detalles'] = [
+                {
+                    "galleta": galleta,
+                    "presentacion": presentacion,
+                    "cantidad": cantidad,
+                    "medida": medida,
+                    "precio_unitario": precio_unitario,
+                    "precio_total": precio_total
+                }
+                for galleta, presentacion, cantidad, medida, precio_unitario, precio_total in detalles
+            ]
+        return ventas
     
     def obtener_menu(self, busqueda=None):
         query = (
@@ -97,37 +195,26 @@ class VentaServicio:
             for galleta_id, nombre, cantidad_total, precio, imagen, medida in resultados
         ]
         return galletas
-
-        
-    def cerrar_venta(self, session, form, current_user):
-        horarios = {
-            'Lunes': [8, 20],
-            'Martes': [8, 20],
-            'Miércoles': [8, 20],
-            'Jueves': [8, 20],
-            'Viernes': [8, 20],
-            'Sábado': [8, 20],
-            'Domingo': [8, 16]
-        }
-        
+            
+    def cerrar_pedido(self, session, form, current_user):
         carrito = session.get('carrito', {})
         total = float(math.ceil(session.get('total', 0)))
         
         venta = Venta()
         venta.fecha = datetime.now()
-        venta.fecha_entrega = form.fecha_entrega.data if current_user.rol.nombre == 'COMPRADOR' else datetime.now()
-        venta.pagado = False if current_user.rol.nombre == 'COMPRADOR' else True
-        venta.comprador_id = current_user.id if current_user.rol.nombre == 'COMPRADOR' else session.get('comprador', None)
-        venta.vendedor_id = None if current_user.rol.nombre == 'COMPRADOR' else current_user.id
-        venta.total = total
+        venta.fecha_entrega = form.fecha_entrega.data
+        venta.pagado = False
+        venta.comprador_id = current_user.id
+        venta.vendedor_id = None
+        venta.total = total + 50
         
         self.bd.session.add(venta)
-        self.bd.session.flush()  # Force insert so that venta.id is generated
+        self.bd.session.flush()
         
         for key, item in carrito.items():
             detalle = VentaDetalle()
-            galleta = self.bd.session.query(Galleta).get(item['galleta_id'])
             
+            galleta = self.bd.session.query(Galleta).get(item['galleta_id'])
             if galleta is None:
                 raise ValueError("Galleta no encontrada")
             
@@ -140,11 +227,12 @@ class VentaServicio:
             detalle.precio_total = item['subtotal']
             
             inventario = self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta.id).first()
+            
             if inventario is None:
                 raise ValueError("Inventario no encontrado")
             if inventario.cantidad < item['peso']:
                 raise ValueError("No hay suficiente inventario")
-            inventario.cantidad -= item['peso']
+            
             self.bd.session.add(detalle)
             self.bd.session.add(inventario)
         self.bd.session.commit()
@@ -152,11 +240,62 @@ class VentaServicio:
         session.pop('carrito', None)
         session.pop('total', None)
         session.pop('cantidad_total', None)
-        session.pop('comprador', None)
+        session.pop('email_comprador', None)
         session.modified = True
+        
+    def cerrar_venta(self, session, current_user):
+        carrito = session.get('carrito', {})
+        total = float(math.ceil(session.get('total', 0)))
+        venta_id = session.get('venta_id', None)
+        email_comprador = session.get('email_comprador', None)
+
+        if venta_id:
+            venta = self.bd.session.query(Venta).get(venta_id)
+            self.bd.session.query(VentaDetalle).filter(VentaDetalle.venta_id == venta.id).delete(synchronize_session=False)
+        else:
+            venta = Venta()
+            comprador = self.bd.session.query(Usuario).filter_by(email=email_comprador).first()
+            venta.comprador_id = comprador.id if comprador else None
+            venta.fecha = datetime.now()
+        
+        venta.fecha_entrega = datetime.now()
+        venta.total = total
+        venta.pagado = True  # Al cerrar la venta se marca como pagada
+        venta.vendedor_id = current_user.id
+
+        self.bd.session.add(venta)
+        self.bd.session.flush()  # Para tener el id de la venta
+
+        for key, item in carrito.items():
+            detalle = VentaDetalle()
+            galleta = self.bd.session.query(Galleta).get(item['galleta_id'])
+            if not galleta:
+                raise ValueError("Galleta no encontrada")
+
+            detalle.venta_id = venta.id
+            detalle.galleta_id = galleta.id
+            detalle.presentacion = item['presentacion']
+            detalle.cantidad = item['cantidad']
+            detalle.medida_id = item['medida_id']
+            detalle.precio_unitario = item['precio']
+            detalle.precio_total = item['subtotal']
+
+            inventario = self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta.id).first()
+            if not inventario:
+                raise ValueError("Inventario no encontrado")
+            if inventario.cantidad < item['peso']:
+                raise ValueError("No hay suficiente inventario")
+            inventario.cantidad -= item['peso']
+
+            self.bd.session.add(detalle)
+            self.bd.session.add(inventario)
+
+        self.bd.session.commit()
+
+        # Limpiar de la sesión la información del pedido
+        self.vaciar_carrito(session)
     
     def agregar_galleta(self, form, session):
-        print("Formulario recibido:", form)
         presentacion = form.get('presentacion', "0")
         galleta_id = int(form.get('galleta_id'))
         medida_id = int(form.get('medida_id'))
@@ -171,14 +310,7 @@ class VentaServicio:
         }
         
         peso = presentaciones.get(presentacion)
-        unidad = re.sub(r'^[0-9\s]+', '', presentacion).strip()
-        if "pz" in presentacion.lower():
-            cuenta = int(re.sub(r'[^0-9]', '', presentacion))
-        elif "g" in presentacion.lower():
-            cuenta = int(re.sub(r'[^0-9]', '', presentacion)) / 1000
-        else:
-            cuenta = 1
-        
+
         galleta = self.obtener_galleta(galleta_id)
         if not galleta:
             raise ValueError("Galleta no encontrada")
@@ -192,22 +324,10 @@ class VentaServicio:
             raise ValueError("No hay suficiente inventario")
         
         key_item = f"{galleta.nombre} {presentacion}"
-        # Calcular precio unitario: (valor de presentación / 0.05) * precio de la galleta
         precio_unitario = float(math.ceil((peso / 0.05) * galleta.precio))
         
-        item = {
-            'galleta_id': galleta_id,
-            'nombre': galleta.nombre,
-            'presentacion': presentacion,
-            'unidad': unidad,
-            'cuenta': cuenta,
-            'peso': peso,  # peso correspondiente a una unidad de esta presentación
-            'precio': precio_unitario,
-            'medida_id': medida_id,
-            'cantidad': 1,
-            'subtotal': precio_unitario,  # subtotal = precio_unitario * cantidad (inicialmente 1)
-            'imagen': galleta.imagen,
-        }
+        medida_obj = self.bd.session.query(Medida).get(medida_id)
+        item = self._construir_detalle_item(galleta, presentacion, 1, medida_obj, precio_unitario, precio_unitario)
         
         total_peso_actual = sum(
             itm['peso'] for itm in session.get('carrito', {}).values() if itm['galleta_id'] == galleta_id
@@ -230,14 +350,15 @@ class VentaServicio:
                 session['carrito'][key_item] = item
                 session['total'] = math.ceil(sum(itm['subtotal'] for itm in session['carrito'].values()))
                 session['cantidad_total'] = sum(itm['cantidad'] for itm in session['carrito'].values())
-            return session['carrito']
         else:
             session['carrito'] = {key_item: item}
             session['total'] = item['subtotal']
             session['cantidad_total'] = 1
-            session['comprador'] = None
+            session['email_comprador'] = None
             session.modified = True
-            return session['carrito']
+        if session.get('venta_id'):
+            session['total'] = session['total'] + 50
+        return session['carrito']
         
     def modificar_cantidad(self, form, session):
         key_item = form.get('key_item')
@@ -281,6 +402,8 @@ class VentaServicio:
         
         # Actualizar totales globales
         session['total'] = math.ceil(sum(itm['subtotal'] for itm in carrito.values()))
+        if session.get('venta_id'):
+            session['total'] = session['total'] + 50
         session['cantidad_total'] = sum(itm['cantidad'] for itm in carrito.values())
         session.modified = True
         return carrito
@@ -299,19 +422,66 @@ class VentaServicio:
                 del session['carrito'][key_item]
             # Actualizar totales globales
             session['total'] = math.ceil(sum(itm['subtotal'] for itm in session['carrito'].values()))
+            if session.get('venta_id'):
+                session['total'] = session['total'] + 50
             session['cantidad_total'] = sum(itm['cantidad'] for itm in session['carrito'].values())
             session.modified = True
             return session['carrito']
         else:
             raise ValueError("Item not found in cart")
-    
+        
+    def vaciar_carrito(self, session):
+        session.pop('carrito', None)
+        session.pop('cantidad_total', None)
+        session.pop('precio_total', None)
+        session.pop('email_comprador', None)
+        session.pop('venta_id', None)
+        session.modified = True
+        
     def obtener_carrito(self, session):
         carrito = session.get('carrito', {})
         total = float(math.ceil(session.get('total', 0)))
-        comprador = session.get('comprador', None)
-        print("Carrito:", carrito)
-        print("Total:", total)
-        print("Comprador:", comprador)
-        if not carrito:
-            return {}, 0, None
-        return carrito, total, comprador
+        email_comprador = session.get('email_comprador', None)
+        venta_id = session.get('venta_id', None)
+        if not venta_id:
+            session['email_comprador'] = None
+        return carrito, total, email_comprador, venta_id
+    
+    def cancelar_pedido(self, session):
+        venta_id = session.get('venta_id', None)
+        venta = self.bd.session.query(Venta).get(venta_id)
+        self.bd.session.query(VentaDetalle).filter(VentaDetalle.venta_id == venta.id).delete(synchronize_session=False)
+        self.bd.session.delete(venta)
+        self.bd.session.commit()
+        self.vaciar_carrito(session)
+    
+    def _construir_detalle_item(self, galleta, presentacion, cantidad, medida, precio_unitario, precio_total):
+        presentaciones = {
+            "1 pz": 0.05,
+            "2 pz": 0.1,
+            "5 pz": 0.25,
+            "500 g": 0.5,
+            "700 g": 0.7,
+            "1 kg": 1
+        }
+        peso = presentaciones.get(presentacion)
+        unidad = re.sub(r'^[0-9\s]+', '', presentacion).strip()
+        if "pz" in presentacion.lower():
+            cuenta = int(re.sub(r'[^0-9]', '', presentacion))
+        elif "g" in presentacion.lower():
+            cuenta = int(re.sub(r'[^0-9]', '', presentacion)) / 1000
+        else:
+            cuenta = 1
+        return {
+            'galleta_id': galleta.id,
+            'nombre': galleta.nombre,
+            'presentacion': presentacion,
+            'unidad': unidad,
+            'cuenta': cuenta,
+            'peso': peso,  # peso según presentación
+            'precio': precio_unitario,  # precio unitario calculado
+            'medida_id': medida.id if hasattr(medida, 'id') else medida,
+            'cantidad': cantidad,
+            'subtotal': precio_total,
+            'imagen': galleta.imagen,
+        }
