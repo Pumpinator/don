@@ -17,8 +17,6 @@ def mostrador():
     venta_servicio = VentaServicio(bd)
     carrito, total, email_comprador, venta_id = venta_servicio.obtener_carrito(session)
     galletas = venta_servicio.obtener_mostrador(busqueda)
-    if not venta_id:
-        session['comprador'] = None
     return render_template('venta/mostrador.html', galletas=galletas, carrito=carrito, total=total, busqueda=busqueda)
 
 @controlador.route('/venta/agregar', methods=['POST'])
