@@ -1,0 +1,76 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Pedidos - DON GALLETO{% endblock %}
+
+{% block header %}Resolución de Pedido{% endblock %}
+
+{% block content %}
+<div class="px-2">
+    <div class="flex tet-center items-center mb-6">
+        <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
+            <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+        </a>
+        <h2 class="ml-4 text-2xl font-bold text-gray-800">
+            Pedidos
+        </h2>
+    </div>
+    <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
+        <a href="{{ url_for('principal.venta.mostrador') }}" class="flex-1 py-3 rounded-full px-4 text-center">
+            Mostrador
+        </a>
+        <a href="{{ url_for('principal.venta.listar_pedidos') }}"
+            class="flex-1 py-3 rounded-full px-4 text-center bg-white border border-gray-200 shadow-md">
+            Pedidos
+        </a>
+    </div>
+
+    <form action="{{ url_for('principal.usuario.listar_usuarios', rol=rol) }}" method="get" class="mb-6">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+            </div>
+            <input type="search" name="busqueda" value="{{ busqueda }}"
+                class="block w-full rounded-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]"
+                placeholder="Buscar pedidos..." required>
+        </div>
+    </form>
+
+    <div class="space-y-4">
+        {% if pedidos|length == 0 %}
+        <div class="p-4 mb-4 text-sm text-[var(--color-dirt-default)] rounded-lg" rol="alert">
+            <span class="font-medium">No se encontraron pedidos</span> {% if busqueda %}con el término de búsqueda "{{
+            busqueda }}"{% endif %}.
+        </div>
+        {% endif %}
+
+        {% for pedido in pedidos %}
+        <a href="{{ url_for('principal.venta.ver_pedido', venta_id=pedido.id) }}"
+            class="block p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h5 class="mb-1 text-xl font-bold tracking-tight text-gray-900">#{{ pedido.id }}</h5>
+                    <p class="text-sm font-normal text-gray-700">Pedido de {{ pedido.comprador.nombre }} 
+                        <span
+                            class="text-gray-500 font-normal">({{ pedido.comprador.email }})</span>
+                    </p>
+                    </p>
+                    <p class="text-sm font-normal text-gray-700">{{ pedido.fecha }}</p>
+                    <p class="text-sm font-normal text-gray-700">${{ pedido.total }} mxn</p>
+                    {% if pedido.pagado %}
+                    <span
+                        class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">Pagado</span>
+                    {% else %}
+                    <span class="bg-red-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm">No
+                        pagado</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

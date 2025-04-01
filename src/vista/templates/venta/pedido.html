@@ -41,7 +41,7 @@
                                     <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
                                     <button type="submit" id="decrement-button"
                                         data-input-counter-decrement="counter-input"
-                                        class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
                                         <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -61,7 +61,7 @@
                                     <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
                                     <button type="submit" id="increment-button"
                                         data-input-counter-increment="counter-input"
-                                        class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
                                         <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -76,10 +76,10 @@
                         </div>
 
                         <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                            <a href="#" class="text-base font-medium text-gray-900 hover:underline">
+                            <p class="text-base font-medium text-gray-900 hover:underline">
                                 {{ item.nombre }}
                                 <span class="text-sm font-normal text-gray-500">({{ item.presentacion }})</span>
-                            </a>
+                            </p>
                             <p class="text-sm font-normal text-gray-700">
                                 ${{ item.precio }} <span class="text-xs">c/u</span>
                             </p>
@@ -124,17 +124,25 @@
                             </div>
                         </div>
                         {% endfor %}
+                        <div class="grid grid-cols-2 justify-between gap-8">
+                            <div class="flex flex-col text-start">
+                                <p class="text-base font-normal text-gray-500">Comisión</p>
+                            </div>
+                            <div class="text-end">
+                                <p class="text-base font-normal text-gray-500">$50.00</p>
+                            </div>
+                        </div>
                     </div>
 
                     <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
                         <dt class="text-base font-bold text-gray-900">Total</dt>
-                        <dd class="text-base font-bold text-gray-900">${{ total }} mxn</dd>
+                        <dd class="text-base font-bold text-gray-900">${{ total + 50 }} mxn</dd>
                     </dl>
                 </div>
 
 
                 {% if current_user.is_authenticated %}
-                <form action="{{ url_for('principal.pedido.cerrar_venta') }}" method="POST">
+                <form action="{{ url_for('principal.pedido.cerrar_pedido') }}" method="POST">
                     <div class="flex flex-col items-start space-x-2 mb-4">
                         {{ form.csrf_token() }}
                         {{ form.fecha_entrega.label(class="text-sm font-medium text-gray-900 mb-2") }}

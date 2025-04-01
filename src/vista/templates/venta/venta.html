@@ -35,7 +35,7 @@
                                     <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
                                     <button type="submit" id="decrement-button"
                                         data-input-counter-decrement="counter-input"
-                                        class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
                                         <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -55,7 +55,7 @@
                                     <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
                                     <button type="submit" id="increment-button"
                                         data-input-counter-increment="counter-input"
-                                        class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
                                         <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -70,10 +70,10 @@
                         </div>
 
                         <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
-                            <a href="#" class="text-base font-medium text-gray-900 hover:underline">
+                            <p class="text-base font-medium text-gray-900 hover:underline">
                                 {{ item.nombre }}
                                 <span class="text-sm font-normal text-gray-500">({{ item.presentacion }})</span>
-                            </a>
+                            </p>
                             <p class="text-sm font-normal text-gray-700">
                                 ${{ item.precio }} <span class="text-xs">c/u</span>
                             </p>
@@ -118,6 +118,16 @@
                             </div>
                         </div>
                         {% endfor %}
+                        {% if venta_id %}
+                        <div class="grid grid-cols-2 justify-between gap-8">
+                            <div class="flex flex-col text-start">
+                                <p class="text-base font-normal text-gray-500">Comisión</p>
+                            </div>
+                            <div class="text-end">
+                                <p class="text-base font-normal text-gray-500">$50.00</p>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
 
                     <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
@@ -125,7 +135,8 @@
                         <dd class="text-base font-bold text-gray-900">${{ total }} mxn</dd>
                     </dl>
                 </div>
-                <form action="{{ url_for('principal.venta.buscar_comprador') }}" method="POST" novalidate>
+                {% if not venta_id %}
+                <form action="{{ url_for('principal.venta.validar_comprador') }}" method="POST" novalidate>
                     <div class="flex items-center space-x-2">
                         {{ form.csrf_token() }}
                         {{ form.email_comprador(
@@ -142,12 +153,25 @@
                     <p class="mt-1 text-sm text-red-600">{{ form.email_comprador.errors[0] }}</p>
                     {% endif %}
                 </form>
+                {% else %}
+                <p class="text-sm font-normal text-gray-700">Pedido de
+                    <span class="text-gray-500 font-normal">{{ email_comprador }}</span>
+                </p>
+                {% endif %}
 
                 <button data-modal-target="modal-cerrar-venta" data-modal-toggle="modal-cerrar-venta" type="button"
                     class="block w-full text-white bg-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-dark)] focus:ring-4 focus:outline-none focus:ring-[var(--color-dirt-default)] font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                     Cerrar Venta
                 </button>
 
+                {% if venta_id %}
+                <div class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
+                    <a href="{{ url_for('principal.venta.cancelar_pedido') }}"
+                        class="block w-full text-white bg-[var(--color-red-default)] hover:bg-[var(--color-red-dark)] focus:ring-4 focus:outline-none focus:ring-[var(--color-red-light)] font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        Cancelar Pedido
+                    </a>
+                </div>
+                {% endif %}
 
                 <div class="flex items-center justify-center gap-2">
                     <span class="text-sm font-normal text-gray-500"> o </span>
@@ -186,12 +210,24 @@
                     ¿Está seguro que desea generar el ticket de compra y cerrar la venta?
                 </h3>
                 <div class="flex items-center justify-center gap-2">
-                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=1) }}"
+                    <a href="
+                    {% if not venta_id %}
+                        {{ url_for('principal.venta.cerrar_venta', ticket=1) }}
+                    {% else %}
+                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=1) }}
+                    {% endif %}
+                     "
                         class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
                         <i class="fa-solid fa-check mr-2"></i>
                         Sí, generar
                     </a>
-                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=0) }}"
+                    <a href="
+                    {% if not venta_id %}
+                        {{ url_for('principal.venta.cerrar_venta', ticket=0) }}
+                    {% else %}
+                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=0) }}
+                    {% endif %}
+                    "
                         class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
                         <i class="fa-solid fa-xmark mr-2"></i>
                         No generar
