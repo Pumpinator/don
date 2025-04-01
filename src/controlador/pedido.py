@@ -85,7 +85,6 @@ def eliminar_galleta():
         return redirect(url_for('principal.pedido.ver_carrito'))
 
 @controlador.route('/carrito/vaciar', methods=['GET'])
-@login_required
 def vaciar_carrito():
     session.pop('carrito', None)
     session.pop('cantidad_total', None)
