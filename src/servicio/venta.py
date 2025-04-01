@@ -38,6 +38,7 @@ class VentaServicio:
             )
             .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
             .join(Medida, GalletaInventario.medida_id == Medida.id)
+            .filter(GalletaInventario.fecha_expiracion > datetime.now())
             .filter(GalletaInventario.cantidad > 0)
         )
         
@@ -73,6 +74,7 @@ class VentaServicio:
             )
             .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
             .join(Medida, GalletaInventario.medida_id == Medida.id)
+            .filter(GalletaInventario.fecha_expiracion > datetime.now())
         )
         
         if busqueda:
@@ -98,6 +100,16 @@ class VentaServicio:
 
         
     def cerrar_venta(self, session, form, current_user):
+        horarios = {
+            'Lunes': [8, 20],
+            'Martes': [8, 20],
+            'Miércoles': [8, 20],
+            'Jueves': [8, 20],
+            'Viernes': [8, 20],
+            'Sábado': [8, 20],
+            'Domingo': [8, 16]
+        }
+        
         carrito = session.get('carrito', {})
         total = float(math.ceil(session.get('total', 0)))
         

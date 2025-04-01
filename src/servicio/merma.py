@@ -1,12 +1,12 @@
 from modelo.merma import Merma
-
+from modelo.produccion import Produccion
 class MermaServicio:
     
     def __init__ (self, bd):
-        self.bd=bd
+        self.bd = bd
         
     def obtener_mermas(self):
-        return self.bd.session.query(Merma).all()
+        return self.bd.session.query(Merma).outerjoin(Produccion).all()
     
     def agregar_merma(self, form):
         tipo = form.get('tipo')  
