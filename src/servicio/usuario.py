@@ -94,7 +94,7 @@ class UsuarioServicio:
         if not usuario:
             raise ValueError("Usuario no encontrado.")
         
-        if email != usuario.email and self.obtener_usuario(correo=email):
+        if email != usuario.email and self.obtener_usuario(email=email):
             raise ValueError("El correo ya se encuentra registrado.")
         
         if password:
