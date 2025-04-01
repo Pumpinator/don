@@ -16,12 +16,12 @@ class ReporteVentas:
         productos_mas_vendidos = (
             self.bd.session.query(
                 Galleta.nombre, 
-                Medida.nombre.label('medida_mas_vendida'),  # Agregar la medida
+                Medida.nombre.label('medida_mas_vendida'),
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_vendido')
             )
             .join(VentaDetalle, Galleta.id == VentaDetalle.galleta_id)
-            .join(Medida, Galleta.medida_id == Medida.id)  # Unir con la tabla de medida
-            .group_by(Galleta.nombre, Medida.nombre)  # Agrupar también por la medida
+            .join(Medida, Galleta.medida_id == Medida.id)  
+            .group_by(Galleta.nombre, Medida.nombre)  
             .order_by(self.bd.desc('total_vendido'))
             .limit(10)
             .all()
