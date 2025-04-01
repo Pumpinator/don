@@ -6,7 +6,7 @@
         <form href="{{ url_for('principal.merma.agregar_merma') }}" method="POST" class="w-full max-w-sm space-y-4">
             <div>
                 <label class="block text-gray-700 font-bold">Tipo de Merma</label>
-                <select name="tipo" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
+                <select id="tipo_merma" name="tipo" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
                     <option value="">Seleccione...</option>
                     <option value="insumo">Insumo</option>
                     <option value="galleta">Galleta</option>
@@ -16,11 +16,11 @@
 
             <div>
                 <label class="block text-gray-700 font-bold">Insumo/Galleta/Producción</label>
-                <select name="item_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
+                <select id="item_select" name="item_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
                     <option value="">Seleccione...</option>
                     {% if insumos %}
                     {% for insumo in insumos %}
-                        <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
+                        <option value="{{ insumo.id }}" data-tipo="insumo">{{ insumo.nombre }}</option>
                     {% endfor %}
                     {% else %}
                         <option value="">No hay insumos disponibles</option>
@@ -29,7 +29,7 @@
                         <option value="{{ galleta.id }}" data-tipo="galleta">{{ galleta.nombre }}</option>
                     {% endfor %}
                     {% for produccion in producciones %}
-                        <option value="{{ produccion.id }}" data-tipo="produccion">{{ produccion.descripcion }}</option>
+                        <option value="{{ produccion.id }}" data-tipo="produccion">{{ produccion.estatus }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -54,5 +54,6 @@
             </div>
         </form>
     </main>
+
 </body>
 {% endblock %}

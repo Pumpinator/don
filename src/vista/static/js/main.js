@@ -8,6 +8,31 @@ document.querySelectorAll('[data-dismiss-target]').forEach((btn) => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    const tipoMerma = document.getElementById("tipo_merma");
+    const itemSelect = document.getElementById("item_select");
+    const opcionesOriginales = [...itemSelect.options];
+
+    tipoMerma.addEventListener("change", function() {
+        const tipoSeleccionado = tipoMerma.value;
+        itemSelect.innerHTML = "";
+
+        // Agregar la opción por defecto
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Seleccione...";
+        itemSelect.appendChild(defaultOption);
+
+        // Filtrar y agregar opciones correspondientes
+        opcionesOriginales.forEach(opcion => {
+            const tipoOpcion = opcion.getAttribute("data-tipo");
+            if (!tipoOpcion || tipoOpcion === tipoSeleccionado) {
+                itemSelect.appendChild(opcion.cloneNode(true));
+            }
+        });
+    });
+});
+
 function showTab(tabName) {
     // Ocultar todos los contenidos
     document.getElementById('insumos-content').classList.add('hidden');
