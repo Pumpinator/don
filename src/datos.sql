@@ -155,35 +155,6 @@ VALUES ('Chispas de Chocolate', FLOOR(@peso_galleta * @receta_chispas_chocolate 
        ('Cacahuate', FLOOR(@peso_galleta * @receta_cacahuate * @margen_ganancia), 'cacahuate.png', 3),
        ('Coco', FLOOR(@peso_galleta * @receta_coco * @margen_ganancia), 'coco.png', 3);
 
-/*
-INSERT INTO presentaciones (cantidad, peso, precio, medida_id, galleta_id)
-VALUES (1, @peso_galleta, FLOOR(@peso_galleta * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
-        (2, @peso_galleta * 2, FLOOR(@peso_galleta * 2 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
-        (5, @peso_galleta * 5, FLOOR(@peso_galleta * 5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1).
-        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
-        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
-        (1, 0.001, FLOOR((@peso_galleta * @receta_chispas_chocolate * @margen_ganancia) / (@peso_galleta * 1000)), 1, 1);
-
-¿Deberíamos generar una tabla de presentaciones para cada galleta?
-
-from bd import bd
-from modelo.medida import Medida
-from modelo.galleta import Galleta
-
-class Presentacion(bd.Model):
-    __tablename__ = 'presentaciones'
-    
-    id = bd.Column(bd.Integer, primary_key=True)
-    cantidad = bd.Column(bd.Integer, nullable=False)
-    peso = bd.Column(bd.Float, nullable=False)
-    precio = bd.Column(bd.Float, nullable=False)
-    
-    medida_id = bd.Column(bd.Integer, bd.ForeignKey('medidas.id'), nullable=False)
-    medida = bd.relationship(Medida, backref='presentaciones')
-    
-    galleta_id = bd.Column(bd.Integer, bd.ForeignKey('galletas.id'), nullable=False)
-    galleta = bd.relationship(Galleta, backref='presentaciones')
-*/
 
 INSERT INTO proveedores (nombre, contacto)
 VALUES ('Harinera Beleño', '477 391 0598'),
@@ -413,3 +384,34 @@ DELIMITER ;
 */
 
 
+
+
+/*
+INSERT INTO presentaciones (cantidad, peso, precio, medida_id, galleta_id)
+VALUES (1, @peso_galleta, FLOOR(@peso_galleta * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (2, @peso_galleta * 2, FLOOR(@peso_galleta * 2 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (5, @peso_galleta * 5, FLOOR(@peso_galleta * 5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1).
+        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (0.5, @peso_galleta * 0.5, FLOOR(@peso_galleta * 0.5 * @receta_chispas_chocolate * @margen_ganancia), 3, 1),
+        (1, 0.001, FLOOR((@peso_galleta * @receta_chispas_chocolate * @margen_ganancia) / (@peso_galleta * 1000)), 1, 1);
+
+¿Deberíamos generar una tabla de presentaciones para cada galleta?
+
+from bd import bd
+from modelo.medida import Medida
+from modelo.galleta import Galleta
+
+class Presentacion(bd.Model):
+    __tablename__ = 'presentaciones'
+    
+    id = bd.Column(bd.Integer, primary_key=True)
+    cantidad = bd.Column(bd.Integer, nullable=False)
+    peso = bd.Column(bd.Float, nullable=False)
+    precio = bd.Column(bd.Float, nullable=False)
+    
+    medida_id = bd.Column(bd.Integer, bd.ForeignKey('medidas.id'), nullable=False)
+    medida = bd.relationship(Medida, backref='presentaciones')
+    
+    galleta_id = bd.Column(bd.Integer, bd.ForeignKey('galletas.id'), nullable=False)
+    galleta = bd.relationship(Galleta, backref='presentaciones')
+*/
