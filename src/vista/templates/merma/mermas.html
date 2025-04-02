@@ -1,6 +1,14 @@
 {% extends "layouts/auth.html" %} {% block title %}Mermas - DON{% endblock %} {% block content %}
 
-<body class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
+                <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+            <h2 class="ml-4 text-2xl font-bold text-gray-800">Mermas</h2>
+        </div>
+    </div>
     <div class="w-full max-w-4xl mx-auto px-6 md:px-12 p-6">
         <p class="text-gray-500">Registros de mermas</p>
 
@@ -83,5 +91,5 @@
             </a>
         </div>
     </div>
-</body>
+</div>
 {% endblock %}

@@ -5,9 +5,9 @@
 {% block header %}Editar Usuario{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center">
-  <div class="w-full flex flex-col max-w-md bg-white rounded-lg p-6">
-    <div class="flex items-center mb-6">
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+  <div class="flex flex-col justify-between">
+    <div class="flex mb-6">
       <a href="javascript:history.back()" class="flex-shrink-0">
         <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
       </a>
@@ -50,7 +50,8 @@
       <div>
         {{ form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
         {{ form.confirm_password(class="mt-1 block w-full border border-gray-300 rounded-full px-4
-        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Confirmar Contraseña") }}
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Confirmar
+        Contraseña") }}
         {% if form.confirm_password.errors %}
         <p class="mt-1 text-sm text-red-600">{{ form.confirm_password.errors[0] }}</p>
         {% endif %}
@@ -73,13 +74,13 @@
     </form>
     {% if usuario.estatus %}
     <button data-modal-target="popup-modal-desactivar" data-modal-toggle="popup-modal-desactivar" type="button"
-      class="w-full mt-4 cursor-pointer bg-white text-[var(--color-red-default)] font-semibold py-2 px-4 rounded-md border border-[var(--color-red-default)] hover:text-white hover:bg-[var(--color-red-default)] focus:ring-[var(--color-red-default)]">
+      class="mt-4 cursor-pointer bg-white text-[var(--color-red-default)] font-semibold py-2 px-4 rounded-md border border-[var(--color-red-default)] hover:text-white hover:bg-[var(--color-red-default)] focus:ring-[var(--color-red-default)]">
       Desactivar
     </button>
     {% endif %}
     {% if not usuario.estatus %}
     <button data-modal-target="popup-modal-activar" data-modal-toggle="popup-modal-activar" type="button"
-      class="w-full mt-4 cursor-pointer bg-white text-green-500 font-semibold py-2 px-4 rounded-md border border-green-500 hover:text-white hover:bg-green-500 focus:ring-green-500">
+      class="mt-4 cursor-pointer bg-white text-green-500 font-semibold py-2 px-4 rounded-md border border-green-500 hover:text-white hover:bg-green-500 focus:ring-green-500">
       Activar
     </button>
     {% endif %}
@@ -115,8 +116,8 @@
         <div class="relative bg-white rounded-lg shadow-sm p-6">
           <div class="text-center">
             <h3 class="mb-5 text-lg font-normal text-gray-500">¿Estás seguro de que deseas activar este usuario?</h3>
-            <form id="form-activar"
-              action="{{ url_for('principal.usuario.activar_usuario', rol=rol, id=usuario.id) }}" method="POST">
+            <form id="form-activar" action="{{ url_for('principal.usuario.activar_usuario', rol=rol, id=usuario.id) }}"
+              method="POST">
               {{ form.csrf_token() }}
               <button type="submit" data-modal-hide="popup-modal-desactivar"
                 class="w-full cursor-pointer text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-5 py-2.5">

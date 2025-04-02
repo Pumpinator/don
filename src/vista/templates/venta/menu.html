@@ -24,6 +24,7 @@
         </a>
         {% endif %}
       </div>
+      
     <form action="{{ url_for('principal.pedido.menu') }}" method="get" class="mb-6">
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -34,7 +35,7 @@
                 </svg>
             </div>
             <input type="search" name="busqueda" value="{{ busqueda }}"
-                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Buscar galletas...">
         </div>
     </form>

@@ -5,14 +5,14 @@
 {% block header %}Resolución de Pedido{% endblock %}
 
 {% block content %}
-<div class="px-2">
-    <div class="flex tet-center items-center mb-6">
-        <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
-            <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
-        </a>
-        <h2 class="ml-4 text-2xl font-bold text-gray-800">
-            Pedidos
-        </h2>
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <a href="{{ url_for('principal.venta.mostrador') }}" class="flex-shrink-0">
+                <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+            <h2 class="ml-4 text-2xl font-bold text-gray-800">Pedidos</h2>
+        </div>
     </div>
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
         <a href="{{ url_for('principal.venta.mostrador') }}" class="flex-1 py-3 rounded-full px-4 text-center">

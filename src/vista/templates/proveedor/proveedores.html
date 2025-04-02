@@ -3,7 +3,26 @@
 {% block title %}Proveedores - DON{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-6">
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <a href="{{ url_for('principal.index') }}" class="flex-shrink-0">
+                <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+            <h2 class="ml-4 text-2xl font-bold text-gray-800">Proveedores</h2>
+        </div>
+    </div>
+
+    <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
+        <a href="{{ url_for('principal.compra.compras') }}" class="flex-1 py-3 rounded-full px-4 text-center">
+            Compras
+        </a>
+        <a href="{{ url_for('principal.proveedor.proveedores') }}"
+            class="flex-1 py-3 rounded-full px-4 text-center bg-white border border-gray-200 shadow-md">
+            Proveedores
+        </a>
+    </div>
+
     <div id="proveedores-container" class="grid grid-cols-1 gap-6">
         {% for proveedor in proveedores %}
         <a href="{{ url_for('principal.proveedor.detalles_proveedor', proveedor_id=proveedor.id) }}" 
