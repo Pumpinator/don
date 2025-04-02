@@ -4,7 +4,14 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">Editar Compra</h1>
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <a href="{{ url_for('principal.compra.compras') }}" class="flex-shrink-0">
+                <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+            <h2 class="ml-4 text-2xl font-bold text-gray-800">Editar Compra</h2>
+        </div>
+    </div>
     <form action="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}" method="POST" class="space-y-4">
         <!-- Proveedor -->
         <div>
@@ -68,7 +75,7 @@
         <!-- Botones -->
         <div class="flex justify-end space-x-4">
             <a href="{{ url_for('principal.compra.compras') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg">Cancelar</a>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
+            <button type="submit" class="bg-[var(--color-latte-default)] text-white px-4 py-2 rounded-lg">Guardar</button>
         </div>
     </form>
 </div>

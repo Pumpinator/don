@@ -15,11 +15,11 @@
 
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
         <a href="{{ url_for('principal.insumo.insumos_inventario', rol='inventario') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center bg-white border border-gray-200 shadow-md">
+            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'inventario' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Inventario
         </a>
         <a href="{{ url_for('principal.insumo.insumos', rol='insumos') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center">
+            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'insumos' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Tipos
         </a>
     </div>
