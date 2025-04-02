@@ -114,11 +114,13 @@ def editar_receta(receta_id):
 def hornear_receta():
     try:
         receta_id = request.form['receta_id']
-        produccion_servicio = ProduccionServicio(bd)
+        kilos = float(request.form['kilos'])
         
+        produccion_servicio = ProduccionServicio(bd)
         produccion = produccion_servicio.crear_produccion(
             receta_id=receta_id,
-            fecha=datetime.now().date()
+            fecha=datetime.now().date(),
+            kilos=kilos
         )
         
         flash("Producción iniciada exitosamente", "success")
