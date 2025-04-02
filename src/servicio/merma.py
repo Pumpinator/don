@@ -2,7 +2,8 @@ from modelo.merma import Merma
 from modelo.produccion import Produccion
 from modelo.insumo import Insumo
 from modelo.galleta import Galleta
-from modelo.insumo_inventario import InsumoInventario  
+from modelo.insumo_inventario import InsumoInventario  # Asegúrate de importar este modelo
+from modelo.galleta_inventario import GalletaInventario
 
 class MermaServicio:
     
@@ -48,7 +49,19 @@ class MermaServicio:
 
         elif tipo == "galleta":
             merma.galleta_id = item_id
-            # Resta cantidad de la galleta en el inventario si es necesario
+            
+            # Buscar la galleta en el inventario y restarle la cantidad de la merma
+            galleta_inventario = self.bd.session.query(GalletaInventario).filter_by(
+                galleta_id=item_id, medida_id=medida_id
+            ).first()
+
+            if not galleta_inventario:
+                raise ValueError("La galleta no se encuentra en el inventario.")
+            
+            if galleta_inventario.cantidad < cantidad:
+                raise ValueError("No hay suficiente cantidad en el inventario para registrar esta merma.")
+
+            galleta_inventario.cantidad -= cantidad  # Restar la merma del inventario de galletas
 
         elif tipo == "produccion":
             merma.produccion_id = item_id
