@@ -8,11 +8,11 @@ from flask_principal import Permission, RoleNeed
 
 controlador = Blueprint('galleta', __name__)
 
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route('/galletas')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas():
     inventario_servicio = InventarioServicio(bd)
     inventarios = inventario_servicio.obtener_galletas()
@@ -29,7 +29,7 @@ def galletas_agregar():
 
 @controlador.route('/galletas_detalles/<int:galleta_id>')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas_detalles(galleta_id):
     hoy = date.today()
     inventario_servicio = InventarioServicio(bd)

@@ -43,7 +43,7 @@
         {% endblock %}
     </main>
 
-    {% if current_user.roles[0] == 'TRABAJADOR' %}
+    {% if current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
     <div
         class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2">
         <div class="grid h-full max-w-lg grid-cols-7 mx-auto text-[var(--color-chocolate-default)]">

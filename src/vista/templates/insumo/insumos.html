@@ -80,7 +80,7 @@
         {% for insumo in insumos %}
         {%set id = insumo.id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
-        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill mb-8">
             <a href="{{ url_for('principal.insumo.insumos_editar', insumo_id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>

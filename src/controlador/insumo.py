@@ -9,11 +9,11 @@ from flask_principal import Permission, RoleNeed
 
 controlador = Blueprint('insumo', __name__)
 
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route('/insumos_inventario')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos_inventario():
     inventario_servicio = InventarioServicio(bd)
     inventarios = inventario_servicio.obtener_insumos_inventarios()
@@ -23,7 +23,7 @@ def insumos_inventario():
 
 @controlador.route('/insumos')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos():
     inventario_servicio = InventarioServicio(bd)
     insumos = inventario_servicio.obtener_insumos()
@@ -34,7 +34,7 @@ def insumos():
 
 @controlador.route('/insumos_detalles/<int:insumo_id>')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos_detalles(insumo_id):
     hoy = date.today()
     inventario_servicio = InventarioServicio(bd)
@@ -47,7 +47,7 @@ def insumos_detalles(insumo_id):
 
 @controlador.route('/insumos/crear', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def crear_insumo():
     form = AgregarInsumo(request.form)
     if request.method == 'POST' and form.validate_on_submit():
@@ -64,7 +64,7 @@ def crear_insumo():
 
 @controlador.route('/insumos_editar/<int:insumo_id>', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos_editar(insumo_id):
     inv_servicio = InventarioServicio(bd)
     insumo = inv_servicio.obtener_insumo(insumo_id)

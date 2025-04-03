@@ -1,7 +1,10 @@
-{% if current_user.is_authenticated %} {% extends "layouts/auth.html" %} {% endif %} {% if current_user.is_anonymous %} {% extends "layouts/guest.html" %} {% endif %} {% block title %}Inicio - DON{% endblock %} {% block content %} {% if current_user.is_authenticated
-and current_user.roles[0] == 'TRABAJADOR' %}
+{% if current_user.is_authenticated %} {% extends "layouts/auth.html" %} {% endif %} {% if current_user.is_anonymous %}
+{% extends "layouts/guest.html" %} {% endif %} {% block title %}Inicio - DON{% endblock %} {% block content %} {% if
+current_user.is_authenticated
+and current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 space-y-6">
-    <a href="{{ url_for('principal.produccion.produccion') }}" class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+    <a href="{{ url_for('principal.produccion.produccion') }}"
+        class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
         <p class="text-gray-500 text-3xl">
             <i class="fas fa-cogs"></i>
         </p>
@@ -9,12 +12,14 @@ and current_user.roles[0] == 'TRABAJADOR' %}
 
     <!-- Contenedores secundarios -->
     <div class="grid grid-cols-2 gap-4">
-        <a href="{{ url_for('principal.venta.mostrador') }}" class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+        <a href="{{ url_for('principal.venta.mostrador') }}"
+            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
             <p class="text-gray-500 text-3xl">
                 <i class="fas fa-store"></i>
             </p>
         </a>
-        <a href="{{ url_for('principal.reportes.reportes') }}" class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+        <a href="{{ url_for('principal.reportes.reportes') }}"
+            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
             <p class="text-gray-500 text-3xl">
                 <i class="fas fa-chart-line"></i>
             </p>
@@ -29,10 +34,12 @@ and current_user.roles[0] == 'TRABAJADOR' %}
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('principal.pedido.menu') }}" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+            <a href="{{ url_for('principal.pedido.menu') }}"
+                class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
-            <a href="{{ url_for('principal.ingresar') }}" class="block bg-gray-200 text-gray-800 text-center py-2 px-4 rounded-lg mt-4 hover:bg-gray-300">
+            <a href="{{ url_for('principal.ingresar') }}"
+                class="block bg-gray-200 text-gray-800 text-center py-2 px-4 rounded-lg mt-4 hover:bg-gray-300">
                 Accede a tu Cuenta
             </a>
         </div>
@@ -46,32 +53,11 @@ and current_user.roles[0] == 'TRABAJADOR' %}
             Ordena tus galletas favoritas y recógelas en sucursal.
         </p>
         <div class="mt-6">
-            <a href="{{ url_for('principal.pedido.menu') }}" class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+            <a href="{{ url_for('principal.pedido.menu') }}"
+                class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
                 Ver el Menú
             </a>
         </div>
     </div>
 </div>
-{% endif %} {% if current_user.is_authenticated and current_user.roles[0] == 'ADMIN' %}
-<div class="space-y-6 px-6">
-    <a href="{{ url_for('principal.usuario.listar_usuarios', rol='administradores') }}" class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer">
-        <p class="text-gray-500 text-3xl">
-            <i class="fas fa-users"></i>
-        </p>
-    </a>
-
-    <!-- Contenedores secundarios -->
-    <div class="grid grid-cols-2 gap-4">
-        <a href="#" class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
-            <p class="text-gray-500 text-3xl">
-                <i class="fas fa-chart-line"></i>
-            </p>
-            <a href="#" class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer">
-                <p class="text-gray-500 text-3xl">
-                    <i class="fas fa-key"></i>
-                </p>
-            </a>
-        </a>
-    </div>
-</div>
-{% endif %} {% endblock %}
+{% endif %}{% endblock %}
