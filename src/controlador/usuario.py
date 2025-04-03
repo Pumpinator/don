@@ -70,7 +70,7 @@ def desactivar_usuario(rol, id):
     try:
         usuario_servicio.desactivar_usuario(id)
         flash("Usuario desactivado exitosamente", "info")
-        return redirect(url_for('usuario.listar_usuarios', rol=rol))
+        return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
     except ValueError as e:
         flash(str(e), "danger")
     return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
@@ -83,7 +83,7 @@ def activar_usuario(rol, id):
     try:
         usuario_servicio.activar_usuario(id)
         flash("Usuario activado exitosamente", "success")
-        return redirect(url_for('usuario.listar_usuarios', rol=rol))
+        return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))
     except ValueError as e:
         flash(str(e), "danger")
     return redirect(url_for('principal.usuario.listar_usuarios', rol=rol))

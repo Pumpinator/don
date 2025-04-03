@@ -122,6 +122,7 @@ class RecetaServicio:
                     Receta.procedimiento,
                     Galleta.nombre.label('galleta_nombre'),
                     Ingrediente.cantidad,
+                    Ingrediente.insumo_id,
                     Insumo.nombre.label('insumo_nombre'),
                     Medida.nombre.label('medida_nombre')
                 )
@@ -148,7 +149,8 @@ class RecetaServicio:
                 receta_dict['ingredientes'].append({
                     'insumo': row.insumo_nombre,
                     'cantidad': row.cantidad,
-                    'medida': row.medida_nombre
+                    'medida': row.medida_nombre,
+                    'insumo_id': row.insumo_id
                 })
 
             return receta_dict

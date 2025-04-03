@@ -1,7 +1,14 @@
-{% if current_user.is_authenticated %} {% extends "layouts/auth.html" %} {% endif %} {% if current_user.is_anonymous %}
-{% extends "layouts/guest.html" %} {% endif %} {% block title %}Inicio - DON{% endblock %} {% block content %} {% if
-current_user.is_authenticated
-and current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
+{% if current_user.is_authenticated %}
+{% extends "layouts/auth.html" %}
+{% endif %}
+{% if current_user.is_anonymous %}
+{% extends "layouts/guest.html" %}
+{% endif %}
+{% block title %}Inicio - DON{% endblock %}
+{% block content %}
+{% if current_user.is_authenticated %}
+{% if current_user.roles and (current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN') %}
+<!-- Vista para trabajador o admin -->
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 space-y-6">
     <a href="{{ url_for('principal.produccion.produccion') }}"
         class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
@@ -25,8 +32,25 @@ and current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
             </p>
         </a>
     </div>
+
+    {% elif current_user.roles and current_user.roles[0] == 'COMPRADOR' %}
+    <div class="flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-lg p-6">
+            <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
+            <p class="text-gray-600 text-center mt-2">
+                Ordena tus galletas favoritas y recógelas en sucursal.
+            </p>
+            <div class="mt-6">
+                <a href="{{ url_for('principal.pedido.menu') }}"
+                    class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
+                    Ver el Menú
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% endif %} {% if current_user.is_anonymous %}
+{% else %}
 <div class="flex items-center justify-center p-4">
     <div class="w-full max-w-md bg-white rounded-lg p-6">
         <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
@@ -45,19 +69,5 @@ and current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
         </div>
     </div>
 </div>
-{% endif %} {% if current_user.is_authenticated and current_user.roles[0] == 'COMPRADOR' %}
-<div class="flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-lg p-6">
-        <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
-        <p class="text-gray-600 text-center mt-2">
-            Ordena tus galletas favoritas y recógelas en sucursal.
-        </p>
-        <div class="mt-6">
-            <a href="{{ url_for('principal.pedido.menu') }}"
-                class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
-                Ver el Menú
-            </a>
-        </div>
-    </div>
-</div>
-{% endif %}{% endblock %}
+{% endif %}
+{% endblock %}

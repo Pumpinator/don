@@ -53,15 +53,17 @@
                             required>
                             <option value="" disabled>Seleccione un insumo</option>
                             {% for insumo in insumos %}
-                            <option value="{{ insumo.id }}" {% if insumo.id==ingrediente.insumo_id %}selected{% endif
-                                %}>
+                            <option value="{{ insumo.id }}"
+                            {% if insumo.id==ingrediente.insumo_id %}
+                            selected
+                            {% endif%}>
                                 {{ insumo.nombre }}
                             </option>
                             {% endfor %}
                         </select>
                         <input type="number" name="cantidad[]"
                             class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]"
-                            value="{{ ingrediente.cantidad }}" placeholder="Cantidad" required>
+                            value="{{ ingrediente.cantidad }}" placeholder="Cantidad" step="0.01" min="0" required>
                         <select name="medida_id[]"
                             class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]"
                             required>
