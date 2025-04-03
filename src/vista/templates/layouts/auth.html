@@ -38,7 +38,7 @@
         </div>
     </header>
 
-    <main class="flex-grow overflow-y-auto bg-white pt-10">
+    <main class="flex-grow overflow-y-auto bg-white my-20">
         {% block content %}
         {% endblock %}
     </main>
@@ -67,12 +67,12 @@
                     Compras
                     <div class="tooltip-arrow" data-popper-arrow></div>
                 </a>
-                <a href="{{ url_for('principal.insumo.insumos') }}"
+                <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
                     class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                     <i class="fas fa-egg text-xl"></i>
                     <span class="sr-only">Compras</span>
                     </button>
-                    <a href="{{ url_for('principal.insumo.insumos') }}"
+                    <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
                         Compras
                         <div class="tooltip-arrow" data-popper-arrow></div>

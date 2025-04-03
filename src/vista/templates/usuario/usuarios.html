@@ -57,7 +57,7 @@
 
         {% for usuario in usuarios %}
         <a href="{{ url_for('principal.usuario.editar_usuario', rol=rol, id=usuario.id) }}"
-            class="block p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+            class="block p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75">
             <div class="flex justify-between items-start">
                 <div>
                     <h5 class="mb-1 text-xl font-bold tracking-tight text-gray-900">{{ usuario.nombre }}</h5>

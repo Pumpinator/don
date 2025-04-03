@@ -12,16 +12,16 @@
             <h2 class="ml-4 text-2xl font-bold text-gray-800">Detalles del Proveedor</h2>
         </div>
     </div>
-    <div class="bg-gray-200 rounded-lg p-6">
+    <div class="border border-gray-200 shadow-sm rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-800">Nombre: {{ proveedor.nombre }}</h2>
         <p class="text-sm text-gray-600">Contacto: {{ proveedor.contacto }}</p>
     </div>
-    <div class="mt-6 flex space-x-4">
+    <div class="mt-6 flex space-x-4 justify-center items-center">
         <a href="{{ url_for('principal.proveedor.editar_proveedor', proveedor_id=proveedor.id) }}"
-            class="bg-[var(--color-latte-default)] text-white px-4 py-2 rounded-lg">Editar</a>
+            class="bg-[var(--color-dirt-default)] text-white px-4 py-2 rounded-lg">Editar</a>
         <form action="{{ url_for('principal.proveedor.eliminar_proveedor', proveedor_id=proveedor.id) }}" method="POST"
             onsubmit="return confirm('¿Seguro que deseas eliminar este proveedor?');">
-            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg">Eliminar</button>
+            <button type="submit" class="bg-[var(--color-red-default)] text-white px-4 py-2 rounded-lg">Eliminar</button>
         </form>
         
     </div>

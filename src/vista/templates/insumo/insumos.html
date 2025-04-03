@@ -14,12 +14,12 @@
     </div>
 
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
-        <a href="{{ url_for('principal.insumo.insumos_inventario', rol='inventario') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'inventario' %}bg-white border border-gray-200 shadow-md{% endif %}">
+        <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
+            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'inventarios' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Inventario
         </a>
-        <a href="{{ url_for('principal.insumo.insumos', rol='insumos') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'insumos' %}bg-white border border-gray-200 shadow-md{% endif %}">
+        <a href="{{ url_for('principal.insumo.insumos', modulo='tipos') }}"
+            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'tipos' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Tipos
         </a>
     </div>
@@ -43,12 +43,12 @@
 
     <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 p-10">
 
-        {%if rol == 'inventario'%}
+        {%if rol == 'inventarios'%}
         {% for inv in inventarios %}
 
         {%set id = inv.insumo_id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
-        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        shadow-sm cursor-pointer hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill mb-8">
             <a href="{{ url_for('principal.insumo.insumos_detalles', insumo_id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>
@@ -80,7 +80,7 @@
         {% for insumo in insumos %}
         {%set id = insumo.id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
-        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill mb-8">
+        shadow-sm cursor-pointer hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill mb-8">
             <a href="{{ url_for('principal.insumo.insumos_editar', insumo_id=id) }}">
                 <div class="p-5 grid grid-cols-2 gap-6">
                     <div>

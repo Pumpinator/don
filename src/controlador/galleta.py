@@ -27,7 +27,7 @@ def galletas_agregar():
     return render_template('galletas/galletas_agregar.html')
 
 
-@controlador.route('/galletas_detalles/<int:galleta_id>')
+@controlador.route('/galleta/<int:galleta_id>')
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def galletas_detalles(galleta_id):

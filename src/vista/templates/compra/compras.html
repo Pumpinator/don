@@ -33,7 +33,7 @@
                 </svg>
             </div>
             <input type="text" id="simple-search" 
-                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-[var(--color-latte-default)] focus:border-[var(--color-latte-default)]"
                 placeholder="Búsqueda" required
                 oninput="filterComprasProveedores()" >
         </div>
@@ -43,7 +43,7 @@
     <div id="compras-container" class="grid grid-cols-1 gap-6 mt-6">
         {% for compra in compras %}
         <a href="{{ url_for('principal.compra.detalles_compra', compra_id=compra.id) }}"
-            class="bg-gray-200 rounded-lg p-6 w-full flex flex-col cursor-pointer hover:bg-gray-300">
+            class="shadow-sm bg-white border border-gray-200 rounded-lg p-6 w-full flex flex-col cursor-pointer hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75">
             <!-- Encabezado con los insumos y total -->
             <div class="flex justify-between items-center mb-4">
                 <div class="flex flex-col">

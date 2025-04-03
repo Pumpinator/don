@@ -19,7 +19,7 @@ class RecetaServicio:
                 Galleta.nombre.label('galleta_nombre'),
                 Insumo.nombre.label('insumo_nombre'),
                 Ingrediente.cantidad,
-                Medida.nombre.label('medida_nombre')
+                Medida.abreviatura.label('medida_nombre')
             )
             .join(Receta.galleta)
             .join(Ingrediente, Receta.id == Ingrediente.receta_id)

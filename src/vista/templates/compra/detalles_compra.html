@@ -12,10 +12,10 @@
             <h2 class="ml-4 text-2xl font-bold text-gray-800">Detalles de Compra</h2>
         </div>
     </div>
-    <div class="bg-gray-200 rounded-lg p-6">
+    <div class="shadow-sm bg-white border border-gray-200 rounded-lg p-6">
         <h2 class="text-lg font-semibold text-gray-800">Proveedor {{ compra.proveedor }}</h2>
         <p class="text-sm text-gray-600">Fecha: {{ compra.fecha }}</p>
-        <p class="text-sm text-gray-600">Total: ${{ compra.total }}</p>
+        <p class="text-sm text-gray-600">Total: ${{ compra.total }} mxn</p>
         <h3 class="text-lg font-semibold text-gray-800 mt-4">Insumos</h3>
         <ul class="divide-y divide-gray-200 dark:divide-gray-700">
             {% for detalle in compra.detalles %}
@@ -40,10 +40,12 @@
             {% endfor %}
 
         </ul>
-    </div>
-    <div class="mt-6">
-        <a href="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}"
-            class="bg-[var(--color-dirt-default)] text-white px-4 py-2 rounded-lg">Editar Compra</a>
+        <div class="mt-6 w-full flex justify-end">
+            <a href="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}"
+                class="bg-[var(--color-dirt-default)] text-white px-4 py-2 rounded-lg">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

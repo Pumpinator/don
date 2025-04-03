@@ -6,7 +6,7 @@
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center">
-            <a href="{{ url_for('principal.receta.recetas') }}" class="flex-shrink-0">
+            <a href="{{ url_for('principal.receta.detalles_receta', receta_id=receta.id) }}" class="flex-shrink-0">
                 <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
             </a>
             <h2 class="ml-4 text-2xl font-bold text-gray-800">Editar Receta</h2>
@@ -61,7 +61,7 @@
                         </select>
                         <input type="number" name="cantidad[]"
                             class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]"
-                            value="{{ ingrediente.cantidad }}" required>
+                            value="{{ ingrediente.cantidad }}" placeholder="Cantidad" required>
                         <select name="medida_id[]"
                             class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]"
                             required>
@@ -78,11 +78,12 @@
                     {% endfor %}
                 </div>
                 <button type="button"
-                    class="agregar-insumo cursor-pointer hover:text-white hover:bg-[var(--color-terracotta-default)] w-full text-[var(--color-terracotta-default)] px-4 py-2 rounded-lg mt-2">Agregar
-                    Insumo</button>
+                    class="agregar-insumo cursor-pointer hover:text-white hover:bg-[var(--color-terracotta-default)] w-full text-[var(--color-terracotta-default)] px-4 py-2 rounded-lg mt-2">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
             </div>
 
-            <div class="space-y-2">
+            <div class="space-y-2 mt-8">
                 <button type="submit" class="w-full bg-[var(--color-dirt-default)] text-white p-3 rounded-2xl">Guardar Cambios</button>
             </div>
         </form>

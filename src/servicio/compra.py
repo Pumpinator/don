@@ -143,7 +143,8 @@ class CompraServicio:
             "id": compra_id,
             "fecha": fecha.strftime('%d/%m/%Y'),
             "proveedor": proveedor,
-            "detalles": detalles
+            "detalles": detalles,
+            "total": f"{float(sum(d['precio_total'] for d in detalles)):,.2f}"
         }
         return compra
 
