@@ -36,6 +36,21 @@ class CocinaServicio:
     
     def obtener_galletas(self):
         return self.bd.session.query(Galleta).all()
+    
+    def agregar_galletas(self, form):
+        nombre = form.get('nombre')
+        precio = form.get('precio')
+    
+        
+        # Verificar si ya existe una galleta con el mismo nombre
+        galleta_existente = self.bd.session.query(Galleta).filter_by(nombre=nombre).first()
+        if galleta_existente:
+            raise ValueError(f"Ya existe una galleta con el nombre '{nombre}'")
+        
+        # Agregar la nueva galleta si no existe
+        galleta = Galleta(nombre=nombre, precio=precio)
+        self.bd.session.add(galleta)
+        self.bd.session.commit()
 
     def agregar_insumo(self, form):
         nombre = form.get('nombre')

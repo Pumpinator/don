@@ -22,10 +22,9 @@
                         d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
             </div>
-            <input type="text" id="simple-search" 
+            <input type="text" id="simple-search"
                 class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-[var(--color-latte-default)] focus:border-[var(--color-latte-default)]"
-                placeholder="Cookie" required
-                oninput="filterInsumos()" />
+                placeholder="Cookie" required oninput="filterInsumos()" />
         </div>
     </form>
 
@@ -34,18 +33,18 @@
 
         <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
-        <div class="max-w-sm max-h-sm">
-            <a href="{{ url_for('principal.galleta.galletas_detalles', galleta_id=inv.galleta_id) }}">
-                <img class="rounded-t-lg md:w-full md:h-full object-cover" src="../static/img/{{ inv.imagen }}"
-                    alt="{{ inv.galleta }}" />
-            </a>
-        </div>
+            <div class="max-w-sm max-h-sm">
+                <a href="{{ url_for('principal.galleta.galletas_detalles', galleta_id=inv.galleta_id) }}">
+                    <img class="rounded-t-lg md:w-full md:h-full object-cover" src="../static/img/{{ inv.imagen }}"
+                        alt="{{ inv.galleta }}" />
+                </a>
+            </div>
             <div class="p-5 grid grid-cols-2 gap-6">
                 <div>
                     <h7 class="mb-2 md:text-2xl lg:text-2xl
                      text-lg font-bold tracking-tight text-gray-900 dark:text-black">
                         {{ inv.galleta }}</h7>
-                        {%if inv.cantidad > 0 %}
+                    {%if inv.cantidad > 0 %}
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
                     {%else%}
                     <p class="mb-3 font-normal text-red-200 dark:text-red-400">Agotado</p>
@@ -55,11 +54,21 @@
                     <h7
                         class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
                         {{inv.cantidad}}</h7>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Pz</p>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Kg</p>
                 </div>
             </div>
         </div>
         {% endfor %}
+        <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
+        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+            <a href="{{ url_for('principal.galleta.galletas_agregar')}}">
+                <div class="max-w-sm max-h-sm flex justify-center items-center h-full">
+
+                    <i class="fa-solid fa-plus text-2xl text-gray-700"></i>
+
+                </div>
+            </a>
+        </div>
     </div>
     <script>
         function filterInsumos() {

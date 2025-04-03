@@ -9,5 +9,3 @@ class Galleta(bd.Model):
     precio = bd.Column(bd.Float, nullable=False)
     imagen = bd.Column(bd.String(100), nullable=True)
     
-    medida_id = bd.Column(bd.Integer, bd.ForeignKey('medidas.id'), nullable=False)
-    medida = bd.relationship(Medida, backref='galletas')
