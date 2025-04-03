@@ -1,0 +1,240 @@
+{% extends "layouts/auth.html" %}
+
+{% block title %}Carrito - DON{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center">
+        <a href="{{ url_for('principal.venta.mostrador') }}" class="flex-shrink-0">
+            <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+        </a>
+        <h2 class="ml-4 text-2xl font-bold text-gray-800">Carrito de Venta <span
+                class="text-xs font-normal text-gray-500">({{ carrito|length }} {% if carrito|length == 1 %}producto{%
+                else %}productos{% endif %})</span></h2>
+    </div>
+
+    <div class="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+        <div class="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+            <div class="space-y-6">
+                {% for key, item in carrito.items() %}
+                <div
+                    class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6 transition duration-75 hover:shadow-xl hover:-translate-x-1 hover:-translate-y-1">
+                    <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
+                        <div class="shrink-0 md:order-1">
+                            <img class="h-20 w-20" src="{{ url_for('static', filename='img/' ~ item.imagen) }}"
+                                alt="{{ item.nombre }}">
+                        </div>
+
+                        <label for="counter-input" class="sr-only">Elegir cantidad:</label>
+                        <div class="flex items-center justify-between md:order-3 md:justify-end">
+                            <div class="flex items-center space-x-4">
+                                <form action="{{ url_for('principal.venta.eliminar_galleta') }}" method="post">
+                                    <input type="hidden" name="key_item" value="{{ key }}">
+                                    <input type="hidden" name="galleta_id" value="{{ item.galleta_id }}">
+                                    <input type="hidden" name="medida_id" value="{{ item.medida_id }}">
+                                    <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
+                                    <button type="submit" id="decrement-button"
+                                        data-input-counter-decrement="counter-input"
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 2">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M1 1h16" />
+                                        </svg>
+                                    </button>
+                                </form>
+                                <form action="{{ url_for('principal.venta.modificar_cantidad') }}" method="post">
+                                    <input type="hidden" name="key_item" value="{{ key }}">
+                                    <input type="number" name="cantidad" data-input-counter
+                                        class="w-18 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0"
+                                        value="{{ item.cantidad }}" min="0" max="99" required />
+                                </form>
+                                <form action="{{ url_for('principal.venta.agregar_galleta') }}" method="post">
+                                    <input type="hidden" name="galleta_id" value="{{ item.galleta_id }}">
+                                    <input type="hidden" name="medida_id" value="{{ item.medida_id }}">
+                                    <input type="hidden" name="presentacion" value="{{ item.presentacion }}">
+                                    <button type="submit" id="increment-button"
+                                        data-input-counter-increment="counter-input"
+                                        class="cursor-pointer inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                                        <svg class="h-2.5 w-2.5 text-gray-900" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M9 1v16M1 9h16" />
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="text-end md:order-4 md:w-32">
+                                <p class="text-base font-bold text-gray-900">${{ item.subtotal }}</p>
+                            </div>
+                        </div>
+
+                        <div class="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
+                            <p class="text-base font-medium text-gray-900 hover:underline">
+                                {{ item.nombre }}
+                                <span class="text-sm font-normal text-gray-500">({{ item.presentacion }})</span>
+                            </p>
+                            <p class="text-sm font-normal text-gray-700">
+                                ${{ item.precio }} <span class="text-xs">c/u</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% if carrito|length > 0 %}
+                <div class="flex items-end justify-end">
+                    <a href="{{ url_for('principal.venta.vaciar_carrito') }}"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-[var(--color-red-default)] hover:text-white transition duration-75 hover:bg-[var(--color-red-default)] focus:outline-none focus:ring-4 focus:ring-[var(--color-red-default)]">
+                        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L17.94 6M18 18L6.06 6" />
+                        </svg>
+                        Vaciar carrito
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if carrito|length > 0 %}
+        <div class="mx-auto mt-6 max-w-4xl flex-1 lg:mt-0 lg:w-full">
+            <div class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+                <p class="text-xl font-semibold text-gray-900 text-center">Resumen de Venta</p>
+
+                <div class="space-y-4">
+                    <div class="space-y-1">
+                        {% for key, item in carrito.items() %}
+                        <div class="grid grid-cols-4 justify-between gap-8">
+                            <div class="flex flex-col text-start col-span-2">
+                                <p class="text-base font-normal text-gray-500">{{ item.nombre }}</p>
+                                <p class="text-xs font-normal text-gray-500">{{ item.presentacion }}</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-base font-normal text-gray-500">{{ item.cantidad }}</p>
+                            </div>
+                            <div class="text-end">
+                                <p class="text-base font-medium text-gray-900">${{ item.subtotal }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% if venta_id %}
+                        <div class="grid grid-cols-2 justify-between gap-8">
+                            <div class="flex flex-col text-start">
+                                <p class="text-base font-normal text-gray-500">Comisión</p>
+                            </div>
+                            <div class="text-end">
+                                <p class="text-base font-normal text-gray-500">$50.00</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
+                        <dt class="text-base font-bold text-gray-900">Total</dt>
+                        <dd class="text-base font-bold text-gray-900">${{ total }} mxn</dd>
+                    </dl>
+                </div>
+                {% if not venta_id %}
+                <form action="{{ url_for('principal.venta.validar_comprador') }}" method="POST" novalidate>
+                    <div class="flex items-center space-x-2">
+                        {{ form.csrf_token() }}
+                        {{ form.email_comprador(
+                        placeholder="Correo del Comprador",
+                        class="flex-1 py-3 px-4 rounded-full border border-gray-300 shadow-sm focus:outline-none
+                        focus:ring-2 focus:ring-primary-700 focus:border-transparent sm:text-base"
+                        ) }}
+                        <button type="submit"
+                            class="px-5 py-2.5 rounded-lg bg-primary-700 text-sm font-medium text-[var(--color-dirt-default)] transition duration-75 hover:text-white hover:bg-[var(--color-dirt-dark)] focus:bg-[var(--color-dirt-light)] focus:outline-none focus:ring-4 focus:ring-[var(--color-dirt-default)]">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
+                    {% if form.email_comprador.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.email_comprador.errors[0] }}</p>
+                    {% endif %}
+                </form>
+                {% else %}
+                <p class="text-sm font-normal text-gray-700">Pedido de
+                    <span class="text-gray-500 font-normal">{{ email_comprador }}</span>
+                </p>
+                {% endif %}
+
+                <button data-modal-target="modal-cerrar-venta" data-modal-toggle="modal-cerrar-venta" type="button"
+                    class="block w-full text-white bg-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-dark)] focus:ring-4 focus:outline-none focus:ring-[var(--color-dirt-default)] font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                    Cerrar Venta
+                </button>
+
+                {% if venta_id %}
+                <div class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
+                    <a href="{{ url_for('principal.venta.cancelar_pedido') }}"
+                        class="block w-full text-white bg-[var(--color-red-default)] hover:bg-[var(--color-red-dark)] focus:ring-4 focus:outline-none focus:ring-[var(--color-red-light)] font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        Cancelar Pedido
+                    </a>
+                </div>
+                {% endif %}
+
+                <div class="flex items-center justify-center gap-2">
+                    <span class="text-sm font-normal text-gray-500"> o </span>
+                    <a href="{{ url_for('principal.venta.mostrador') }}"
+                        class="inline-flex items-center gap-2 text-sm font-medium text-primary-700 underline hover:no-underline">
+                        seguir vendiendo
+                        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 12H5m14 0-4 4m4-4-4-4" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div id="modal-cerrar-venta" tabindex="-1"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full h-full border shadow-xl">
+    <div class="relative p-4 w-full max-w-md">
+        <div class="relative bg-white rounded-lg shadow-sm">
+            <!-- Botón para cerrar el modal -->
+            <button type="button"
+                class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]"
+                data-modal-hide="modal-cerrar-venta">
+                <i class="fa-solid fa-times"></i>
+                <span class="sr-only">Cerrar modal</span>
+            </button>
+            <!-- Contenido del modal -->
+            <div class="p-4 md:p-5 text-center">
+                <i class="fa-solid fa-ticket-alt mx-auto mb-4 text-[var(--color-red-default)] text-4xl"></i>
+                <h3 class="mb-5 text-lg font-normal text-gray-500">
+                    ¿Está seguro que desea generar el ticket de compra y cerrar la venta?
+                </h3>
+                <div class="flex items-center justify-center gap-2">
+                    <a href="
+                    {% if not venta_id %}
+                        {{ url_for('principal.venta.cerrar_venta', ticket=1) }}
+                    {% else %}
+                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=1) }}
+                    {% endif %}
+                     "
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
+                        <i class="fa-solid fa-check mr-2"></i>
+                        Sí, generar
+                    </a>
+                    <a href="
+                    {% if not venta_id %}
+                        {{ url_for('principal.venta.cerrar_venta', ticket=0) }}
+                    {% else %}
+                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=0) }}
+                    {% endif %}
+                    "
+                        class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
+                        <i class="fa-solid fa-xmark mr-2"></i>
+                        No generar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock %}
