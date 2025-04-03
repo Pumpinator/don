@@ -21,7 +21,7 @@ def galletas():
 
 @controlador.route('/galletas_agregar')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas_agregar():
     
     return render_template('galletas/galletas_agregar.html')
