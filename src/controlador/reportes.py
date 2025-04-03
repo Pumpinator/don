@@ -21,3 +21,4 @@ def reportes():
         resumen_ventas=resumen_ventas, 
         productos_mas_vendidos=productos_mas_vendidos
     )
+
