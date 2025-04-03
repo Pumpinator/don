@@ -49,7 +49,7 @@ def crear_insumo():
             cocina_servicio = CocinaServicio(bd)
             cocina_servicio.agregar_insumo(request.form)
             flash("Insumo creado exitosamente.", "success")
-            return redirect(url_for('principal.insumo.insumos'))
+            return redirect(url_for('principal.insumo.insumos', modulo='tipos'))
         except ValueError as e:
             flash(str(e), "danger")
     elif request.method == 'POST':
