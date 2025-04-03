@@ -8,9 +8,13 @@ from sqlalchemy import func
 class InventarioServicio:
     def __init__ (self, bd):
         self.bd = bd
+
         
     def obtener_galleta(self, id):
         return self.bd.session.query(Galleta).get(id)
+    
+    def obtener_galletas(self):
+        return self.bd.session.query(Galleta).all()
     
     def detalles_galleta(self, galleta_id):
         galletas = (
@@ -31,7 +35,7 @@ class InventarioServicio:
         return inventarios
     
 
-    def obtener_galletas(self):
+    def obtener_galletas_inv(self):
         resultados = (
             self.bd.session
             .query(

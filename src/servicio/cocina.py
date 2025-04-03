@@ -52,6 +52,30 @@ class CocinaServicio:
         self.bd.session.add(galleta)
         self.bd.session.commit()
 
+    def editar_galleta(self, form):
+        id = form.get('id')
+        nombre = form.get('nombre')
+        precio = form.get('precio')
+        
+        # Verificar si ya existe una galleta con el mismo nombre (excluyendo la actual)
+        galleta_existente = self.bd.session.query(Galleta).filter(
+            Galleta.nombre == nombre,
+            Galleta.id != id
+        ).first()
+        
+        if galleta_existente:
+            raise ValueError(f"Ya existe una galleta con el nombre '{nombre}'")
+        
+        # Actualizar la galleta si no existe otra con el mismo nombre
+        galleta = self.bd.session.query(Galleta).filter_by(id=id).first()
+        if galleta:
+            galleta.nombre = nombre
+            galleta.precio = precio
+            self.bd.session.commit()
+        else:
+            raise ValueError(f"Galleta con ID '{id}' no encontrada")
+
+
     def agregar_insumo(self, form):
         nombre = form.get('nombre')
         
