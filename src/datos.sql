@@ -217,16 +217,16 @@ VALUES ('Chispas de Chocolate', 'Mezclar los ingredientes y hornear', 1),
        ('Coco', 'Mezclar los ingredientes y hornear', 10);
 
 INSERT INTO producciones (fecha, costo, estatus, receta_id)
-VALUES (@fecha_expiracion, @receta_chispas_chocolate, 0, 1),
-       (@fecha_expiracion, @receta_avena, 0, 2),
-       (@fecha_expiracion, @receta_nuez, 0, 3),
-       (@fecha_expiracion, @receta_pasas, 0, 4),
-       (@fecha_expiracion, @receta_fresa, 0, 5),
-       (@fecha_expiracion, @receta_mantequilla, 0, 6),
-       (@fecha_expiracion, @receta_chocolate_avellana, 0, 7),
-       (@fecha_expiracion, @receta_almendra, 0, 8),
-       (@fecha_expiracion, @receta_cacahuate, 0, 9),
-       (@fecha_expiracion, @receta_coco, 0, 10);
+VALUES (@fecha_actual, @receta_chispas_chocolate, 0, 1),
+       (@fecha_actual, @receta_avena, 0, 2),
+       (@fecha_actual, @receta_nuez, 0, 3),
+       (@fecha_actual, @receta_pasas, 0, 4),
+       (@fecha_actual, @receta_fresa, 0, 5),
+       (@fecha_actual, @receta_mantequilla, 0, 6),
+       (@fecha_actual, @receta_chocolate_avellana, 0, 7),
+       (@fecha_actual, @receta_almendra, 0, 8),
+       (@fecha_actual, @receta_cacahuate, 0, 9),
+       (@fecha_actual, @receta_coco, 0, 10);
 
 INSERT INTO galletas_inventarios (produccion_id, galleta_id, fecha_expiracion, costo, cantidad, medida_id)
 VALUES (1, 1, @fecha_expiracion, FLOOR(@receta_chispas_chocolate * 100), 100, 3),

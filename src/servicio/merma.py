@@ -2,7 +2,7 @@ from modelo.merma import Merma
 from modelo.produccion import Produccion
 from modelo.insumo import Insumo
 from modelo.galleta import Galleta
-from modelo.insumo_inventario import InsumoInventario  # Asegúrate de importar este modelo
+from modelo.insumo_inventario import InsumoInventario  
 from modelo.galleta_inventario import GalletaInventario
 
 class MermaServicio:

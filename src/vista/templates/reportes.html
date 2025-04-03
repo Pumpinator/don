@@ -14,8 +14,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-gray-900">Ventas Totales</h2>
             <div class="relative inline-block text-left">
-                <button type="button"
-                    class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
+                <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
                     id="menu-button" aria-expanded="true" aria-haspopup="true">
                     Mensual
                     <svg class="-mr-1 h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -27,13 +26,13 @@
             </div>
         </div>
         <p class="text-5xl font-bold text-gray-900">
-            <i class="fa-solid fa-sack-dollar text-5xl"></i>
-            {{ "{:,.2f}".format(resumen_ventas[0]['ingresos_totales']) if resumen_ventas else "0.00" }}
+            <i class="fa-solid fa-sack-dollar text-5xl"></i> {{ "{:,.2f}".format(resumen_ventas[0]['ingresos_totales']) if resumen_ventas else "0.00" }}
         </p>
     </div>
 
     <!-- Grid de métricas -->
     <div class="grid grid-cols-2 gap-4">
+        <!-- Ventas -->
         <div class="bg-gray-100 rounded-lg p-4 text-center">
             <p class="text-sm font-medium text-gray-500">Ventas</p>
             <p class="text-xl font-bold text-gray-900">
@@ -41,6 +40,7 @@
             </p>
         </div>
 
+        <!-- Gastos -->
         <div class="bg-gray-100 rounded-lg p-4 text-center">
             <p class="text-sm font-medium text-gray-500">Gastos</p>
             <p class="text-xl font-bold text-yellow-600">
@@ -48,6 +48,7 @@
             </p>
         </div>
 
+        <!-- Ganancias -->
         <div class="bg-gray-100 rounded-lg p-4 text-center">
             <p class="text-sm font-medium text-gray-500">Ganancias</p>
             <p class="text-xl font-bold text-green-600">
@@ -55,6 +56,7 @@
             </p>
         </div>
 
+        <!-- Más Vendido -->
         <div class="bg-gray-100 rounded-lg p-4 text-center">
             <p class="text-sm font-medium text-gray-500">Más Vendido</p>
             <p class="text-xl font-bold text-gray-900">
@@ -67,8 +69,6 @@
                 {{ productos_mas_vendidos[0]['medida_mas_vendida'] if productos_mas_vendidos else "-" }}
             </p>
         </div>
-
     </div>
 </div>
-
 {% endblock %}

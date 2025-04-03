@@ -30,45 +30,37 @@ class ReporteVentas:
         return productos_mas_vendidos
     
     def obtener_resumen(self):
-        #Obtiene un resumen de las ventas y los gastos.
+    # Obtiene un resumen TOTAL (sin agrupar por fecha)
         resumen_ventas = (
             self.bd.session.query(
-                Venta.fecha_entrega, 
                 self.bd.func.count(Venta.id).label('total_ventas'),
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_galletas_vendidas'),
                 self.bd.func.sum(VentaDetalle.cantidad * VentaDetalle.precio_unitario).label('ingresos_totales')
             )
             .join(VentaDetalle, Venta.id == VentaDetalle.venta_id)
-            .group_by(Venta.fecha_entrega)
-            .all()
+            .first()  # Obtenemos solo el primer registro (el total)
         )
 
         resumen_gastos = (
             self.bd.session.query(
-                Compra.fecha, 
                 self.bd.func.sum(CompraDetalle.cantidad * CompraDetalle.precio_unitario).label('total_gastos')
             )
-            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)
-            .group_by(Compra.fecha)
-            .all()
+            .select_from(Compra)  # Especificamos explícitamente la tabla principal
+            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)  # Especificamos la condición de unión
+            .scalar()  # Obtenemos directamente el valor
         )
-        resumen_ventas_dict = {rv[0]: {'total_ventas': rv[1], 'total_galletas_vendidas': rv[2], 'ingresos_totales': rv[3]} for rv in resumen_ventas}
-        resumen_gastos_dict = {rg[0]: {'total_gastos': rg[1]} for rg in resumen_gastos}
-        resumen_final = []
-        fechas = set(resumen_ventas_dict.keys()).union(set(resumen_gastos_dict.keys()))
 
-        for fecha in fechas:
-            total_ventas = resumen_ventas_dict.get(fecha, {}).get('total_ventas', 0)
-            total_galletas_vendidas = resumen_ventas_dict.get(fecha, {}).get('total_galletas_vendidas', 0)
-            ingresos_totales = resumen_ventas_dict.get(fecha, {}).get('ingresos_totales', 0)
-            total_gastos = resumen_gastos_dict.get(fecha, {}).get('total_gastos', 0)
+    # Si no hay ventas, establecer valores por defecto
+        if resumen_ventas[2] is None:  # Si ingresos_totales es None
+            resumen_ventas = (0, 0, 0)
+    
+        if resumen_gastos is None:
+            resumen_gastos = 0
 
-            resumen_final.append({
-                'fecha': fecha,
-                'total_ventas': total_ventas,
-                'total_galletas_vendidas': total_galletas_vendidas,
-                'ingresos_totales': ingresos_totales,
-                'total_gastos': total_gastos,
-                'ganancias': ingresos_totales - total_gastos 
-            })
-        return resumen_final
+        return [{
+            'total_ventas': resumen_ventas[0],
+            'total_galletas_vendidas': resumen_ventas[1],
+            'ingresos_totales': resumen_ventas[2],
+            'total_gastos': resumen_gastos,
+            'ganancias': resumen_ventas[2] - resumen_gastos
+        }]
