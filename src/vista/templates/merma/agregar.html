@@ -29,8 +29,11 @@
                         <option value="{{ galleta.id }}" data-tipo="galleta">{{ galleta.nombre }}</option>
                     {% endfor %}
                     {% for produccion in producciones %}
-                        <option value="{{ produccion.id }}" data-tipo="produccion">{{ produccion.estatus }}</option>
-                    {% endfor %}
+    <option value="{{ produccion.id }}" data-tipo="produccion">
+        {{ produccion.descripcion_estatus }}
+    </option>
+{% endfor %}
+
                 </select>
             </div>
 

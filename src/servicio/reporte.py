@@ -41,7 +41,7 @@ class ReporteVentas:
             .join(VentaDetalle, Venta.id == VentaDetalle.venta_id)
             .first()  # Obtenemos solo el primer registro
         )
-
+        # Consulta a la base de datos para calcular la suma total de gastos registrados en el sistema. 
         resumen_gastos = (
             self.bd.session.query(
                 self.bd.func.sum(CompraDetalle.cantidad * CompraDetalle.precio_unitario).label('total_gastos')

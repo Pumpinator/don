@@ -76,12 +76,18 @@
                 </div>
                 <div class="grid grid-cols-4 p-3 rounded-lg text-center">
                     <div class="p-3">Producción</div>
-                    <div class="p-3">{{ merma.produccion.estatus }}</div>
+                    <div class="p-3">
+                        {% if merma.produccion.estatus == 1 %} 🛠 Haciendo {% elif merma.produccion.estatus == 2 %} 🔥 Cocinando {% elif merma.produccion.estatus == 3 %} ✅ Listo {% elif merma.produccion.estatus == 4 %} ⚠️ Merma {% else %} Desconocido {% endif %}
+                    </div>
+
+
+
                     <div class="p-3">{{ merma.medida.nombre }}</div>
                     <div class="p-3">{{ merma.total }}</div>
                 </div>
             </div>
             {% endfor %}
+
         </div>
         {{insumo}}
         <!-- Botón para agregar nueva merma -->
