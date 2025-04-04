@@ -13,7 +13,7 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 
 @controlador.route('/galletas_inv')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas_inv():
     inventario_servicio = InventarioServicio(bd)
     inventarios = inventario_servicio.obtener_galletas_inv()
