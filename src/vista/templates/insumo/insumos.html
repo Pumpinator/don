@@ -15,11 +15,11 @@
 
     <div class="flex w-full overflow-hidden bg-gray-200 rounded-full mb-6 text-sm">
         <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'inventarios' %}bg-white border border-gray-200 shadow-md{% endif %}">
+            class="flex-1 py-3 rounded-full px-4 text-center {% if modulo == 'inventarios' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Inventario
         </a>
         <a href="{{ url_for('principal.insumo.insumos', modulo='tipos') }}"
-            class="flex-1 py-3 rounded-full px-4 text-center {% if rol == 'tipos' %}bg-white border border-gray-200 shadow-md{% endif %}">
+            class="flex-1 py-3 rounded-full px-4 text-center {% if modulo == 'tipos' %}bg-white border border-gray-200 shadow-md{% endif %}">
             Tipos
         </a>
     </div>

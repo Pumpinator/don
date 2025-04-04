@@ -44,7 +44,7 @@
         <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
             <div class="max-w-sm max-h-sm">
-                <a href="{{ url_for('principal.galleta.galletas_detalles', galleta_id=inv.galleta_id) }}">
+                <a href="{{ url_for('principal.galleta.galletas_detalles', galleta_id=inv.id) }}">
                     <img class="rounded-t-lg md:w-full md:h-full object-cover" src="../static/img/{{ inv.imagen }}"
                         alt="{{ inv.galleta }}" />
                 </a>

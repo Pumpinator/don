@@ -39,6 +39,7 @@ class InventarioServicio:
         resultados = (
             self.bd.session
             .query(
+                Galleta.id,
                 Galleta.nombre, 
                 Galleta.imagen,
                 func.sum(GalletaInventario.cantidad).label("cantidad_total"),
@@ -46,12 +47,12 @@ class InventarioServicio:
             )
             .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
             .join(Medida, GalletaInventario.medida_id == Medida.id)
-            .group_by(Galleta.nombre, Galleta.imagen, Medida.nombre)
+            .group_by(Galleta.id, Galleta.nombre, Galleta.imagen, Medida.nombre)
             .all()
         )
         inventarios = [
-            {"imagen": imagen, "galleta": nombre, "cantidad": int(cantidad_total), "medida": medida} 
-            for nombre, imagen, cantidad_total, medida in resultados
+            {"id":galleta_id,"imagen": imagen, "galleta": nombre, "cantidad": int(cantidad_total), "medida": medida} 
+            for galleta_id, nombre, imagen, cantidad_total, medida in resultados
         ]
         return inventarios
     
@@ -87,18 +88,19 @@ class InventarioServicio:
         resultados = (
             self.bd.session
             .query(
+                InsumoInventario.insumo_id,
                 Insumo.nombre, 
-                func.sum(InsumoInventario.cantidad).label("cantidad_total"),
+                func.sum(InsumoInventario.cantidad),
                 Medida.nombre
             )
             .join(Insumo, Insumo.id == InsumoInventario.insumo_id)
             .join(Medida, InsumoInventario.medida_id == Medida.id)
-            .group_by(Insumo.nombre, Medida.nombre)
+            .group_by(InsumoInventario.insumo_id, Insumo.nombre, Medida.nombre)
             .all()
         )
         inventarios = [
-            {"insumo": nombre, "cantidad": int(cantidad_total), "medida": medida} 
-            for nombre, cantidad_total, medida in resultados
+            {"insumo_id": insumo_id, "insumo": nombre, "cantidad": int(total), "medida": medida} 
+            for insumo_id, nombre, total, medida in resultados
         ]
         return inventarios
     
