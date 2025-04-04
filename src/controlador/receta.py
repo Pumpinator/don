@@ -143,7 +143,7 @@ def detalles_receta(receta_id):
 
 @controlador.route('/receta/eliminar/<int:receta_id>', methods=['POST'])
 @login_required
-@admin_or_trabajador_permission.require(http_exception=403)
+@trabajador_permission.require(http_exception=403)
 def eliminar_receta(receta_id):
     try:
         servicio = RecetaServicio(bd)

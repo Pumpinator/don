@@ -34,6 +34,11 @@
         {% for item in produccion %}
         {% if item.estatus != 4 %} <!-- Ocultamos las producciones con estatus 4 -->
         <div class="bg-white shadow-lg rounded-lg p-4">
+            <!-- Imagen de la galleta -->
+            <div class="w-full h-40 mb-4">
+                <img class="w-full h-full object-cover rounded-lg" src="../static/img/{{ item.receta.imagen }}" alt="{{ item.receta.nombre }}">
+            </div>
+
             <h3 class="text-lg font-bold">{{ item.receta.nombre }}</h3>
             <p class="text-gray-600">Fecha: {{ item.fecha.strftime('%d/%m/%Y') }}</p>
             <p class="text-gray-600">Costo: ${{ item.costo }}</p>
