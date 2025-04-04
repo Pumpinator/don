@@ -14,7 +14,7 @@ class ProduccionServicio:
         self.bd = bd
         
     def obtener_producciones(self):
-        return self.bd.session.query(Produccion).options(joinedload(Produccion.receta)).all()
+        return self.bd.session.query(Produccion).options(joinedload(Produccion.receta).joinedload(Receta.galleta)).all()
     
     def crear_produccion(self, receta_id, fecha, kilos):
         try:
