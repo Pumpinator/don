@@ -50,17 +50,16 @@
       <div>
         {{ form.confirm_password.label(class="block text-sm font-medium text-gray-700") }}
         {{ form.confirm_password(class="mt-1 block w-full border border-gray-300 rounded-full px-4
-        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Confirmar
-        Contraseña") }}
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", placeholder="Confirmar Contraseña") }}
         {% if form.confirm_password.errors %}
         <p class="mt-1 text-sm text-red-600">{{ form.confirm_password.errors[0] }}</p>
         {% endif %}
       </div>
 
       <div>
-        {{ form.rol.label(class="block text-sm font-medium text-gray-700") }}
+        {{ form.rol.label(class="block text-sm font-medium text-gray-700", hidden=True if current_user.id == usuario.id else False) }}
         {{ form.rol(class="mt-1 block w-full border border-gray-300 rounded-full px-4
-        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]") }}
+        focus:ring-[var(--color-red-default)] focus:border-[var(--color-red-default)]", hidden=True if current_user.id == usuario.id else False) }}
         {% if form.rol.errors %}
         <p class="mt-1 text-sm text-red-600">{{ form.rol.errors[0] }}</p>
         {% endif %}
@@ -72,6 +71,7 @@
       </button>
 
     </form>
+    {% if current_user.id != usuario.id%}
     {% if usuario.estatus %}
     <button data-modal-target="popup-modal-desactivar" data-modal-toggle="popup-modal-desactivar" type="button"
       class="mt-4 cursor-pointer bg-white text-[var(--color-red-default)] font-semibold py-2 px-4 rounded-md border border-[var(--color-red-default)] hover:text-white hover:bg-[var(--color-red-default)] focus:ring-[var(--color-red-default)]">
@@ -83,6 +83,7 @@
       class="mt-4 cursor-pointer bg-white text-green-500 font-semibold py-2 px-4 rounded-md border border-green-500 hover:text-white hover:bg-green-500 focus:ring-green-500">
       Activar
     </button>
+    {% endif %}
     {% endif %}
 
     <!-- Desactivar Modal -->
@@ -120,7 +121,7 @@
               method="POST">
               {{ form.csrf_token() }}
               <button type="submit" data-modal-hide="popup-modal-desactivar"
-                class="w-full cursor-pointer text-white bg-green-500 hover:bg-green-600 font-medium rounded-lg text-sm px-5 py-2.5">
+                class="w-full cursor-pointer text-white bg-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-dark)] font-medium rounded-lg text-sm px-5 py-2.5">
                 Sí
               </button>
             </form>

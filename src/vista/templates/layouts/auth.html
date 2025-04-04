@@ -26,7 +26,8 @@
             </button>
             {% endif %}
             {% if current_user.rol.nombre == "COMPRADOR" %}
-            <a href="{{ url_for('principal.pedido.ver_carrito') }}" class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
+            <a href="{{ url_for('principal.pedido.ver_carrito') }}"
+                class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </a>
@@ -38,17 +39,17 @@
         </div>
     </header>
 
-    <main class="flex-grow overflow-y-auto bg-white pt-10">
+    <main class="flex-grow overflow-y-auto bg-white my-20">
         {% block content %}
         {% endblock %}
     </main>
 
-    {% if current_user.roles[0] == 'TRABAJADOR' %}
+    {% if current_user.roles[0] == 'TRABAJADOR' or current_user.roles[0] == 'ADMIN' %}
     <div
         class="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2">
         <div class="grid h-full max-w-lg grid-cols-7 mx-auto text-[var(--color-chocolate-default)]">
             <a href="{{ url_for('principal.index') }}"
-                class="inline-flex flex-col items-center justify-center px-5 rounded-s-full transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                class="inline-flex flex-col items-center justify-center px-5 rounded-s-full transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-home text-xl"></i>
                 <span class="sr-only">Inicio</span>
             </a>
@@ -58,7 +59,7 @@
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </a>
             <a href="{{ url_for('principal.compra.compras') }}"
-                class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                class="inline-flex flex-col items-center justify-center px-5 transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-truck text-xl"></i>
                 <span class="sr-only">Compras</span>
                 </button>
@@ -67,8 +68,8 @@
                     Compras
                     <div class="tooltip-arrow" data-popper-arrow></div>
                 </a>
-                <a href="{{ url_for('principal.insumo.insumos') }}"
-                    class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
+                    class="inline-flex flex-col items-center justify-center px-5 transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                     <i class="fas fa-egg text-xl"></i>
                     <span class="sr-only">Compras</span>
                     </button>
@@ -78,7 +79,7 @@
                         <div class="tooltip-arrow" data-popper-arrow></div>
                     </a>
                     <a href="{{ url_for('principal.receta.recetas') }}"
-                        class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                        class="inline-flex flex-col items-center justify-center px-5 transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                         <i class="fas fa-receipt text-xl"></i>
                         <span class="sr-only">Recetas</span>
                         </button>
@@ -98,7 +99,7 @@
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </a>
                             <a href="{{ url_for('principal.merma.mermas') }}"
-                                class="inline-flex flex-col items-center justify-center px-5 transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                                class="inline-flex flex-col items-center justify-center px-5 transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                                 <i class="fas fa-arrow-trend-down text-xl"></i>
                                 <span class="sr-only">Mermas</span>
                                 </button>
@@ -108,7 +109,7 @@
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </a>
                                 <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
-                                    class="inline-flex flex-col items-center justify-center px-5 rounded-e-full transition duration-75 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
+                                    class="inline-flex flex-col items-center justify-center px-5 rounded-e-full transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                                     <i class="fas fa-users text-xl"></i>
                                     <span class="sr-only">Usuarios</span>
                                     </button>
@@ -126,7 +127,7 @@
     {% if messages %}
     {% for category, message in messages %}
     <div id="toast-{{ category }}"
-        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm bottom-5 left-5"
+        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm top-5 right-5"
         role="alert">
         {% if category == 'success' %}
         <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">

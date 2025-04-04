@@ -9,7 +9,7 @@ from flask_principal import Permission, RoleNeed
 
 controlador = Blueprint('galleta', __name__)
 
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 @controlador.route('/galletas_inv')
 @login_required
@@ -22,7 +22,7 @@ def galletas_inv():
 
 @controlador.route('/galletas')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas():
     inventario_servicio = InventarioServicio(bd)
     inventarios = inventario_servicio.obtener_galletas()
@@ -31,7 +31,7 @@ def galletas():
 
 @controlador.route('/galletas_agregar', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas_agregar():
     form = AgregarGalleta(request.form)
     if request.method == 'POST' and form.validate_on_submit():
@@ -45,9 +45,9 @@ def galletas_agregar():
     return render_template('galletas/galletas_agregar.html', form=form)
 
 
-@controlador.route('/galletas_detalles/<int:galleta_id>')
+@controlador.route('/galleta/<int:galleta_id>')
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def galletas_detalles(galleta_id):
     hoy = date.today()
     inventario_servicio = InventarioServicio(bd)

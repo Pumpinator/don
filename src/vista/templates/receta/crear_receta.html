@@ -3,21 +3,27 @@
 {% block title %}Agregar Receta - DON GALLETO{% endblock %}
 
 {% block content %}
-<p class="text-gray-500 text-lg font-semibold text-center">Agregar Receta</p>
-
-<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+<div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center">
+            <a href="{{ url_for('principal.receta.recetas') }}" class="flex-shrink-0">
+                <i class="fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+            <h2 class="ml-4 text-2xl font-bold text-gray-800">Editar Receta</h2>
+        </div>
+    </div>
     <main class="flex flex-col items-center px-6">
         <form action="{{ url_for('principal.receta.crear_receta') }}" method="POST" class="w-full max-w-sm space-y-4" id="recetaForm">
             <!-- Nombre de la receta -->
             <div>
                 <label class="block text-gray-700 font-bold">Nombre de la Receta</label>
-                <input type="text" name="nombre" class="w-full p-3 rounded-2xl focus:outline-none" placeholder="Ingrese el nombre de la receta" required>
+                <input type="text" name="nombre" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" placeholder="Ingrese el nombre de la receta" required>
             </div>
 
             <!-- Selección de galleta -->
             <div>
                 <label class="block text-gray-700 font-bold">Galleta</label>
-                <select name="galleta_id" class="w-full bg-200 p-3 rounded-2xl focus:outline-none" required>
+                <select name="galleta_id" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" required>
                     <option value="" disabled selected>Seleccione una galleta...</option>
                     {% for galleta in galletas %}
                         <option value="{{ galleta.id }}">{{ galleta.nombre }}</option>
@@ -28,7 +34,7 @@
             <!-- Procedimiento -->
             <div>
                 <label class="block text-gray-700 font-bold">Procedimiento</label>
-                <textarea name="procedimiento" class="w-full p-3 rounded-2xl focus:outline-none" rows="4" placeholder="Describa el procedimiento de la receta" required></textarea>
+                <textarea name="procedimiento" class="mt-1 py-4 block w-full border border-gray-300 rounded-full px-8 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]" rows="4" placeholder="Describa el procedimiento de la receta" required></textarea>
             </div>
 
             <!-- Insumos (Sección dinámica) -->
@@ -37,28 +43,27 @@
                 <div id="insumos-container">
                     <!-- Primer conjunto de campos -->
                     <div class="insumo-item flex space-x-2 mb-2">
-                        <select name="insumo_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                        <select name="insumo_id[]" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" required>
                             <option value="" disabled selected>Seleccione un insumo</option>
                             {% for insumo in insumos %}
                                 <option value="{{ insumo.id }}">{{ insumo.nombre }}</option>
                             {% endfor %}
                         </select>
-                        <input type="number" name="cantidad[]" class="w-20 p-3 rounded-2xl focus:outline-none" placeholder="Cant" required>
-                        <select name="medida_id[]" class="flex-1 p-3 rounded-2xl focus:outline-none" required>
+                        <input type="number" name="cantidad[]" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" placeholder="Cantidad" step="0.01" min="0" required>
+                        <select name="medida_id[]" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" required>
                             <option value="" disabled selected>Medida</option>
                             {% for medida in medidas %}
                                 <option value="{{ medida.id }}">{{ medida.nombre }}</option>
                             {% endfor %}
                         </select>
-                        <button type="button" class="agregar-insumo bg-green-500 text-white p-3 rounded-2xl">+</button>
+                        <button type="button" class="agregar-insumo bg-[var(--color-dirt-default)] text-white p-3 rounded-2xl">+</button>
                     </div>
                 </div>
             </div>
 
             <!-- Botones de acción -->
             <div class="space-y-2">
-                <button type="button" onclick="window.location.href='/produccion'" class="w-full bg-gray-300 p-3 rounded-2xl">Cancelar</button>
-                <button type="submit" class="w-full bg-blue-500 text-white p-3 rounded-2xl">Agregar</button>
+                <button type="submit" class="w-full cursor-pointer bg-[var(--color-dirt-default)] hover:bg-[var(--color-dirt-dark)] text-white p-3 rounded-2xl">Agregar</button>
             </div>
         </form>
     </main>
@@ -80,5 +85,5 @@
             });
         });
     </script>
-</body>
+</div>
 {% endblock %}

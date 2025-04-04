@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, abort
 from servicio.cocina import CocinaServicio
 from servicio.inventario import InventarioServicio
 from formularios.agregar_insumo import AgregarInsumo
@@ -9,32 +9,26 @@ from flask_principal import Permission, RoleNeed
 
 controlador = Blueprint('insumo', __name__)
 
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
-@controlador.route('/insumos_inventario')
+@controlador.route('/insumos/<string:modulo>')
 @login_required
-@trabajador_permission.require(http_exception=403)
-def insumos_inventario():
+@admin_or_trabajador_permission.require(http_exception=403)
+def insumos(modulo):
     inventario_servicio = InventarioServicio(bd)
-    inventarios = inventario_servicio.obtener_insumos_inventarios()
-    rol = 'inventario'
-    return render_template('insumo/insumos.html',rol=rol, inventarios=inventarios)
+    if modulo == 'inventarios':        
+        inventarios = inventario_servicio.obtener_insumos_inventarios()
+        return render_template('insumo/insumos.html',rol=modulo, inventarios=inventarios)
+    elif modulo == 'tipos':
+        inventario_servicio = InventarioServicio(bd)
+        insumos = inventario_servicio.obtener_insumos()
+        return render_template('insumo/insumos.html', rol=modulo, insumos=insumos)
+    else:
+        abort(404)
 
-
-@controlador.route('/insumos')
+@controlador.route('/insumos/inventarios/<int:insumo_id>')
 @login_required
-@trabajador_permission.require(http_exception=403)
-def insumos():
-    inventario_servicio = InventarioServicio(bd)
-    insumos = inventario_servicio.obtener_insumos()
-    rol = 'insumos'
-    return render_template('insumo/insumos.html', rol=rol, insumos=insumos)
-
-
-
-@controlador.route('/insumos_detalles/<int:insumo_id>')
-@login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos_detalles(insumo_id):
     hoy = date.today()
     inventario_servicio = InventarioServicio(bd)
@@ -47,7 +41,7 @@ def insumos_detalles(insumo_id):
 
 @controlador.route('/insumos/crear', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def crear_insumo():
     form = AgregarInsumo(request.form)
     if request.method == 'POST' and form.validate_on_submit():
@@ -55,16 +49,16 @@ def crear_insumo():
             cocina_servicio = CocinaServicio(bd)
             cocina_servicio.agregar_insumo(request.form)
             flash("Insumo creado exitosamente.", "success")
-            return redirect(url_for('principal.insumo.insumos'))
+            return redirect(url_for('principal.insumo.insumos', modulo='tipos'))
         except ValueError as e:
             flash(str(e), "danger")
     elif request.method == 'POST':
         flash("Por favor, corrige los errores en el formulario.", "danger")
     return render_template('insumo/agregar_insumo.html', form=form)
 
-@controlador.route('/insumos_editar/<int:insumo_id>', methods=['GET', 'POST'])
+@controlador.route('/insumos/tipos/<int:insumo_id>', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def insumos_editar(insumo_id):
     inv_servicio = InventarioServicio(bd)
     insumo = inv_servicio.obtener_insumo(insumo_id)

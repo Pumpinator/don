@@ -5,7 +5,7 @@ from modelo.compra_detalle import CompraDetalle
 from bd import bd
 from modelo.galleta import Galleta
 from modelo.medida import Medida
-
+from modelo.galleta_inventario import GalletaInventario 
 
 class ReporteVentas:
 
@@ -20,7 +20,8 @@ class ReporteVentas:
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_vendido')
             )
             .join(VentaDetalle, Galleta.id == VentaDetalle.galleta_id)
-            .join(Medida, Galleta.medida_id == Medida.id)  
+            .join(GalletaInventario, Galleta.id == GalletaInventario.galleta_id)  # Unión con GalletaInventario
+            .join(Medida, GalletaInventario.medida_id == Medida.id)  
             .group_by(Galleta.nombre, Medida.nombre)  
             .order_by(self.bd.desc('total_vendido'))
             .limit(10)
@@ -30,7 +31,7 @@ class ReporteVentas:
         return productos_mas_vendidos
     
     def obtener_resumen(self):
-    # Obtiene un resumen TOTAL (sin agrupar por fecha)
+        # Obtiene un resumen TOTAL 
         resumen_ventas = (
             self.bd.session.query(
                 self.bd.func.count(Venta.id).label('total_ventas'),
@@ -38,22 +39,22 @@ class ReporteVentas:
                 self.bd.func.sum(VentaDetalle.cantidad * VentaDetalle.precio_unitario).label('ingresos_totales')
             )
             .join(VentaDetalle, Venta.id == VentaDetalle.venta_id)
-            .first()  # Obtenemos solo el primer registro (el total)
+            .first()  # Obtenemos solo el primer registro
         )
 
         resumen_gastos = (
             self.bd.session.query(
                 self.bd.func.sum(CompraDetalle.cantidad * CompraDetalle.precio_unitario).label('total_gastos')
             )
-            .select_from(Compra)  # Especificamos explícitamente la tabla principal
-            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)  # Especificamos la condición de unión
-            .scalar()  # Obtenemos directamente el valor
+            .select_from(Compra)  
+            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id) 
+            .scalar()  
         )
 
-    # Si no hay ventas, establecer valores por defecto
-        if resumen_ventas[2] is None:  # Si ingresos_totales es None
+        # Si no hay ventas, establecer valores por defecto
+        if resumen_ventas[2] is None:  
             resumen_ventas = (0, 0, 0)
-    
+        
         if resumen_gastos is None:
             resumen_gastos = 0
 

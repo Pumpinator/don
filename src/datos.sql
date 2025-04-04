@@ -165,11 +165,23 @@ VALUES ('Harinera Beleño', '477 391 0598'),
        ('Leche León', '477 152 2100'),
        ('Costco Wholesale', '477 788 1300');
 
+
 INSERT INTO compras (proveedor_id, fecha, total)
-VALUES (1, @fecha_expiracion, 0),
-       (2, @fecha_expiracion, 0),
-       (3, @fecha_expiracion, 0),
-       (4, @fecha_expiracion, 0);
+VALUES (1, @fecha_expiracion, @costo_harina),
+       (2, @fecha_expiracion, @costo_huevo),
+       (3, @fecha_expiracion, @costo_leche),
+       (4, @fecha_expiracion, @costo_azucar +
+                              @costo_mantequilla +
+                              @costo_chispas_chocolate +
+                              @costo_avena +
+                              @costo_nuez +
+                              @costo_pasas +
+                              @costo_fresa +
+                              @costo_chocolate_avellana +
+                              @costo_almendra +
+                              @costo_cacahuate +
+                              @costo_coco);
+
 
 INSERT INTO compras_detalles (compra_id, insumo_id, precio_unitario, precio_total, cantidad, medida_id)
 VALUES (1, 1, @precio_harina, @costo_harina, @inventario_harina, 1),
@@ -204,60 +216,6 @@ VALUES (1, 1, @fecha_expiracion, @precio_harina, @inventario_harina, 1),
        (4, 13, @fecha_expiracion, @precio_cacahuate, @inventario_cacahuate, 1),
        (4, 14, @fecha_expiracion, @precio_coco, @inventario_coco, 1);
 
-INSERT INTO recetas (nombre, procedimiento, galleta_id)
-VALUES ('Chispas de Chocolate', 'Mezclar los ingredientes y hornear', 1),
-       ('Avena', 'Mezclar los ingredientes y hornear', 2),
-       ('Nuez', 'Mezclar los ingredientes y hornear', 3),
-       ('Pasas', 'Mezclar los ingredientes y hornear', 4),
-       ('Fresa', 'Mezclar los ingredientes y hornear', 5),
-       ('Mantequilla', 'Mezclar los ingredientes y hornear', 6),
-       ('Chocolate con Avellana', 'Mezclar los ingredientes y hornear', 7),
-       ('Almendra', 'Mezclar los ingredientes y hornear', 8),
-       ('Cacahuate', 'Mezclar los ingredientes y hornear', 9),
-       ('Coco', 'Mezclar los ingredientes y hornear', 10);
-
-INSERT INTO producciones (fecha, costo, estatus, receta_id)
-VALUES (@fecha_actual, @receta_chispas_chocolate, 0, 1),
-       (@fecha_actual, @receta_avena, 0, 2),
-       (@fecha_actual, @receta_nuez, 0, 3),
-       (@fecha_actual, @receta_pasas, 0, 4),
-       (@fecha_actual, @receta_fresa, 0, 5),
-       (@fecha_actual, @receta_mantequilla, 0, 6),
-       (@fecha_actual, @receta_chocolate_avellana, 0, 7),
-       (@fecha_actual, @receta_almendra, 0, 8),
-       (@fecha_actual, @receta_cacahuate, 0, 9),
-       (@fecha_actual, @receta_coco, 0, 10);
-
-INSERT INTO galletas_inventarios (produccion_id, galleta_id, fecha_expiracion, costo, cantidad, medida_id)
-VALUES (1, 1, @fecha_expiracion, FLOOR(@receta_chispas_chocolate * 100), 100, 3),
-       (2, 2, @fecha_expiracion, FLOOR(@receta_avena * 100), 100, 3),
-       (3, 3, @fecha_expiracion, FLOOR(@receta_nuez * 100), 100, 3),
-       (4, 4, @fecha_expiracion, FLOOR(@receta_pasas * 100), 100, 3),
-       (5, 5, @fecha_expiracion, FLOOR(@receta_fresa * 100), 100, 3),
-       (6, 6, @fecha_expiracion, FLOOR(@receta_mantequilla * 100), 100, 3),
-       (7, 7, @fecha_expiracion, FLOOR(@receta_chocolate_avellana * 100), 100, 3),
-       (8, 8, @fecha_expiracion, FLOOR(@receta_almendra * 100), 100, 3),
-       (9, 9, @fecha_expiracion, FLOOR(@receta_cacahuate * 100), 100, 3),
-       (10, 10, @fecha_expiracion, FLOOR(@receta_coco * 100), 100, 3);
-
-INSERT INTO ingrediente(receta_id, insumo_id, medida_id, cantidad) VALUES 
-(1, 3, 1, 20)
-, (1, 5, 2, 50)
-, (2, 7, 3, 10)
-, (2, 2, 1, 30)
-, (3, 9, 2, 15)
-, (3, 1, 3, 40)
-, (4, 4, 1, 25)
-, (4, 6, 2, 35)
-, (5, 8, 3, 12)
-, (5, 10, 1, 22)
-, (6, 11, 2, 18)
-, (6, 12, 3, 28)
-, (7, 13, 1, 32)
-, (8, 14, 2, 45)
-, (9, 5, 3, 27);
-
-/*
 DELIMITER $$
 
 CREATE PROCEDURE SP_InsertarReceta(

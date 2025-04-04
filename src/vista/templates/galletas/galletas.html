@@ -41,8 +41,8 @@
     <div class=" p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
         {% for inv in inventarios %}
 
-        <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
-        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        <div class="p-5 galleta-item shadow-sm border border-gray-200 rounded-lg 
+        shadow-sm hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill">
             <div class="max-w-sm max-h-sm">
                 <a href="{{ url_for('principal.galleta.galletas')}}">
                 </a>
@@ -56,8 +56,8 @@
             </div>
         </div>
         {% endfor %}
-        <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
-        shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
+        <div class="p-5 galleta-item bg-white border border-gray-200 shadow-sm rounded-lg 
+        shadow-sm hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill">
             <a href="{{ url_for('principal.galleta.galletas_agregar')}}">
                 <div class="max-w-sm max-h-sm flex justify-center items-center h-full">
 

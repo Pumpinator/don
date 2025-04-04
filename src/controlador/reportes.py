@@ -5,12 +5,12 @@ from bd import bd
 from flask import Blueprint, render_template, request
 
 controlador = Blueprint('reportes', __name__)
-trabajador_permission = Permission(RoleNeed('TRABAJADOR'))
+admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
 
 @controlador.route('/reportes', methods=['GET'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def reportes():
     reporte_ventas = ReporteVentas()  
     resumen_ventas = reporte_ventas.obtener_resumen()
@@ -21,3 +21,4 @@ def reportes():
         resumen_ventas=resumen_ventas, 
         productos_mas_vendidos=productos_mas_vendidos
     )
+

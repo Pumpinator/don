@@ -30,7 +30,7 @@
         </div>
     </header>
 
-    <main class="flex-grow overflow-y-auto bg-white pt-10">
+    <main class="flex-grow overflow-y-auto bg-white my-20">
         {% block content %}
         {% endblock %}
     </main>
@@ -39,7 +39,7 @@
     {% if messages %}
     {% for category, message in messages %}
     <div id="toast-{{ category }}"
-        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm bottom-5 left-5"
+        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm top-5 right-5"
         role="alert">
         {% if category == 'success' %}
         <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
