@@ -18,11 +18,11 @@ def insumos(modulo):
     inventario_servicio = InventarioServicio(bd)
     if modulo == 'inventarios':        
         inventarios = inventario_servicio.obtener_insumos_inventarios()
-        return render_template('insumo/insumos.html',rol=modulo, inventarios=inventarios)
+        return render_template('insumo/insumos.html',modulo=modulo, inventarios=inventarios)
     elif modulo == 'tipos':
         inventario_servicio = InventarioServicio(bd)
         insumos = inventario_servicio.obtener_insumos()
-        return render_template('insumo/insumos.html', rol=modulo, insumos=insumos)
+        return render_template('insumo/insumos.html', modulo=modulo, insumos=insumos)
     else:
         abort(404)
 
