@@ -433,9 +433,9 @@ BEGIN
 
     -- Cursor para recorrer los ingredientes de la receta recién insertada
     DECLARE cur_ingredientes CURSOR FOR
-        SELECT i.cantidad, ins.precio
+        SELECT i.cantidad, ins.costo
         FROM ingrediente i
-        JOIN insumos ins ON i.insumo_id = ins.id
+        JOIN insumos_inventarios ins ON i.insumo_id = ins.insumo_id
         WHERE i.receta_id = NEW.id;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_costo_insumo = NULL;
