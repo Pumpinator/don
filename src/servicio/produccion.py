@@ -2,10 +2,11 @@ from collections import defaultdict
 from sqlalchemy import func
 from modelo.compra_detalle import CompraDetalle
 from modelo.galleta_inventario import GalletaInventario
+from modelo.insumo_inventario import InsumoInventario
 from modelo.produccion import Produccion
 from modelo.receta import Receta
 from sqlalchemy.orm import joinedload
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 class ProduccionServicio:
     
@@ -58,21 +59,57 @@ class ProduccionServicio:
             produccion.estatus += 1
             
             if produccion.estatus == 4:
-                # Recalcular costo base para obtener los kilos
-                costo_base = self._calcular_costo_base(produccion.receta)
-                kilos = produccion.costo / costo_base if costo_base > 0 else 0
-                cantidad_galletas = round(kilos / 0.05)
+                try:
+                    costo_base = self._calcular_costo_base(produccion.receta)
+                    kilos = produccion.costo / costo_base if costo_base > 0 else 0
+                    
+                    for ingrediente in produccion.receta.ingredientes:
+                        insumo_id = ingrediente.insumo_id
+                        cantidad_necesaria = ingrediente.cantidad * kilos
+                        
+                        lotes = (
+                            self.bd.session.query(InsumoInventario)
+                            .filter(
+                                InsumoInventario.insumo_id == insumo_id,
+                                InsumoInventario.fecha_expiracion >= datetime.today().date(),
+                                InsumoInventario.cantidad > 0
+                            )
+                            .order_by(InsumoInventario.fecha_expiracion.asc())
+                            .all()
+                        )
+                        
+                        total_disponible = sum(lote.cantidad for lote in lotes)
+                        if total_disponible < cantidad_necesaria:
+                            raise ValueError(f"Insumo {ingrediente.insumo.nombre} insuficiente: Requerido {cantidad_necesaria}, Disponible {total_disponible}")
+                        
+                        restante = cantidad_necesaria
+                        for lote in lotes:
+                            if restante <= 0:
+                                break
+                            a_restar = min(lote.cantidad, restante)
+                            lote.cantidad -= a_restar
+                            restante -= a_restar
+                            if lote.cantidad == 0:
+                                self.bd.session.delete(lote)
+                    
+                    cantidad_galletas = round(kilos / 0.05)
+                    nuevo_inventario = GalletaInventario(
+                        fecha_expiracion=produccion.fecha + timedelta(days=7),
+                        costo=produccion.costo,
+                        cantidad=cantidad_galletas,
+                        medida_id=3,
+                        produccion_id=produccion.id,
+                        galleta_id=produccion.receta.galleta_id
+                    )
+                    self.bd.session.add(nuevo_inventario)
+                    self.bd.session.commit()
                 
-                nuevo_inventario = GalletaInventario(
-                    fecha_expiracion=produccion.fecha + timedelta(days=7),
-                    costo=produccion.costo,
-                    cantidad=cantidad_galletas,
-                    medida_id=1,
-                    produccion_id=produccion.id,
-                    galleta_id=produccion.receta.galleta_id
-                )
-                self.bd.session.add(nuevo_inventario)
-            
+                except Exception as e:
+                    self.bd.session.rollback()
+                    raise e
+            else:
+                self.bd.session.commit()
+        else:
             self.bd.session.commit()
 
     def _calcular_costo_base(self, receta):
