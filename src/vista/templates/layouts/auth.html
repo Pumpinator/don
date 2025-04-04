@@ -26,7 +26,8 @@
             </button>
             {% endif %}
             {% if current_user.rol.nombre == "COMPRADOR" %}
-            <a href="{{ url_for('principal.pedido.ver_carrito') }}" class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
+            <a href="{{ url_for('principal.pedido.ver_carrito') }}"
+                class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
                 <i class="fas fa-shopping-cart text-xl"></i>
                 <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
             </a>
@@ -126,7 +127,7 @@
     {% if messages %}
     {% for category, message in messages %}
     <div id="toast-{{ category }}"
-        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm bottom-5 left-5"
+        class="fixed flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm top-5 right-5"
         role="alert">
         {% if category == 'success' %}
         <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">

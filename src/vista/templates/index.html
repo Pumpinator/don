@@ -11,24 +11,33 @@
 <!-- Vista para trabajador o admin -->
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0 space-y-6">
     <a href="{{ url_for('principal.produccion.produccion') }}"
-        class="bg-gray-200 rounded-lg p-4 h-96 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
-        <p class="text-gray-500 text-3xl">
-            <i class="fas fa-cogs"></i> Producción
+        class="flex flex-col bg-gray-200 rounded-lg p-4 h-96 items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+        <p class="text-gray-500 text-5xl">
+            <i class="fas fa-cogs"></i>
+        </p>
+        <p class="text-gray-500 font-medium text-2xl">
+            Producción
         </p>
     </a>
 
     <!-- Contenedores secundarios -->
     <div class="grid grid-cols-2 gap-4">
         <a href="{{ url_for('principal.venta.mostrador') }}"
-            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
-            <p class="text-gray-500 text-3xl">
+            class="flex flex-col bg-gray-200 rounded-lg p-4 h-40 items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+            <p class="text-gray-500 text-5xl">
                 <i class="fas fa-store"></i>
+            </p>
+            <p class="text-gray-500 font-medium text-2xl">
+                Mostrador
             </p>
         </a>
         <a href="{{ url_for('principal.reportes.reportes') }}"
-            class="bg-gray-200 rounded-lg p-4 h-40 flex items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
-            <p class="text-gray-500 text-3xl">
+            class="flex flex-col bg-gray-200 rounded-lg p-4 h-40 items-center justify-center cursor-pointer hover:scale-102 hover:shadow-lg transition-transform duration-200">
+            <p class="text-gray-500 text-5xl">
                 <i class="fas fa-chart-line"></i>
+            </p>
+            <p class="text-gray-500 font-medium text-2xl">
+                Reportes
             </p>
         </a>
     </div>
