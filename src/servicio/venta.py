@@ -5,7 +5,7 @@ from modelo.venta import Venta
 from modelo.venta_detalle import VentaDetalle
 from modelo.galleta_inventario import GalletaInventario
 from modelo.medida import Medida
-from sqlalchemy import func
+from sqlalchemy import func, case
 from sqlalchemy.orm import joinedload
 import re
 import math
@@ -24,7 +24,23 @@ class VentaServicio:
         return self.bd.session.query(Galleta).get(id)
     
     def obtener_inventario(self, galleta_id):
-        return self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta_id).first()
+        now = datetime.now()
+        conversion = case(
+            (GalletaInventario.medida_id == 3, GalletaInventario.cantidad * 0.05),
+            else_=GalletaInventario.cantidad
+        )
+        resultado = (
+            self.bd.session.query(func.sum(conversion))
+            .filter(
+                GalletaInventario.galleta_id == galleta_id,
+                GalletaInventario.fecha_expiracion > now,
+                GalletaInventario.cantidad > 0
+            )
+            .group_by(GalletaInventario.galleta_id)
+            .scalar()
+        )
+        print(f"Inventario total para galleta_id {galleta_id}: {round(resultado, 2)}")
+        return round(resultado, 2) if resultado is not None else 0
     
     def obtener_venta(self, venta_id, session):
         venta = (
@@ -125,27 +141,25 @@ class VentaServicio:
     
     def obtener_menu(self, busqueda=None):
         query = (
-            self.bd.session
-            .query(
+            self.bd.session.query(
                 Galleta.id,
                 Galleta.nombre,
-                func.sum(GalletaInventario.cantidad).label("cantidad_total"),
+                func.sum(GalletaInventario.cantidad).label("cantidad"),
                 func.min(Galleta.precio).label("precio"),
                 Galleta.imagen,
-                Medida.nombre
+                func.min(Medida.nombre).label("medida")  # Se usa MIN para obtener la medida
             )
             .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
             .join(Medida, GalletaInventario.medida_id == Medida.id)
-            .filter(GalletaInventario.fecha_expiracion > datetime.now())
-            .filter(GalletaInventario.cantidad > 0)
         )
         
         if busqueda:
-            # Búsqueda insensible a mayúsculas
             query = query.filter(Galleta.nombre.ilike(f"%{busqueda}%"))
-        query = query.group_by(Galleta.id, Galleta.nombre, Medida.nombre)
+        
+        query = query.group_by(Galleta.id, Galleta.nombre, Galleta.imagen)
         query = query.order_by(func.sum(GalletaInventario.cantidad).desc())
         resultados = query.all()
+        
         galletas = [
             {
                 "galleta_id": galleta_id,
@@ -161,25 +175,22 @@ class VentaServicio:
     
     def obtener_mostrador(self, busqueda=None):
         query = (
-            self.bd.session
-            .query(
+            self.bd.session.query(
                 Galleta.id,
                 Galleta.nombre,
-                func.sum(GalletaInventario.cantidad).label("cantidad_total"),
+                func.sum(GalletaInventario.cantidad).label("cantidad"),
                 func.min(Galleta.precio).label("precio"),
                 Galleta.imagen,
-                Medida.nombre
+                func.min(Medida.nombre).label("medida")  # Se usa MIN para obtener la medida
             )
             .join(Galleta, Galleta.id == GalletaInventario.galleta_id)
             .join(Medida, GalletaInventario.medida_id == Medida.id)
-            .filter(GalletaInventario.fecha_expiracion > datetime.now())
         )
         
         if busqueda:
-            # Búsqueda insensible a mayúsculas
             query = query.filter(Galleta.nombre.ilike(f"%{busqueda}%"))
         
-        query = query.group_by(Galleta.id, Galleta.nombre, Medida.nombre)
+        query = query.group_by(Galleta.id, Galleta.nombre, Galleta.imagen)
         query = query.order_by(func.sum(GalletaInventario.cantidad).desc())
         resultados = query.all()
         
@@ -187,12 +198,12 @@ class VentaServicio:
             {
                 "galleta_id": galleta_id,
                 "galleta": nombre,
-                "cantidad": float(cantidad_total),
+                "cantidad": float(cantidad),
                 "precio": precio,
                 "imagen": imagen,
                 "medida": medida
             }
-            for galleta_id, nombre, cantidad_total, precio, imagen, medida in resultados
+            for galleta_id, nombre, cantidad, precio, imagen, medida in resultados
         ]
         return galletas
             
@@ -226,21 +237,15 @@ class VentaServicio:
             detalle.precio_unitario = item['precio']
             detalle.precio_total = item['subtotal']
             
-            inventario = self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta.id).first()
-            
-            if inventario is None:
-                raise ValueError("Inventario no encontrado")
-            if inventario.cantidad < item['peso']:
-                raise ValueError("No hay suficiente inventario")
-            
+            # No se debe restar inventario en el pedido, solo se conservan los detalles.
             self.bd.session.add(detalle)
-            self.bd.session.add(inventario)
-        self.bd.session.commit()
-        
+            
         session.pop('carrito', None)
         session.pop('total', None)
         session.pop('cantidad_total', None)
         session.pop('email_comprador', None)
+        
+        self.bd.session.commit()
         session.modified = True
         
     def cerrar_venta(self, session, current_user):
@@ -271,7 +276,7 @@ class VentaServicio:
             galleta = self.bd.session.query(Galleta).get(item['galleta_id'])
             if not galleta:
                 raise ValueError("Galleta no encontrada")
-
+            
             detalle.venta_id = venta.id
             detalle.galleta_id = galleta.id
             detalle.presentacion = item['presentacion']
@@ -280,16 +285,53 @@ class VentaServicio:
             detalle.precio_unitario = item['precio']
             detalle.precio_total = item['subtotal']
 
-            inventario = self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta.id).first()
-            if not inventario:
-                raise ValueError("Inventario no encontrado")
-            if inventario.cantidad < item['peso']:
+            # Verificar que la suma total de inventarios (ya lo hace el método obtener_inventario)
+            inventario_total = self.obtener_inventario(galleta.id)
+            if inventario_total < item['peso']:
                 raise ValueError("No hay suficiente inventario")
-            inventario.cantidad -= item['peso']
+            print(f"Inventario total para galleta_id {galleta.id}: {inventario_total} y peso requerido: {item['peso']}")
+            
+            # Obtener todos los registros de inventario activos para esta galleta, ordenados por fecha de expiración (más antigua primero)
+            now = datetime.now()
+            inventarios = (
+                self.bd.session.query(GalletaInventario)
+                .filter(
+                    GalletaInventario.galleta_id == galleta.id,
+                    GalletaInventario.fecha_expiracion > now,
+                    GalletaInventario.cantidad > 0
+                )
+                .order_by(GalletaInventario.fecha_expiracion.asc())
+                .all()
+            )
+            
+            restante = item['peso'] * item['cantidad']  # peso total requerido en kg
 
+            for inventario in inventarios:
+                if restante <= 0:
+                    break
+                if inventario.medida_id == 3:
+                    # El inventario viene en piezas, convertir a kg:
+                    disponible_kg = inventario.cantidad * 0.05
+                    if disponible_kg >= restante:
+                        # Calcula cuántas piezas quedarían después de descontar lo requerido.
+                        piezas_restantes = (disponible_kg - restante) / 0.05
+                        inventario.cantidad = piezas_restantes
+                        restante = 0
+                        break
+                    else:
+                        restante -= disponible_kg
+                        inventario.cantidad = 0
+                else:
+                    # Inventario en kg (medida_id==1)
+                    disponible = inventario.cantidad
+                    if disponible >= restante:
+                        inventario.cantidad = disponible - restante
+                        restante = 0
+                        break
+                    else:
+                        restante -= disponible
+                        inventario.cantidad = 0
             self.bd.session.add(detalle)
-            self.bd.session.add(inventario)
-
         self.bd.session.commit()
 
         # Limpiar de la sesión la información del pedido
@@ -315,12 +357,10 @@ class VentaServicio:
         if not galleta:
             raise ValueError("Galleta no encontrada")
         
-        inventario = self.obtener_inventario(galleta_id)
-        if not inventario:
-            raise ValueError("Inventario no encontrado")
-        if inventario.cantidad <= 0:
+        inventario_total = self.obtener_inventario(galleta_id)
+        if inventario_total <= 0:
             raise ValueError("Inventario no disponible")
-        if inventario.cantidad < peso:
+        if inventario_total < peso:
             raise ValueError("No hay suficiente inventario")
         
         key_item = f"{galleta.nombre} {presentacion}"
@@ -333,7 +373,7 @@ class VentaServicio:
             itm['peso'] for itm in session.get('carrito', {}).values() if itm['galleta_id'] == galleta_id
         )
         nueva_peso_total = total_peso_actual + peso
-        if round(nueva_peso_total, 2) > inventario.cantidad:
+        if round(nueva_peso_total, 2) > inventario_total:
             raise ValueError("No hay suficiente inventario para agregar este artículo")
         
         session.modified = True
@@ -373,13 +413,18 @@ class VentaServicio:
         carrito = session['carrito']
         item = carrito[key_item]
         # Recuperar el inventario para la galleta
-        inv = self.obtener_inventario(item['galleta_id'])
-        if not inv:
-            raise ValueError("Inventario no encontrado para este artículo")
+        inventario_total = self.obtener_inventario(item['galleta_id'])
+        if inventario_total <= 0:
+            raise ValueError("Inventario no disponible")
+        # Si la cantidad es 0, eliminar el item del carrito
+        if nueva_cantidad == 0:
+            del carrito[key_item]
+            session['cantidad_total'] = sum(itm['cantidad'] for itm in carrito.values())
+            session['total'] = math.ceil(sum(itm['subtotal'] for itm in carrito.values()))
+            session.modified = True
+            return carrito
         
-        # Primero, calcular el peso unitario (el mismo que se usó al agregar el item)
-        if item['cantidad'] <= 0:
-            raise ValueError("Cantidad actual inválida")
+        # Calcular el peso unitario de este item
         unit_weight = item['peso'] / item['cantidad']
         
         # Calcular el nuevo peso para este item
@@ -390,7 +435,7 @@ class VentaServicio:
                         if itm['galleta_id'] == item['galleta_id'] and k != key_item)
         
         nuevo_total_peso = peso_otros + nuevo_peso_item
-        if round(nuevo_total_peso, 2) > inv.cantidad:
+        if round(nuevo_total_peso, 2) > inventario_total:
             raise ValueError("No hay suficiente inventario para modificar este artículo")
         
         if nueva_cantidad <= 0:
