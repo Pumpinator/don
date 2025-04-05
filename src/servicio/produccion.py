@@ -58,7 +58,7 @@ class ProduccionServicio:
         if produccion and produccion.estatus < 4:
             produccion.estatus += 1
             
-            if produccion.estatus == 4:
+            if produccion.estatus == 3:
                 try:
                     costo_base = self._calcular_costo_base(produccion.receta)
                     kilos = produccion.costo / costo_base if costo_base > 0 else 0
