@@ -83,15 +83,6 @@
             }
         });
 
-        // Elimina la opción seleccionada de producción al agregar la merma
-        function eliminarOpcionProduccion(id) {
-            const select = document.getElementById('item_select');
-            const optionToRemove = select.querySelector(`option[value="${id}"]`);
-            if (optionToRemove) {
-                optionToRemove.remove(); // Elimina la opción de producción seleccionada
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             { %
                 if eliminar_produccion_id %

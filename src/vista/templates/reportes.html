@@ -14,19 +14,19 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold text-gray-900">Ventas Totales</h2>
             <div class="relative inline-block text-left">
-                <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500"
-                    id="menu-button" aria-expanded="true" aria-haspopup="true">
-                    Mensual
-                    <svg class="-mr-1 h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </button>
+                <form method="get" action="{{ url_for('principal.reportes.reportes') }}">
+                    <select name="periodo" onchange="this.form.submit()" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500">
+                        <option value="diario" {% if periodo_seleccionado == 'diario' %}selected{% endif %}>Diario</option>
+                        <option value="mensual" {% if periodo_seleccionado == 'mensual' %}selected{% endif %}>Mensual</option>
+                    </select>
+                </form>
             </div>
         </div>
         <p class="text-5xl font-bold text-gray-900">
             <i class="fa-solid fa-sack-dollar text-5xl"></i> {{ "{:,.2f}".format(resumen_ventas[0]['ingresos_totales']) if resumen_ventas else "0.00" }}
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+            {% if periodo_seleccionado == 'diario' %} Reporte del día de hoy {% else %} Reporte del mes actual {% endif %}
         </p>
     </div>
 
@@ -61,9 +61,6 @@
             <p class="text-sm font-medium text-gray-500">Más Vendido</p>
             <p class="text-xl font-bold text-gray-900">
                 {{ productos_mas_vendidos[0]['nombre'] if productos_mas_vendidos else "Sin datos" }}
-            </p>
-            <p class="text-xs text-gray-500">
-                {{ productos_mas_vendidos[0]['categoria'] if productos_mas_vendidos else "-" }}
             </p>
             <p class="text-lg font-semibold text-gray-900">
                 {{ productos_mas_vendidos[0]['medida_mas_vendida'] if productos_mas_vendidos else "-" }}
