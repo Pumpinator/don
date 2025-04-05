@@ -78,18 +78,22 @@
                     <div class="p-3">Producción</div>
                     <div class="p-3">
                         {% if merma.produccion.estatus == 1 %} 🛠 Haciendo {% elif merma.produccion.estatus == 2 %} 🔥 Cocinando {% elif merma.produccion.estatus == 3 %} ✅ Listo {% elif merma.produccion.estatus == 4 %} ⚠️ Merma {% else %} Desconocido {% endif %}
+                        <br>
+                        <span class="text-sm text-gray-600">
+                            {{ merma.produccion.fecha.strftime('%d/%m/%Y') }} - 
+                            {% if merma.produccion.receta and merma.produccion.receta.galleta %}
+                                {{ merma.produccion.receta.galleta.nombre }}
+                            {% else %}
+                                Producción sin galleta asociada
+                            {% endif %}
+                        </span>
                     </div>
-
-
-
                     <div class="p-3">{{ merma.medida.nombre }}</div>
                     <div class="p-3">{{ merma.total }}</div>
                 </div>
             </div>
             {% endfor %}
-
         </div>
-        {{insumo}}
         <!-- Botón para agregar nueva merma -->
         <div class="mt-6 bg-gray-200 p-6 flex justify-center items-center rounded-lg cursor-pointer hover:bg-gray-300">
             <a href="{{ url_for('principal.merma.agregar_merma') }}" class="flex justify-center items-center w-full h-full">

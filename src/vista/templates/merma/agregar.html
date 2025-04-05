@@ -3,7 +3,7 @@
 
 <body class="bg-gray-100 min-h-screen flex flex-col justify-between">
     <main class="flex flex-col items-center px-6">
-        <form href="{{ url_for('principal.merma.agregar_merma') }}" method="POST" class="w-full max-w-sm space-y-4">
+        <form action="{{ url_for('principal.merma.agregar_merma') }}" method="POST" class="w-full max-w-sm space-y-4">
             <div>
                 <label class="block text-gray-700 font-bold">Tipo de Merma</label>
                 <select id="tipo_merma" name="tipo" class="w-full bg-200 p-3 rounded-2xl focus:outline-none">
@@ -29,13 +29,21 @@
                         <option value="{{ galleta.id }}" data-tipo="galleta">{{ galleta.nombre }}</option>
                     {% endfor %}
                     {% for produccion in producciones %}
-    <option value="{{ produccion.id }}" data-tipo="produccion">
-        {{ produccion.descripcion_estatus }}
-    </option>
-{% endfor %}
-
+                    <option 
+                        value="{{ produccion.id }}" 
+                        data-tipo="produccion" 
+                        data-total-producido="{{ produccion.total }}">
+                        {{ produccion.descripcion_estatus }}
+                    </option>
+                {% endfor %}
                 </select>
+
+                <!-- Campo oculto que se llenará según la opción seleccionada si es de tipo "producción" -->
+                <input type="hidden" id="total_producido_input" name="total_producido" value=""> {% for produccion in producciones %}
+                <p style="display:none;">ID: {{ produccion.id }} - Total: {{ produccion.total }}</p>
+                {% endfor %}
             </div>
+
 
             <div>
                 <label class="block text-gray-700 font-bold">Medida</label>
@@ -57,6 +65,44 @@
             </div>
         </form>
     </main>
+    <script>
+        document.getElementById('item_select').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const tipo = selectedOption.getAttribute('data-tipo');
+            const totalProducidoInput = document.getElementById('total_producido_input');
+            const cantidadInput = document.querySelector('input[name="cantidad"]');
 
+            // Si la opción seleccionada es "producción", actualizamos el total producido
+            if (tipo === 'produccion') {
+                const total = selectedOption.getAttribute('data-total-producido');
+                totalProducidoInput.value = total || '';
+                cantidadInput.value = total || '';
+            } else {
+                totalProducidoInput.value = '';
+                cantidadInput.value = '';
+            }
+        });
+
+        // Elimina la opción seleccionada de producción al agregar la merma
+        function eliminarOpcionProduccion(id) {
+            const select = document.getElementById('item_select');
+            const optionToRemove = select.querySelector(`option[value="${id}"]`);
+            if (optionToRemove) {
+                optionToRemove.remove(); // Elimina la opción de producción seleccionada
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            { %
+                if eliminar_produccion_id %
+            }
+            eliminarOpcionProduccion({
+                {
+                    eliminar_produccion_id
+                }
+            }); { % endif %
+            }
+        });
+    </script>
 </body>
 {% endblock %}
