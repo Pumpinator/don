@@ -31,6 +31,7 @@
             class="bg-[var(--color-dirt-default)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-dirt-default)]">
             Editar Receta
         </a>
+        {% if current_user.rol.nombre == 'ADMIN' %}
         <form action="{{ url_for('principal.receta.eliminar_receta', receta_id=receta.id) }}" method="POST"
             onsubmit="return confirm('¿Estás seguro de querer eliminar esta receta?');">
             <button type="submit"
@@ -38,6 +39,7 @@
                 Eliminar Receta
             </button>
         </form>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
