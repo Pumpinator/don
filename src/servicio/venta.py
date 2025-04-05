@@ -39,7 +39,6 @@ class VentaServicio:
             .group_by(GalletaInventario.galleta_id)
             .scalar()
         )
-        print(f"Inventario total para galleta_id {galleta_id}: {round(resultado, 2)}")
         return round(resultado, 2) if resultado is not None else 0
     
     def obtener_venta(self, venta_id, session):
@@ -262,21 +261,24 @@ class VentaServicio:
             comprador = self.bd.session.query(Usuario).filter_by(email=email_comprador).first()
             venta.comprador_id = comprador.id if comprador else None
             venta.fecha = datetime.now()
-        
+
         venta.fecha_entrega = datetime.now()
         venta.total = total
-        venta.pagado = True  # Al cerrar la venta se marca como pagada
+        venta.pagado = True
         venta.vendedor_id = current_user.id
 
         self.bd.session.add(venta)
         self.bd.session.flush()  # Para tener el id de la venta
+
+        # Crear un diccionario virtual para evitar volver a consultar la BD tras modificar
+        virtual_inventory = {}
 
         for key, item in carrito.items():
             detalle = VentaDetalle()
             galleta = self.bd.session.query(Galleta).get(item['galleta_id'])
             if not galleta:
                 raise ValueError("Galleta no encontrada")
-            
+
             detalle.venta_id = venta.id
             detalle.galleta_id = galleta.id
             detalle.presentacion = item['presentacion']
@@ -285,35 +287,37 @@ class VentaServicio:
             detalle.precio_unitario = item['precio']
             detalle.precio_total = item['subtotal']
 
-            # Verificar que la suma total de inventarios (ya lo hace el método obtener_inventario)
-            inventario_total = self.obtener_inventario(galleta.id)
-            if inventario_total < item['peso']:
-                raise ValueError("No hay suficiente inventario")
-            print(f"Inventario total para galleta_id {galleta.id}: {inventario_total} y peso requerido: {item['peso']}")
+            # Si aún no se tiene el inventario virtual para esta galleta, se consulta
+            if galleta.id not in virtual_inventory:
+                virtual_inventory[galleta.id] = self.obtener_inventario(galleta.id)
             
-            # Obtener todos los registros de inventario activos para esta galleta, ordenados por fecha de expiración (más antigua primero)
+            requerido = item['peso']
+            if virtual_inventory[galleta.id] < requerido:
+                raise ValueError("No hay suficiente inventario")
+            
+            # Descontar el requerido del inventario virtual
+            virtual_inventory[galleta.id] -= requerido
+
+            # Ahora, proceder a descontar de los registros reales de inventario
             now = datetime.now()
             inventarios = (
                 self.bd.session.query(GalletaInventario)
                 .filter(
                     GalletaInventario.galleta_id == galleta.id,
                     GalletaInventario.fecha_expiracion > now,
-                    GalletaInventario.cantidad > 0
+                    GalletaInventario.cantidad > 0  # se consideran solo registros activos
                 )
                 .order_by(GalletaInventario.fecha_expiracion.asc())
                 .all()
             )
-            
-            restante = item['peso'] * item['cantidad']  # peso total requerido en kg
-
+            restante = requerido
             for inventario in inventarios:
                 if restante <= 0:
                     break
                 if inventario.medida_id == 3:
-                    # El inventario viene en piezas, convertir a kg:
+                    # Cantidad en piezas: convertir a kg
                     disponible_kg = inventario.cantidad * 0.05
                     if disponible_kg >= restante:
-                        # Calcula cuántas piezas quedarían después de descontar lo requerido.
                         piezas_restantes = (disponible_kg - restante) / 0.05
                         inventario.cantidad = piezas_restantes
                         restante = 0
@@ -322,7 +326,7 @@ class VentaServicio:
                         restante -= disponible_kg
                         inventario.cantidad = 0
                 else:
-                    # Inventario en kg (medida_id==1)
+                    # Registro en kg
                     disponible = inventario.cantidad
                     if disponible >= restante:
                         inventario.cantidad = disponible - restante
@@ -333,8 +337,6 @@ class VentaServicio:
                         inventario.cantidad = 0
             self.bd.session.add(detalle)
         self.bd.session.commit()
-
-        # Limpiar de la sesión la información del pedido
         self.vaciar_carrito(session)
     
     def agregar_galleta(self, form, session):
