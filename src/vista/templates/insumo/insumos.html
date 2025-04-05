@@ -92,6 +92,16 @@
             </a>
         </div>
         {%endfor%}
+        <div class="p-5 flex justify-center items-center galleta-item bg-white border border-gray-200 shadow-sm rounded-lg 
+        shadow-sm hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill">
+            <a href="{{ url_for('principal.insumo.crear_insumo')}}">
+                <div class="max-w-sm max-h-sm flex justify-center items-center h-full">
+
+                    <i class="fa-solid fa-plus text-2xl text-gray-700"></i>
+
+                </div>
+            </a>
+        </div>
         {%endif%}
 
     </div>
