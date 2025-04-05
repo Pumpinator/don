@@ -32,7 +32,17 @@ class CocinaServicio:
         return self.bd.session.query(Medida).distinct().all()
     
     def obtener_producciones(self):
-        return self.bd.session.query(Produccion).all()
+        estatus_dict = {
+            1: "🛠 Haciendo",
+            2: "🔥 Cocinando",
+            3: "✅ Listo"
+        }
+        producciones = self.bd.session.query(Produccion).all()
+        
+        for produccion in producciones:
+            produccion.descripcion_estatus = estatus_dict.get(produccion.estatus, "Desconocido")
+
+        return producciones
     
     def obtener_galletas(self):
         return self.bd.session.query(Galleta).all()

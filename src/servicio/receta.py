@@ -17,6 +17,7 @@ class RecetaServicio:
                 Receta.nombre,
                 Receta.procedimiento,
                 Galleta.nombre.label('galleta_nombre'),
+                Galleta.imagen.label('galleta_imagen'),
                 Insumo.nombre.label('insumo_nombre'),
                 Ingrediente.cantidad,
                 Medida.abreviatura.label('medida_nombre')
@@ -39,6 +40,7 @@ class RecetaServicio:
                     'nombre': row.nombre,
                     'procedimiento': row.procedimiento,
                     'galleta': row.galleta_nombre,
+                    'imagen': row.galleta_imagen,
                     'ingredientes': []
                 }
             

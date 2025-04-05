@@ -59,7 +59,7 @@ def editar_proveedor(proveedor_id):
 
 @controlador.route('/proveedor/eliminar/<int:proveedor_id>', methods=['POST'])
 @login_required
-@admin_or_trabajador_permission.require(http_exception=403)
+@trabajador_permission.require(http_exception=403)
 def eliminar_proveedor(proveedor_id):
     try:
         servicio = ProveedorServicio(bd)

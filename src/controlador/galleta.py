@@ -11,7 +11,7 @@ controlador = Blueprint('galleta', __name__)
 
 admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJADOR'))
 
-@controlador.route('/galletas_inv')
+@controlador.route('/galletas/inventarios')
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def galletas_inv():
@@ -29,7 +29,7 @@ def galletas():
     print(inventarios)
     return render_template('galletas/galletas.html', inventarios=inventarios)
 
-@controlador.route('/galletas_agregar', methods=['GET', 'POST'])
+@controlador.route('/galletas/agregar', methods=['GET', 'POST'])
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def galletas_agregar():

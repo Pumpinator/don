@@ -1,8 +1,4 @@
-{% extends "layouts/auth.html" %}
-
-{% block title %}Producción - DON{% endblock %}
-
-{% block content %}
+{% extends "layouts/auth.html" %} {% block title %}Producción - DON{% endblock %} {% block content %}
 <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
     <div class="flex items-center justify-between mb-6">
         <div class="flex items-center">
@@ -16,47 +12,47 @@
     <form class="mb-6">
         <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
             </div>
-            <input type="text" id="simple-search" 
-                class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Búsqueda" required
-                oninput="filterProduccion()" >
+            <input type="text" id="simple-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Búsqueda" required oninput="filterProduccion()">
         </div>
     </form>
-    
+
     <!-- Tarjetas de producción -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {% for item in produccion %}
-        {% if item.estatus != 4 %} <!-- Ocultamos las producciones con estatus 4 -->
+        {% for item in produccion %} {% if item.estatus != 4 %}
+        <!-- Ocultamos las producciones con estatus 4 -->
         <div class="bg-white shadow-lg rounded-lg p-4">
-            <h3 class="text-lg font-bold">{{ item.receta.nombre }}</h3>
+            <!-- Imagen de la galleta -->
+            <div class="w-full h-40 mb-4">
+                <img class="w-full h-full object-contain rounded-lg" src="../static/img/{{ item.receta.galleta.imagen }}" alt="{{ item.receta.nombre }}">
+            </div>
+
+            <h3 class="text-lg font-bold">{{ item.receta.galleta.nombre }}</h3>
             <p class="text-gray-600">Fecha: {{ item.fecha.strftime('%d/%m/%Y') }}</p>
             <p class="text-gray-600">Costo: ${{ item.costo }}</p>
-            <p class="text-gray-600">Estatus:
-                {% if item.estatus == 1 %}
-                🛠 Haciendo
-                {% elif item.estatus == 2 %}
-                🔥 Cocinando
-                {% elif item.estatus == 3 %}
-                ✅ Listo
-                {% endif %}
+            <p class="text-gray-600">Estatus: {% if item.estatus == 1 %} 🛠 Haciendo {% elif item.estatus == 2 %} 🔥 Cocinando {% elif item.estatus == 3 %} ✅ Listo {% endif %}
             </p>
             <!-- Botón Avanzar -->
-            <form method="POST"
-                action="{{ url_for('principal.produccion.avanzar_produccion', produccion_id=item.id) }}">
-                <button type="submit"
-                    class="mt-4 w-full cursor-pointer bg-[var(--color-red-default)] hover:bg-[var(--color-red-dark)] text-white font-bold py-2 px-4 rounded">
+            <form method="POST" action="{{ url_for('principal.produccion.avanzar_produccion', produccion_id=item.id) }}">
+                <button type="submit" class="mt-4 w-full cursor-pointer bg-[var(--color-red-default)] hover:bg-[var(--color-red-dark)] text-white font-bold py-2 px-4 rounded">
                     Avanzar
                 </button>
             </form>
+
+            <form method="POST" action="{{ url_for('principal.merma.agregar_merma', produccion_id=item.id) }}">
+                <input type="hidden" name="estatus_id" value="{{ item.estatus }}">
+                <input type="hidden" name="estatus_text" value="{% if item.estatus == 1 %}Haciendo{% elif item.estatus == 2 %}Cocinando{% elif item.estatus == 3 %}Listo{% endif %}">
+                <button type="submit" class="w-full cursor-pointer bg-[#4B413E] hover:bg-[#5A504D] text-white font-bold py-2 px-4 rounded-r" onclick="ocultarProduccion(event)">                    
+                    Mermar
+                </button>
+            </form>
+
         </div>
-        {% endif %}
-        {% endfor %}
+        {% endif %} {% endfor %}
     </div>
 </div>
 </div>
@@ -71,6 +67,15 @@
             const text = card.textContent.toLowerCase();
             card.style.display = text.includes(searchInput) ? 'block' : 'none';
         });
+    }
+
+    function ocultarProduccion(event) {
+        event.preventDefault();
+        let card = event.target.closest('.bg-white');
+        if (card) {
+            card.style.display = "none"; // Oculta la tarjeta
+        }
+        setTimeout(() => event.target.form.submit(), 300);
     }
 </script>
 
