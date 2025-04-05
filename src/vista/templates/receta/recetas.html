@@ -11,6 +11,12 @@
             </a>
             <h2 class="ml-4 text-2xl font-bold text-gray-800">Recetas</h2>
         </div>
+        <div class="flex items-center justify-self-end">
+            <h2 class="ml-4 text-2xl font-bold text-gray-800 pr-2">Producción</h2>
+            <a href="{{ url_for('principal.produccion.produccion') }}" class="flex-shrink-0">
+                <i class="-scale-x-95 fa-solid fa-angle-left text-2xl text-gray-700"></i>
+            </a>
+        </div>
     </div>
     <div id="recetas-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {% for receta in recetas %}
