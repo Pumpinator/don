@@ -23,9 +23,13 @@
                 {% if form.nombre.errors %}
                 <p class="mt-1 text-sm text-red-600">{{ form.nombre.errors[0] }}</p>
                 {% endif %}
-                {{ form.precio(class="hidden mt-1 block w-full border border-gray-300 rounded-full px-4
-                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]", placeholder="Precio", value=1)
+                {{ form.precio.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.precio(class=" mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]", placeholder="Precio")
                 }}
+                {% if form.precio.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.precio.errors[0] }}</p>
+                {% endif %}
             </div>
             <button type="submit"
                 class="w-full bg-[var(--color-latte-default)] text-white font-semibold py-2 px-4 rounded-md hover:bg-[var(--color-dirt-default)] focus:outline-none focus:ring-2 focus:ring-[var(--color-dirt-default)]">

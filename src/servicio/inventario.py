@@ -52,7 +52,7 @@ class InventarioServicio:
         )
         inventarios = [
             {"id":galleta_id,"imagen": imagen, "galleta": nombre, "cantidad": int(cantidad_total), "medida": medida} 
-            for galleta_id, nombre, imagen, cantidad_total, medida in resultados
+            for galleta_id,nombre, imagen, cantidad_total, medida in resultados
         ]
         return inventarios
     
@@ -88,19 +88,19 @@ class InventarioServicio:
         resultados = (
             self.bd.session
             .query(
-                InsumoInventario.insumo_id,
+                Insumo.id,
                 Insumo.nombre, 
-                func.sum(InsumoInventario.cantidad),
+                func.sum(InsumoInventario.cantidad).label("cantidad_total"),
                 Medida.nombre
             )
             .join(Insumo, Insumo.id == InsumoInventario.insumo_id)
             .join(Medida, InsumoInventario.medida_id == Medida.id)
-            .group_by(InsumoInventario.insumo_id, Insumo.nombre, Medida.nombre)
+            .group_by(Insumo.id,Insumo.nombre, Medida.nombre)
             .all()
         )
         inventarios = [
-            {"insumo_id": insumo_id, "insumo": nombre, "cantidad": int(total), "medida": medida} 
-            for insumo_id, nombre, total, medida in resultados
+            {"id":insumo_id,"insumo": nombre, "cantidad": int(cantidad_total), "medida": medida} 
+            for insumo_id, nombre, cantidad_total, medida in resultados
         ]
         return inventarios
     

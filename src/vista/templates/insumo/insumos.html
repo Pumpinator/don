@@ -43,10 +43,10 @@
 
     <div id="insumos-container" class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 p-10">
 
-        {%if rol == 'inventarios'%}
+        {%if modulo == 'inventarios'%}
         {% for inv in inventarios %}
 
-        {%set id = inv.insumo_id%}
+        {%set id = inv.id%}
         <div class="insumo-item bg-white border border-gray-200 rounded-lg 
         shadow-sm cursor-pointer hover:shadow-2xl hover:-translate-x-1 hover:-translate-y-1 transition duration-75 object-fill mb-8">
             <a href="{{ url_for('principal.insumo.insumos_detalles', insumo_id=id) }}">
@@ -92,12 +92,6 @@
             </a>
         </div>
         {%endfor%}
-        <div class="mt-6 bg-gray-200 p-6 flex justify-center items-center rounded-lg cursor-pointer hover:bg-gray-300">
-            <a href="{{ url_for('principal.insumo.crear_insumo') }}"
-                class="flex justify-center items-center w-full h-full">
-                <span class="text-2xl">+</span>
-            </a>
-        </div>
         {%endif%}
 
     </div>
