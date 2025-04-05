@@ -114,3 +114,16 @@ def page_not_found(error):
 @controlador.errorhandler(403)
 def forbidden(error):
     return render_template('errors/403.html'), 403
+
+@controlador.before_request
+def log():
+    usuario_servicio = UsuarioServicio(bd)
+    usuario = usuario_servicio.obtener_usuario(id = current_user.get_id()) if current_user.is_authenticated else None
+    current_app.logger.info(
+        "Usuario: %s, Método: %s, Ruta: %s, Args: %s, Form: %s",
+        usuario.rol.nombre if usuario else 'ANÓNIMO',
+        request.method,
+        request.path,
+        request.args.to_dict(),
+        request.form.to_dict()
+    )

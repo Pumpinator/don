@@ -3,7 +3,7 @@ from servicio.usuario import UsuarioServicio
 from formularios.usuario import CrearForm, EditarForm
 from bd import bd
 from flask_login import login_required, current_user
-from flask_principal import Permission, RoleNeed
+from flask_principal import Permission, RoleNeed, current_app
 
 controlador = Blueprint('usuario', __name__)
 
