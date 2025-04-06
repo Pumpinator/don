@@ -45,7 +45,7 @@
 
             <form method="POST" action="{{ url_for('principal.merma.mermas', produccion_id=item.id) }}">
                 <input type="hidden" name="estatus_id" value="{{ item.estatus }}">
-                <input type="hidden" name="estatus_text" value="{% if item.estatus == 1 %}Haciendo{% elif item.estatus == 2 %}Cocinando{% elif item.estatus == 3 %}Listo{% endif %}"> {% if item.estatus == 3 %}
+                <input type="hidden" name="estatus_text" value="{% if item.estatus == 1 %}Haciendo{% elif item.estatus == 2 %}Cocinando{% elif item.estatus == 3 %}Listo{% endif %}"> {% if item.estatus == 1 or item.estatus == 3 %}
                 <button type="submit" class="mt-4 w-full cursor-pointer bg-[#4B413E] hover:bg-[#5A504D] text-white font-bold py-2 px-4 rounded">
                     Mermar
                 </button> {% endif %}

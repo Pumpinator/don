@@ -50,6 +50,8 @@ def agregar_merma():
 
         except ValueError as e:
             flash(str(e), "danger")
+            
+    medidas = CocinaServicio(bd).obtener_medidas()
 
     # Pasa los datos necesarios a la plantilla
     insumos = InventarioServicio(bd).obtener_insumos()  
@@ -58,5 +60,9 @@ def agregar_merma():
     medidas = CocinaServicio(bd).obtener_medidas()
 
     # Pasa las producciones para el select en la plantilla
-    return render_template('merma/agregar.html', insumos=insumos, galletas=galletas,
-                           producciones=producciones, medidas=medidas, produccion_id=produccion_id)
+    return render_template('merma/agregar.html', 
+                         insumos=InventarioServicio(bd).obtener_insumos(),
+                         galletas=CocinaServicio(bd).obtener_galletas(),
+                         producciones=CocinaServicio(bd).obtener_producciones(),
+                         medidas=medidas,
+                         produccion_id=produccion_id)
