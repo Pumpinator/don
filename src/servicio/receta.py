@@ -122,6 +122,7 @@ class RecetaServicio:
                     Receta.id,
                     Receta.nombre,
                     Receta.procedimiento,
+                    Galleta.id.label('galleta_id'),
                     Galleta.nombre.label('galleta_nombre'),
                     Ingrediente.cantidad,
                     Ingrediente.insumo_id,
@@ -144,6 +145,7 @@ class RecetaServicio:
                 'nombre': receta[0].nombre,
                 'procedimiento': receta[0].procedimiento,
                 'galleta': receta[0].galleta_nombre,
+                'galleta_id': receta[0].galleta_id,
                 'ingredientes': []
             }
 
