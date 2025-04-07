@@ -67,7 +67,7 @@ def insumos_editar(insumo_id):
         try:
             inv_servicio.editar_insumo(form, insumo_id)
             flash("Insumo editado exitosamente.", "success")
-            return redirect(url_for('principal.insumo.insumos'))
+            return redirect(url_for('principal.insumo.insumos', modulo='tipos'))
         except ValueError as e:
             flash(str(e), "danger")
     elif request.method == 'POST':

@@ -39,8 +39,8 @@
     </form>
 
     <select id="view-mode" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" required>
-        <option value="kg" selected>Kilogramos</option>
-        <option value="piezas">Piezas</option>
+        <option value="kg">Kilogramos</option>
+        <option value="piezas" selected>Piezas</option>
     </select>
 
     <div class="p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
@@ -66,8 +66,8 @@
                 </div>
                 <div class="justify-self-end">
                     <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg font-bold tracking-tight text-gray-900 dark:text-black cantidad"
-                        data-cantidad-kg="{{ "%.2f"|format(inv.cantidad_kg) }}">
-                        {{ "%.2f"|format(inv.cantidad_kg) }}
+                        data-cantidad="{{ inv.cantidad_piezas }}">
+                        {{ inv.cantidad_piezas }}
                     </h7>
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 medida">{{ inv.medida }}</p>
                 </div>
@@ -90,6 +90,27 @@
             });
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const mode = 'piezas'; // Valor predeterminado
+            const items = document.querySelectorAll('.galleta-item');
+
+            items.forEach(item => {
+                const cantidadElement = item.querySelector('.cantidad');
+                const medidaElement = item.querySelector('.medida');
+                const cantidadPiezas = parseInt(cantidadElement.getAttribute('data-cantidad')); // Recuperar el valor original en piezas
+
+                if (!isNaN(cantidadPiezas)) {
+                    // Mostrar en piezas por defecto
+                    cantidadElement.textContent = cantidadPiezas;
+                    medidaElement.textContent = 'Piezas';
+                } else {
+                    console.error('El valor de data-cantidad no es válido:', cantidadPiezas);
+                    cantidadElement.textContent = '0'; // Valor por defecto en caso de error
+                    medidaElement.textContent = 'Piezas';
+                }
+            });
+        });
+
         document.getElementById('view-mode').addEventListener('change', function () {
             const mode = this.value; // Obtener el modo seleccionado (kg o piezas)
             const items = document.querySelectorAll('.galleta-item');
@@ -97,17 +118,23 @@
             items.forEach(item => {
                 const cantidadElement = item.querySelector('.cantidad');
                 const medidaElement = item.querySelector('.medida');
-                const cantidadKg = parseFloat(cantidadElement.getAttribute('data-cantidad-kg')); // Recuperar el valor original
+                const cantidadPiezas = parseInt(cantidadElement.getAttribute('data-cantidad')); // Recuperar el valor original en piezas
 
-                if (mode === 'piezas') {
-                    // Convertir a piezas
-                    const cantidadPiezas = Math.floor(cantidadKg / 0.05);
-                    cantidadElement.textContent = cantidadPiezas;
-                    medidaElement.textContent = 'Piezas';
+                if (!isNaN(cantidadPiezas)) {
+                    if (mode === 'kg') {
+                        // Convertir a kilogramos
+                        const cantidadKg = (cantidadPiezas * 0.05).toFixed(2);
+                        cantidadElement.textContent = cantidadKg;
+                        medidaElement.textContent = 'Kilogramos';
+                    } else {
+                        // Mostrar en piezas
+                        cantidadElement.textContent = cantidadPiezas;
+                        medidaElement.textContent = 'Piezas';
+                    }
                 } else {
-                    // Mostrar en kilogramos con máximo dos decimales
-                    cantidadElement.textContent = cantidadKg.toFixed(2);
-                    medidaElement.textContent = 'Kilogramos';
+                    console.error('El valor de data-cantidad no es válido:', cantidadPiezas);
+                    cantidadElement.textContent = '0'; // Valor por defecto en caso de error
+                    medidaElement.textContent = mode === 'kg' ? 'Kilogramos' : 'Piezas';
                 }
             });
         });

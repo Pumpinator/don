@@ -342,7 +342,7 @@ END$$
 
 DELIMITER ;
 
-*/
+
 
 
 
@@ -376,51 +376,3 @@ class Presentacion(bd.Model):
     galleta_id = bd.Column(bd.Integer, bd.ForeignKey('galletas.id'), nullable=False)
     galleta = bd.relationship(Galleta, backref='presentaciones')
 */
-
-
-DELIMITER $$
-
-CREATE TRIGGER TR_CalcularPrecioGalleta
-AFTER INSERT ON recetas
-FOR EACH ROW
-BEGIN
-    DECLARE v_precio_total FLOAT DEFAULT 0;
-    DECLARE v_costo_insumo FLOAT;
-    DECLARE v_cantidad FLOAT;
-    DECLARE v_margen_ganancia FLOAT DEFAULT 1.5;
-
-    -- Cursor para recorrer los ingredientes de la receta recién insertada
-    DECLARE cur_ingredientes CURSOR FOR
-        SELECT i.cantidad, ins.costo
-        FROM ingrediente i
-        JOIN insumos_inventarios ins ON i.insumo_id = ins.insumo_id
-        WHERE i.receta_id = NEW.id;
-
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_costo_insumo = NULL;
-
-    -- Abrir el cursor
-    OPEN cur_ingredientes;
-
-    -- Recorrer los ingredientes y calcular el costo total
-    FETCH cur_ingredientes INTO v_cantidad, v_costo_insumo;
-    WHILE v_costo_insumo IS NOT NULL DO
-        SET v_precio_total = v_precio_total + (v_cantidad * v_costo_insumo);
-        FETCH cur_ingredientes INTO v_cantidad, v_costo_insumo;
-    END WHILE;
-
-    -- Cerrar el cursor
-    CLOSE cur_ingredientes;
-
-    -- Calcular el precio final de la galleta con el margen de ganancia
-    SET v_precio_total = FLOOR(v_precio_total * v_margen_ganancia);
-
-    -- Actualizar el precio de la galleta asociada
-    UPDATE galletas
-    SET precio = v_precio_total
-    WHERE id = NEW.galleta_id;
-END$$
-
-DELIMITER ;
--- ↑ Trigger pa calcular el precio de la galleta
--- Va a haber una galleta creada, pero sin precio porque se va a esperar a
--- que se inserte la receta para calcular el precio de la galleta en base a sus insumos

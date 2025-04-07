@@ -55,8 +55,8 @@ class InventarioServicio:
                 "id": galleta_id,
                 "imagen": imagen,
                 "galleta": nombre,
-                "cantidad_kg": float(cantidad_total),
-                "cantidad_piezas": int(cantidad_total / 0.05),  # Convertir a piezas
+                "cantidad_kg": float(cantidad_total * 0.05), # Convertir a kilos
+                "cantidad_piezas": int(cantidad_total),  
                 "medida": medida
             }
             for galleta_id, nombre, imagen, cantidad_total, medida in resultados
@@ -124,5 +124,4 @@ class InventarioServicio:
         
         # Actualizar el insumo con los datos del formulario
         insumo.nombre = form.nombre.data
-        insumo.cantidad = form.cantidad.data
         self.bd.session.commit()
