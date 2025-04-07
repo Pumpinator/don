@@ -33,12 +33,16 @@ class CocinaServicio:
     
     def obtener_producciones(self):
         estatus_dict = {
-            1: "🛠 Haciendo",
-            2: "🔥 Cocinando",
-            3: "✅ Listo"
-        }
+        1: "🛠 Haciendo",
+        2: "🔥 Cocinando",
+        3: "✅ Listo",
+        4: "❌ Mermado"  # Agregado para marcar las producciones mermadas
+    }
         producciones = self.bd.session.query(Produccion).all()
-        
+    
+    # Filtra producciones con estatus "Mermado"
+        producciones = [p for p in producciones if p.estatus != 4]
+    
         for produccion in producciones:
             produccion.descripcion_estatus = estatus_dict.get(produccion.estatus, "Desconocido")
 

@@ -6,23 +6,37 @@ from bd import bd
 from modelo.galleta import Galleta
 from modelo.medida import Medida
 from modelo.galleta_inventario import GalletaInventario 
+from datetime import datetime, timedelta
 
 class ReporteVentas:
 
     def __init__(self):
         self.bd = bd  
 
-    def obtener_mas_vendidos(self):
-        productos_mas_vendidos = (
+    def obtener_mas_vendidos(self, periodo='mensual'):
+        query = (
             self.bd.session.query(
                 Galleta.nombre, 
                 Medida.nombre.label('medida_mas_vendida'),
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_vendido')
             )
             .join(VentaDetalle, Galleta.id == VentaDetalle.galleta_id)
-            .join(GalletaInventario, Galleta.id == GalletaInventario.galleta_id)  # Unión con GalletaInventario
-            .join(Medida, GalletaInventario.medida_id == Medida.id)  
-            .group_by(Galleta.nombre, Medida.nombre)  
+            .join(GalletaInventario, Galleta.id == GalletaInventario.galleta_id)
+            .join(Medida, GalletaInventario.medida_id == Medida.id)
+            .join(Venta, VentaDetalle.venta_id == Venta.id)
+        )
+        
+        # Filtrar por periodo
+        if periodo == 'diario':
+            hoy = datetime.now().date()
+            query = query.filter(self.bd.func.date(Venta.fecha) == hoy)
+        elif periodo == 'mensual':
+            hoy = datetime.now().date()
+            primer_dia_mes = hoy.replace(day=1)
+            query = query.filter(self.bd.func.date(Venta.fecha) >= primer_dia_mes)
+            
+        productos_mas_vendidos = (
+            query.group_by(Galleta.nombre, Medida.nombre)
             .order_by(self.bd.desc('total_vendido'))
             .limit(10)
             .all()
@@ -30,26 +44,39 @@ class ReporteVentas:
 
         return productos_mas_vendidos
     
-    def obtener_resumen(self):
-        # Obtiene un resumen TOTAL 
-        resumen_ventas = (
+    def obtener_resumen(self, periodo='mensual'):
+        # Consulta para ventas
+        ventas_query = (
             self.bd.session.query(
                 self.bd.func.count(Venta.id).label('total_ventas'),
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_galletas_vendidas'),
                 self.bd.func.sum(VentaDetalle.cantidad * VentaDetalle.precio_unitario).label('ingresos_totales')
             )
             .join(VentaDetalle, Venta.id == VentaDetalle.venta_id)
-            .first()  # Obtenemos solo el primer registro
         )
-        # Consulta a la base de datos para calcular la suma total de gastos registrados en el sistema. 
-        resumen_gastos = (
+        
+        # Consulta para gastos
+        gastos_query = (
             self.bd.session.query(
                 self.bd.func.sum(CompraDetalle.cantidad * CompraDetalle.precio_unitario).label('total_gastos')
             )
             .select_from(Compra)  
-            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id) 
-            .scalar()  
+            .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)
         )
+        
+        # Filtrar por periodo
+        if periodo == 'diario':
+            hoy = datetime.now().date()
+            ventas_query = ventas_query.filter(self.bd.func.date(Venta.fecha) == hoy)
+            gastos_query = gastos_query.filter(self.bd.func.date(Compra.fecha) == hoy)
+        elif periodo == 'mensual':
+            hoy = datetime.now().date()
+            primer_dia_mes = hoy.replace(day=1)
+            ventas_query = ventas_query.filter(self.bd.func.date(Venta.fecha) >= primer_dia_mes)
+            gastos_query = gastos_query.filter(self.bd.func.date(Compra.fecha) >= primer_dia_mes)
+        
+        resumen_ventas = ventas_query.first()
+        resumen_gastos = gastos_query.scalar()
 
         # Si no hay ventas, establecer valores por defecto
         if resumen_ventas[2] is None:  

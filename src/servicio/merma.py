@@ -2,6 +2,8 @@ from modelo.merma import Merma
 from modelo.produccion import Produccion
 from modelo.insumo_inventario import InsumoInventario
 from modelo.galleta_inventario import GalletaInventario
+from modelo.receta import Receta
+from sqlalchemy.orm import joinedload
 
 class MermaServicio:
 
@@ -12,65 +14,64 @@ class MermaServicio:
         return self.bd.session.query(Merma).outerjoin(Produccion).all()
 
     def agregar_merma(self, form):
-        tipo = form.get('tipo')
-        item_id = form.get('item_id')
-        medida_id = form.get('medida_id')
-        cantidad = form.get('cantidad')
-
-        if not cantidad:
-            raise ValueError("La cantidad es obligatoria.")
-
         try:
-            cantidad = float(cantidad)
-            if cantidad <= 0:
-                raise ValueError("La cantidad debe ser un número positivo.")
-        except ValueError:
-            raise ValueError("La cantidad debe ser un número válido.")
+            tipo = form.get('tipo')
+            item_id = form.get('item_id')
+            medida_id = form.get('medida_id')
+            cantidad = form.get('cantidad')
 
-        merma = Merma(total=cantidad, cantidad=cantidad, medida_id=medida_id)
+            if not cantidad:
+                raise ValueError("La cantidad es obligatoria.")
+            try:
+                cantidad = float(cantidad)
+                if cantidad <= 0:
+                    raise ValueError("La cantidad debe ser positiva.")
+            except ValueError:
+                raise ValueError("La cantidad debe ser numérica.")
 
-        if tipo == "insumo":
-            merma.insumo_id = item_id
+            merma = Merma(total=cantidad, cantidad=cantidad, medida_id=medida_id)
 
-            insumo_inventario = self.bd.session.query(InsumoInventario).filter_by(
-                insumo_id=item_id, medida_id=medida_id
-            ).first()
+            if tipo == "insumo":
+                merma.insumo_id = item_id
+                insumo = self.bd.session.query(InsumoInventario).filter_by(insumo_id=item_id).first()
+                if insumo:
+                    insumo.cantidad -= cantidad
+            elif tipo == "galleta":
+                merma.galleta_id = item_id
+                galleta = self.bd.session.query(GalletaInventario).filter_by(galleta_id=item_id).first()
+                if galleta:
+                    galleta.cantidad -= cantidad
+            elif tipo == "produccion":
+                merma.produccion_id = item_id
 
-            if not insumo_inventario:
-                raise ValueError("El insumo no se encuentra en el inventario.")
+                # Obtener la producción y su receta
+                produccion = self.bd.session.query(Produccion)\
+                    .options(joinedload(Produccion.receta).joinedload(Receta.galleta))\
+                    .filter_by(id=item_id).first()
 
-            if insumo_inventario.cantidad < cantidad:
-                raise ValueError("No hay suficiente cantidad en el inventario para registrar esta merma.")
+                if not produccion:
+                    raise ValueError("Producción no encontrada.")
+                if not produccion.receta or not produccion.receta.galleta:
+                    raise ValueError("La producción no tiene una receta o galleta asociada.")
 
-            insumo_inventario.cantidad -= cantidad
+                galleta_id = produccion.receta.galleta.id
+                inventario = self.bd.session.query(GalletaInventario).filter_by(galleta_id=galleta_id).first()
 
-        elif tipo == "galleta":
-            merma.galleta_id = item_id
+                if not inventario:
+                    raise ValueError("Inventario de galleta no encontrado.")
 
-            galleta_inventario = self.bd.session.query(GalletaInventario).filter_by(
-                galleta_id=item_id, medida_id=medida_id
-            ).first()
+                # Descontar del inventario de galleta
+                inventario.cantidad -= cantidad
+                
 
-            if not galleta_inventario:
-                raise ValueError("La galleta no se encuentra en el inventario.")
+            else:
+                raise ValueError("Tipo de merma no válido.")
 
-            if galleta_inventario.cantidad < cantidad:
-                raise ValueError("No hay suficiente cantidad en el inventario para registrar esta merma.")
+            self.bd.session.add(merma)
+            self.bd.session.commit()
+            return True
 
-            galleta_inventario.cantidad -= cantidad
-
-        elif tipo == "produccion":
-            merma.produccion_id = item_id
-            produccion = self.bd.session.query(Produccion).filter_by(id=item_id).first()
-
-            if not produccion:
-                raise ValueError("La producción no existe.")
-            
-            merma.produccion = produccion  # Asigna el objeto completo si es necesario
-
-            # Actualiza el estatus antes de guardar la merma
-            produccion.estatus = 4  # Asegúrate de que el estatus esté siendo correctamente asignado.
-
-        self.bd.session.flush()  # Fuerza la actualización de los cambios pendientes
-        self.bd.session.add(merma)
-        self.bd.session.commit()
+        except Exception as e:
+            self.bd.session.rollback()
+            print(f"Error al agregar merma: {e}")
+            raise
