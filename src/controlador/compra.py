@@ -66,7 +66,7 @@ def crear_compra():
 
 @controlador.route('/compra/editar/<int:compra_id>', methods=['GET', 'POST'])
 @login_required
-@trabajador_permission.require(http_exception=403)
+@admin_or_trabajador_permission.require(http_exception=403)
 def editar_compra(compra_id):
     servicio = CompraServicio(bd)
     compra = servicio.obtener_compra(compra_id)
