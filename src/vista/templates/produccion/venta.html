@@ -210,24 +210,12 @@
                     ¿Está seguro que desea generar el ticket de compra y cerrar la venta?
                 </h3>
                 <div class="flex items-center justify-center gap-2">
-                    <a href="
-                    {% if not venta_id %}
-                        {{ url_for('principal.venta.cerrar_venta', ticket=1) }}
-                    {% else %}
-                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=1) }}
-                    {% endif %}
-                     "
+                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=1) }}"
                         class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
                         <i class="fa-solid fa-check mr-2"></i>
                         Sí, generar
                     </a>
-                    <a href="
-                    {% if not venta_id %}
-                        {{ url_for('principal.venta.cerrar_venta', ticket=0) }}
-                    {% else %}
-                        {{ url_for('principal.venta.cerrar_venta', venta_id=venta_id, ticket=0) }}
-                    {% endif %}
-                    "
+                    <a href="{{ url_for('principal.venta.cerrar_venta', ticket=0) }}"
                         class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
                         <i class="fa-solid fa-xmark mr-2"></i>
                         No generar

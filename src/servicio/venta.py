@@ -7,8 +7,12 @@ from modelo.galleta_inventario import GalletaInventario
 from modelo.medida import Medida
 from sqlalchemy import func, case
 from sqlalchemy.orm import joinedload
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.graphics.barcode import code128
 import re
 import math
+import os
 from datetime import datetime
 
 class VentaServicio:
@@ -216,7 +220,7 @@ class VentaServicio:
         venta.pagado = False
         venta.comprador_id = current_user.id
         venta.vendedor_id = None
-        venta.total = total + 50
+        venta.total = total
         
         self.bd.session.add(venta)
         self.bd.session.flush()
@@ -338,6 +342,7 @@ class VentaServicio:
             self.bd.session.add(detalle)
         self.bd.session.commit()
         self.vaciar_carrito(session)
+        return venta.id
     
     def agregar_galleta(self, form, session):
         presentacion = form.get('presentacion', "0")
@@ -398,8 +403,6 @@ class VentaServicio:
             session['cantidad_total'] = 1
             session['email_comprador'] = None
             session.modified = True
-        if session.get('venta_id'):
-            session['total'] = session['total'] + 50
         return session['carrito']
         
     def modificar_cantidad(self, form, session):
@@ -449,8 +452,6 @@ class VentaServicio:
         
         # Actualizar totales globales
         session['total'] = math.ceil(sum(itm['subtotal'] for itm in carrito.values()))
-        if session.get('venta_id'):
-            session['total'] = session['total'] + 50
         session['cantidad_total'] = sum(itm['cantidad'] for itm in carrito.values())
         session.modified = True
         return carrito
@@ -470,7 +471,7 @@ class VentaServicio:
             # Actualizar totales globales
             session['total'] = math.ceil(sum(itm['subtotal'] for itm in session['carrito'].values()))
             if session.get('venta_id'):
-                session['total'] = session['total'] + 50
+                session['total'] = session['total']
             session['cantidad_total'] = sum(itm['cantidad'] for itm in session['carrito'].values())
             session.modified = True
             return session['carrito']
@@ -487,7 +488,7 @@ class VentaServicio:
         
     def obtener_carrito(self, session):
         carrito = session.get('carrito', {})
-        total = float(math.ceil(session.get('total', 0)))
+        total = round(session.get('total', 0), 2)
         email_comprador = session.get('email_comprador', None)
         venta_id = session.get('venta_id', None)
         if not venta_id:
@@ -532,3 +533,122 @@ class VentaServicio:
             'subtotal': precio_total,
             'imagen': galleta.imagen,
         }
+
+    def obtener_ticket(self, venta_id):
+        venta = self.bd.session.query(Venta).get(venta_id)
+        
+        if not venta:
+            raise ValueError("Venta no encontrada")
+        if not venta.pagado:
+            raise ValueError("Venta no pagada")
+        
+        # Obtener detalles de la venta        
+        detalles = self.bd.session.query(VentaDetalle).filter_by(venta_id=venta_id).all()
+
+        # Directorio de tickets en la raíz del proyecto
+        tickets_dir = os.path.join(os.getcwd(), "tickets")
+        if not os.path.exists(tickets_dir):
+            os.makedirs(tickets_dir)
+
+        ticket_filepath = os.path.join(tickets_dir, f"ticket_{venta_id}.pdf")
+        c = canvas.Canvas(ticket_filepath, pagesize=letter)
+        width, height = letter
+
+        y = height - 100
+        
+        c.setFont("Helvetica-Bold", 16)
+        text = "GALLETERÍA DON S.A de C. V."
+        text_width = c.stringWidth(text, "Helvetica-Bold", 16)
+        x = (width - text_width) / 2
+        c.drawString(x, y, text)
+        y -= 30
+        
+        c.setFont("Helvetica", 8)
+        text = "Blvd. Universidad Tecnológica 225, Universidad Tecnologica,"
+        text_width = c.stringWidth(text, "Helvetica", 8)
+        x = (width - text_width) / 2
+        c.drawString(x, y, text)
+        y -= 10
+        
+        text = "Col. San Carlos la Roncha, 37670 León de los Aldama, Gto."
+        text_width = c.stringWidth(text, "Helvetica", 8)
+        x = (width - text_width) / 2
+        c.drawString(x, y, text)
+        y -= 10
+        
+        text = "Tel 477 123 4567"
+        text_width = c.stringWidth(text, "Helvetica", 8)
+        x = (width - text_width) / 2
+        c.drawString(x, y, text)
+        y -= 50
+
+
+        c.setFont("Helvetica", 10)
+        text = f"{venta.fecha_entrega.strftime('%Y-%m-%d %H:%M')}" if venta.fecha_entrega else "Sin fecha de entrega"
+        text_width = c.stringWidth(text, "Helvetica", 12)
+        x = 150
+        c.drawString(x, y, text)
+        y = y
+        
+        text = f"Caja 1"
+        text_width = c.stringWidth(text, "Helvetica", 12)
+        x = 420
+        c.drawString(x, y, text)
+        y -= 20
+        
+        # Cabecera de la tabla con detalles (incluyendo columna para imagen)
+        headers = ["ARTÍCULO", "CANTIDAD", "SUBTOTAL"]
+        x_positions = [150, (width - c.stringWidth("CANTIDAD", "Helvetica", 10)) / 2, 400]
+        c.setFont("Helvetica", 10)
+        for i, header in enumerate(headers):
+            c.drawString(x_positions[i], y, header)
+        y -= 30
+
+        c.setFont("Helvetica", 10)
+        # Iterar sobre cada detalle para listarlo e incluir la imagen
+        for detalle in detalles:
+            if y < 100:
+                c.showPage()
+                y = height - 50
+                
+            c.drawString(x_positions[0], y, f"{detalle.galleta.nombre}")
+            c.drawString((width - c.stringWidth(f"{detalle.cantidad}", "Helvetica", 10)) / 2, y, f"{detalle.cantidad}")
+            c.drawString((width + 230 - c.stringWidth(f"{detalle.precio_total}", "Helvetica", 10)) / 2, y, f"${detalle.precio_total:.2f}")
+            y -= 15
+            c.drawString(x_positions[0], y, f"{detalle.presentacion}")
+            y -= 20  # Espaciado para que quepa la imagen
+        y -= 10
+        text = f"Total"
+        text_width = c.stringWidth(text, "Helvetica", 10)
+        x = 150
+        c.setFont("Helvetica", 10)
+        c.drawString(x, y, text)
+        
+        text = f"${venta.total:.2f}"
+        text_width = c.stringWidth(text, "Helvetica", 10)
+        x = 400 + 12
+        c.drawString(x, y, text)
+        y -= 60
+        
+        text = "IVA INCLUIDO EN EL PRECIO"
+        text_width = c.stringWidth(text, "Helvetica", 12)
+        x = (width - text_width) / 2
+        c.setFont("Helvetica", 12)
+        c.drawString(x, y, text)
+        y -= 15
+        
+        text = "GRACIAS POR SU VISITA"
+        text_width = c.stringWidth(text, "Helvetica", 12)
+        x = (width - text_width) / 2
+        c.setFont("Helvetica", 12)
+        c.drawString(x, y, text)
+        y -= 80
+        
+        barcode = code128.Code128(str(venta.id), barHeight=40, barWidth=1.2)
+        barcode_width = barcode.width
+        barcode_x = (width - barcode_width) / 2
+        barcode.drawOn(c, barcode_x, y)
+        y -= 40
+
+        c.save()
+        return ticket_filepath
