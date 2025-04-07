@@ -18,6 +18,7 @@ class ReporteVentas:
             self.bd.session.query(
                 Galleta.nombre, 
                 Medida.nombre.label('medida_mas_vendida'),
+                VentaDetalle.presentacion.label('presentacion_mas_vendida'),
                 self.bd.func.sum(VentaDetalle.cantidad).label('total_vendido')
             )
             .join(VentaDetalle, Galleta.id == VentaDetalle.galleta_id)
@@ -36,7 +37,7 @@ class ReporteVentas:
             query = query.filter(self.bd.func.date(Venta.fecha) >= primer_dia_mes)
             
         productos_mas_vendidos = (
-            query.group_by(Galleta.nombre, Medida.nombre)
+            query.group_by(Galleta.nombre, Medida.nombre, VentaDetalle.presentacion)
             .order_by(self.bd.desc('total_vendido'))
             .limit(10)
             .all()
