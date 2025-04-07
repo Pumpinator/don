@@ -120,7 +120,8 @@ def log():
     usuario_servicio = UsuarioServicio(bd)
     usuario = usuario_servicio.obtener_usuario(id = current_user.get_id()) if current_user.is_authenticated else None
     current_app.logger.info(
-        "Usuario: %s, Método: %s, Ruta: %s, Args: %s, Form: %s",
+        "Usuario: %s,Rol: %s, Método: %s, Ruta: %s, Args: %s, Form: %s",
+        usuario.email if usuario else 'ANÓNIMO',
         usuario.rol.nombre if usuario else 'ANÓNIMO',
         request.method,
         request.path,
