@@ -29,7 +29,7 @@ class CompraServicio:
             .join(CompraDetalle, Compra.detalles)
             .join(Insumo, CompraDetalle.insumo)
             .join(Medida, CompraDetalle.medida)
-            .order_by(Compra.fecha.desc())
+            .order_by(Compra.fecha.asc())
             .all()
         )
 

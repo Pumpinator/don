@@ -104,16 +104,16 @@
         }
     }
 
-    function filterRecetas() {
+    function filterComprasProveedores() {
         const searchInput = document.getElementById('simple-search').value.toLowerCase();
-        const recetas = document.querySelectorAll('#recetas-container > div');
+        const compras = document.querySelectorAll('#compras-container > a');
 
-        recetas.forEach(receta => {
-            const recetaText = receta.textContent.toLowerCase();
-            if (recetaText.includes(searchInput)) {
-                receta.style.display = '';
+        compras.forEach(compra => {
+            const compraText = compra.textContent.toLowerCase();
+            if (compraText.includes(searchInput)) {
+                compra.style.display = '';
             } else {
-                receta.style.display = 'none';
+                compra.style.display = 'none';
             }
         });
     }

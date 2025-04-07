@@ -13,7 +13,6 @@
         </div>
     </div>
     <form action="{{ url_for('principal.compra.editar_compra', compra_id=compra.id) }}" method="POST" class="space-y-4">
-        <!-- Proveedor -->
         <div>
             <label class="block text-gray-700 font-bold">Proveedor</label>
             <select name="proveedor_id" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]" required>
