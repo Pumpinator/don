@@ -13,7 +13,7 @@
                     d="M13 5H1m0 0 4 4M1 5l4-4" />
             </svg>
         </a>
-        <form action="{{ url_for('principal.galleta.galletas_agregar') }}" method="post" class="space-y-5" novalidate>
+        <form action="{{ url_for('principal.galleta.galletas_agregar') }}" method="post" enctype="multipart/form-data" class="space-y-5" novalidate>
             {{ form.csrf_token() }}
             <div>
                 {{ form.nombre.label(class="block text-sm font-medium text-gray-700") }}
@@ -29,6 +29,13 @@
                 }}
                 {% if form.precio.errors %}
                 <p class="mt-1 text-sm text-red-600">{{ form.precio.errors[0] }}</p>
+                {% endif %}
+                {{ form.imagen.label(class="block text-sm font-medium text-gray-700") }}
+                {{ form.imagen(class=" mt-1 block w-full border border-gray-300 rounded-full px-4
+                focus:ring-[var(--color-dirt-default)] focus:border-[var(--color-dirt-default)]", placeholder="Imagen")
+                }}
+                {% if form.imagen.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.imagen.errors[0] }}</p>
                 {% endif %}
             </div>
             <button type="submit"

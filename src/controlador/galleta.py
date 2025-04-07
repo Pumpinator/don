@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for, current_app
 from servicio.cocina import CocinaServicio
 from servicio.inventario import InventarioServicio
 from bd import bd
@@ -6,6 +6,8 @@ from formularios.agregar_galleta import AgregarGalleta, EditarGalleta
 from datetime import date
 from flask_login import login_required
 from flask_principal import Permission, RoleNeed
+import os
+from werkzeug.utils import secure_filename
 
 controlador = Blueprint('galleta', __name__)
 
@@ -32,15 +34,30 @@ def galletas():
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def galletas_agregar():
-    form = AgregarGalleta(request.form)
+    form = AgregarGalleta()
     if request.method == 'POST' and form.validate_on_submit():
         try:
+            if 'imagen' not in request.files or request.files['imagen'].filename == '':
+                flash("La imagen es obligatoria.", "danger")
+                return render_template('galletas/galletas_agregar.html', form=form)
+
+            imagen = request.files['imagen']
+            filename = secure_filename(imagen.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            imagen.save(filepath)  
+
             cocina_servicio = CocinaServicio(bd)
-            cocina_servicio.agregar_galletas(request.form)
+            data = {
+                'nombre': form.nombre.data,
+                'precio': form.precio.data,
+                'imagen': filename  
+            }
+            cocina_servicio.agregar_galletas(data)
+
             flash("Galleta creada exitosamente.", "success")
             return redirect(url_for('principal.galleta.galletas'))
         except ValueError as e:
-            flash(str(e), "danger")        
+            flash(str(e), "danger")
     return render_template('galletas/galletas_agregar.html', form=form)
 
 

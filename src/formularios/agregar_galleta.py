@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, StringField, FloatField
+from flask_wtf.file import FileAllowed
+from wtforms import HiddenField, StringField, FloatField, FileField
 from wtforms.validators import DataRequired, Length, InputRequired, NumberRange
 
 class AgregarGalleta(FlaskForm):
@@ -10,6 +11,10 @@ class AgregarGalleta(FlaskForm):
     precio = FloatField('Precio', validators=[
         DataRequired(message="El precio es obligatorio."),
         NumberRange(min=0, message="El precio debe ser un número positivo.")
+    ])
+    imagen = FileField('Imagen', validators=[
+        DataRequired(message="La imagen es obligatoria."),
+        FileAllowed(['jpg', 'jpeg', 'png'], message="Solo se permiten imágenes en formato JPG o PNG.")
     ])
     
 class EditarGalleta(FlaskForm):

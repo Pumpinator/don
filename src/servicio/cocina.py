@@ -54,15 +54,15 @@ class CocinaServicio:
     def agregar_galletas(self, form):
         nombre = form.get('nombre')
         precio = form.get('precio')
-    
-        
+        imagen = form.get('imagen')  # Obtener el nombre del archivo de la imagen
+
         # Verificar si ya existe una galleta con el mismo nombre
         galleta_existente = self.bd.session.query(Galleta).filter_by(nombre=nombre).first()
         if galleta_existente:
             raise ValueError(f"Ya existe una galleta con el nombre '{nombre}'")
-        
-        # Agregar la nueva galleta si no existe
-        galleta = Galleta(nombre=nombre, precio=precio)
+
+        # Crear una nueva instancia de Galleta con los datos proporcionados
+        galleta = Galleta(nombre=nombre, precio=precio, imagen=imagen)
         self.bd.session.add(galleta)
         self.bd.session.commit()
 
@@ -71,7 +71,6 @@ class CocinaServicio:
         nombre = form.get('nombre')
         precio = form.get('precio')
         
-        # Verificar si ya existe una galleta con el mismo nombre (excluyendo la actual)
         galleta_existente = self.bd.session.query(Galleta).filter(
             Galleta.nombre == nombre,
             Galleta.id != id
@@ -80,7 +79,6 @@ class CocinaServicio:
         if galleta_existente:
             raise ValueError(f"Ya existe una galleta con el nombre '{nombre}'")
         
-        # Actualizar la galleta si no existe otra con el mismo nombre
         galleta = self.bd.session.query(Galleta).filter_by(id=id).first()
         if galleta:
             galleta.nombre = nombre
@@ -93,12 +91,10 @@ class CocinaServicio:
     def agregar_insumo(self, form):
         nombre = form.get('nombre')
         
-        # Verificar si ya existe un insumo con el mismo nombre
         insumo_existente = self.bd.session.query(Insumo).filter_by(nombre=nombre).first()
         if insumo_existente:
             raise ValueError(f"Ya existe un insumo con el nombre '{nombre}'")
         
-        # Agregar el nuevo insumo si no existe
         insumo = Insumo(nombre=nombre)
         self.bd.session.add(insumo)
         self.bd.session.commit()

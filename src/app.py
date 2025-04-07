@@ -1,6 +1,8 @@
+from fileinput import filename
 import logging
+import os
 
-from flask import Flask
+from flask import Flask, current_app
 from flask_principal import Principal
 from config import DevelopmentConfig
 from controlador.principal import controlador as controlador_principal, login_manager
@@ -8,6 +10,10 @@ from bd import bd
 
 app = Flask(__name__, static_folder='vista/static', template_folder='vista/templates')
 app.config.from_object(DevelopmentConfig)
+app.config['UPLOAD_FOLDER'] = os.path.join('src','vista', 'static', 'img')
+
+filename = "example.txt"  # Define un nombre de archivo válido
+filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
 handler = logging.FileHandler('app.log')
 handler.setLevel(logging.INFO)
@@ -19,6 +25,7 @@ login_manager.init_app(app)
 principal = Principal(app)
 
 app.register_blueprint(controlador_principal)
+
 
 if __name__ == '__main__':
     bd.init_app(app)
