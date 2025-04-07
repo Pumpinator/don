@@ -17,7 +17,6 @@ admin_or_trabajador_permission = Permission(RoleNeed('ADMIN'), RoleNeed('TRABAJA
 def galletas_inv():
     inventario_servicio = InventarioServicio(bd)
     inventarios = inventario_servicio.obtener_galletas_inv()
-    print(inventarios)
     return render_template('galletas/galletas_inv.html', inventarios=inventarios)
 
 @controlador.route('/galletas')

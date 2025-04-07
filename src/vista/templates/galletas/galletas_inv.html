@@ -38,9 +38,13 @@
         </div>
     </form>
 
-    <div class=" p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
-        {% for inv in inventarios %}
+    <select id="view-mode" class="mt-1 block w-full border border-gray-300 rounded-full px-4 focus:ring-[var(--color-terracotta-default)] focus:border-[var(--color-dirt-default)]" required>
+        <option value="kg" selected>Kilogramos</option>
+        <option value="piezas">Piezas</option>
+    </select>
 
+    <div class="p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-4">
+        {% for inv in inventarios %}
         <div class="p-5 galleta-item bg-white border border-gray-200 rounded-lg 
         shadow-sm light:bg-gray-800 light:border-gray-700 object-fill">
             <div class="max-w-sm max-h-sm">
@@ -54,17 +58,18 @@
                     <h7 class="mb-2 md:text-2xl lg:text-2xl
                      text-lg font-bold tracking-tight text-gray-900 dark:text-black">
                         {{ inv.galleta }}</h7>
-                    {%if inv.cantidad > 0 %}
+                    {% if inv.cantidad_kg > 0 %}
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Disponible</p>
-                    {%else%}
+                    {% else %}
                     <p class="mb-3 font-normal text-red-200 dark:text-red-400">Agotado</p>
-                    {%endif%}
+                    {% endif %}
                 </div>
-                <div class="justify-self-end ">
-                    <h7
-                        class="mb-2 md:text-2xl lg:text-2xl text-lg  font-bold  tracking-tight text-gray-900 dark:text-black">
-                        {{inv.cantidad}}</h7>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{inv.medida}}</p>
+                <div class="justify-self-end">
+                    <h7 class="mb-2 md:text-2xl lg:text-2xl text-lg font-bold tracking-tight text-gray-900 dark:text-black cantidad"
+                        data-cantidad-kg="{{ "%.2f"|format(inv.cantidad_kg) }}">
+                        {{ "%.2f"|format(inv.cantidad_kg) }}
+                    </h7>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 medida">{{ inv.medida }}</p>
                 </div>
             </div>
         </div>
@@ -84,6 +89,28 @@
                 }
             });
         }
+
+        document.getElementById('view-mode').addEventListener('change', function () {
+            const mode = this.value; // Obtener el modo seleccionado (kg o piezas)
+            const items = document.querySelectorAll('.galleta-item');
+
+            items.forEach(item => {
+                const cantidadElement = item.querySelector('.cantidad');
+                const medidaElement = item.querySelector('.medida');
+                const cantidadKg = parseFloat(cantidadElement.getAttribute('data-cantidad-kg')); // Recuperar el valor original
+
+                if (mode === 'piezas') {
+                    // Convertir a piezas
+                    const cantidadPiezas = Math.floor(cantidadKg / 0.05);
+                    cantidadElement.textContent = cantidadPiezas;
+                    medidaElement.textContent = 'Piezas';
+                } else {
+                    // Mostrar en kilogramos con máximo dos decimales
+                    cantidadElement.textContent = cantidadKg.toFixed(2);
+                    medidaElement.textContent = 'Kilogramos';
+                }
+            });
+        });
     </script>
 </div>
 {% endblock %}

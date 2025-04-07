@@ -51,8 +51,15 @@ class InventarioServicio:
             .all()
         )
         inventarios = [
-            {"id":galleta_id,"imagen": imagen, "galleta": nombre, "cantidad": int(cantidad_total), "medida": medida} 
-            for galleta_id,nombre, imagen, cantidad_total, medida in resultados
+            {
+                "id": galleta_id,
+                "imagen": imagen,
+                "galleta": nombre,
+                "cantidad_kg": float(cantidad_total),
+                "cantidad_piezas": int(cantidad_total / 0.05),  # Convertir a piezas
+                "medida": medida
+            }
+            for galleta_id, nombre, imagen, cantidad_total, medida in resultados
         ]
         return inventarios
     
