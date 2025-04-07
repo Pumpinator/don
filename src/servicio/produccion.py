@@ -61,7 +61,7 @@ class ProduccionServicio:
             if produccion.estatus == 3:
                 try:
                     costo_base = self._calcular_costo_base(produccion.receta)
-                    kilos = produccion.costo / costo_base if costo_base > 0 else 0
+                    kilos = float(produccion.costo) / costo_base if costo_base > 0 else 0
                     
                     for ingrediente in produccion.receta.ingredientes:
                         insumo_id = ingrediente.insumo_id
@@ -80,7 +80,7 @@ class ProduccionServicio:
                         
                         total_disponible = sum(lote.cantidad for lote in lotes)
                         if total_disponible < cantidad_necesaria:
-                            raise ValueError(f"Insumo {ingrediente.insumo.nombre} insuficiente: Requerido {cantidad_necesaria}, Disponible {total_disponible}")
+                            raise ValueError(f"Insumo {ingrediente.insumo.nombre} insuficiente: Requerido {round(cantidad_necesaria, 2)}, Disponible {round(total_disponible, 2)}")
                         
                         restante = cantidad_necesaria
                         for lote in lotes:
