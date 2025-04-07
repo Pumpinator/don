@@ -105,16 +105,15 @@
         function calcularTotal() {
             let total = 0;
             document.querySelectorAll('.insumo-item').forEach(item => {
-                const cantidad = parseFloat(item.querySelector('.cantidad').value) || 0;
-                const precio = parseFloat(item.querySelector('.precio').value) || 0;
+                const cantidad = parseFloat(item.querySelector('input[name="cantidad[]"]').value) || 0;
+                const precio = parseFloat(item.querySelector('input[name="costo[]"]').value) || 0;
                 total += cantidad * precio;
             });
             totalInput.value = total.toFixed(2);
         }
 
-        // Evento para recalcular el total al cambiar cantidad o precio
         container.addEventListener('input', function(e) {
-            if (e.target.classList.contains('cantidad') || e.target.classList.contains('precio')) {
+            if (e.target.classList.contains('cantidad[]') || e.target.classList.contains('costo[]')) {
                 calcularTotal();
             }
         });
