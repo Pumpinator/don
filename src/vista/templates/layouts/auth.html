@@ -29,7 +29,11 @@
             <a href="{{ url_for('principal.pedido.ver_carrito') }}"
                 class="relative group hover:text-[var(--color-chocolate-default)] cursor-pointer">
                 <i class="fas fa-shopping-cart text-xl"></i>
-                <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                {% if session.get('carrito') %}
+                {% set total = 0 %}
+                <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full">
+                </span>
+                {% endif %}
             </a>
             {% endif %}
             <a href="{{url_for('principal.usuario.cuenta')}}"
@@ -68,7 +72,8 @@
                 Compras
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
-            <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}" data-tooltip-target="tooltip-insumos"
+            <a href="{{ url_for('principal.insumo.insumos', modulo='inventarios') }}"
+                data-tooltip-target="tooltip-insumos"
                 class="inline-flex flex-col items-center justify-center px-5 transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-egg text-xl"></i>
                 <span class="sr-only">Insumos</span>
@@ -108,7 +113,8 @@
                 Mermas
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
-            <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}" data-tooltip-target="tooltip-usuarios"
+            <a href="{{ url_for('principal.usuario.listar_usuarios', rol='trabajadores') }}"
+                data-tooltip-target="tooltip-usuarios"
                 class="inline-flex flex-col items-center justify-center px-5 rounded-e-full transition duration-300 hover:bg-[var(--color-chocolate-default)] hover:text-white group">
                 <i class="fas fa-users text-xl"></i>
                 <span class="sr-only">Usuarios</span>

@@ -35,6 +35,8 @@ def crear_usuario(rol):
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def listar_usuarios(rol):
+    if rol != 'administradores' and rol != 'trabajadores' and rol != 'compradores':
+        abort(404)
     usuario_servicio = UsuarioServicio(bd)
     usuarios_list = usuario_servicio.obtener_usuarios(rol=rol)
     return render_template('usuario/usuarios.html', usuarios=usuarios_list, rol=rol)
@@ -43,6 +45,10 @@ def listar_usuarios(rol):
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def editar_usuario(rol, id):
+    if rol == 'administradores' and current_user.rol.nombre != 'ADMIN':
+        abort(403)
+    if rol != 'administradores' and rol != 'trabajadores' and rol != 'compradores':
+        abort(404)
     usuario_servicio = UsuarioServicio(bd)
     usuario = usuario_servicio.obtener_usuario(id=id)
     

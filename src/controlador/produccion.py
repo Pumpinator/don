@@ -30,6 +30,10 @@ def produccion():
 @admin_or_trabajador_permission.require(http_exception=403)
 def avanzar_produccion(produccion_id):
     produccion_servicio = ProduccionServicio(bd)
-    produccion_servicio.avanzar_estatus(produccion_id)
+    try:   
+        produccion_servicio.avanzar_estatus(produccion_id)
+        flash("Producción avanzada exitosamente.", "success")
+    except Exception as e:
+        flash(f"Ocurrió un error: {str(e)}", "danger")
     return redirect(url_for('principal.produccion.produccion'))
 

@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, abort
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_from_directory, current_app
 from bd import bd
 from servicio.venta import VentaServicio
 from formularios.venta import VentaForm
 from flask_login import login_required, current_user
 from flask_principal import Permission, RoleNeed
+from flask import send_from_directory, current_app
+import os
 
 controlador = Blueprint('venta', __name__)
 
@@ -135,10 +137,13 @@ def validar_comprador():
 @login_required
 @admin_or_trabajador_permission.require(http_exception=403)
 def cerrar_venta():
+    ticket_param = request.args.get('ticket', '0')
+    generar_ticket = True if ticket_param == '1' else False
     try:
         venta_servicio = VentaServicio(bd)
-        venta_servicio.cerrar_venta(session, current_user)
+        venta_id = venta_servicio.cerrar_venta(session, current_user)
         flash("Venta cerrada con éxito", "success")
+        if generar_ticket: return ver_ticket(venta_id)
     except Exception as e:
         print(e.__class__.__name__)
         if hasattr(e, 'message'):
@@ -148,3 +153,17 @@ def cerrar_venta():
         else:
             flash(str(e), "danger")
     return redirect(url_for('principal.venta.mostrador'))
+
+@controlador.route('/tickets/<int:venta_id>', methods=['GET'])
+@login_required
+@admin_or_trabajador_permission.require(http_exception=403)
+def ver_ticket(venta_id):
+    filename = f'ticket_{venta_id}.pdf'
+    try :
+        venta_servicio = VentaServicio(bd)
+        venta_servicio.obtener_ticket(venta_id)
+    except Exception as e:
+        flash("Error al generar el ticket: " + str(e), "danger")
+        return redirect(url_for('principal.venta.mostrador'))
+    tickets_dir = os.path.join(current_app.root_path, '..', 'tickets')
+    return send_from_directory(tickets_dir, filename)

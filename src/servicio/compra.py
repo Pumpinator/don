@@ -108,12 +108,14 @@ class CompraServicio:
                 CompraDetalle.insumo_id,
                 CompraDetalle.precio_total,
                 Medida.nombre,
-                Medida.abreviatura
+                Medida.abreviatura,
+                InsumoInventario.fecha_expiracion
             )
             .select_from(Compra)
             .join(CompraDetalle, Compra.id == CompraDetalle.compra_id)
             .join(Insumo, CompraDetalle.insumo_id == Insumo.id)
             .join(Medida, CompraDetalle.medida_id == Medida.id)
+            .join(InsumoInventario, (Compra.id == InsumoInventario.compra_id) & (CompraDetalle.insumo_id == InsumoInventario.insumo_id))
             .filter(Compra.id == compra_id)
         )
         
@@ -127,9 +129,10 @@ class CompraServicio:
                 "insumo_id": insumo_id,
                 "precio_total": precio_total,
                 "medida_nombre": medida,
-                "medida_abreviatura": medida_abreviatura
+                "medida_abreviatura": medida_abreviatura,
+                "fecha_expiracion": fecha_expiracion
             }
-            for insumo, cantidad, precio_unitario, insumo_id, precio_total, medida, medida_abreviatura in resultados
+            for insumo, cantidad, precio_unitario, insumo_id, precio_total, medida, medida_abreviatura, fecha_expiracion in resultados
         ]
         
         query = (
@@ -141,10 +144,10 @@ class CompraServicio:
         fecha, proveedor = query.first()
         compra = {
             "id": compra_id,
-            "fecha": fecha.strftime('%d/%m/%Y'),
+            "fecha": fecha,
             "proveedor": proveedor,
             "detalles": detalles,
-            "total": f"{float(sum(d['precio_total'] for d in detalles)):,.2f}"
+            "total": round(sum(d['precio_total'] for d in detalles), 2),
         }
         return compra
 

@@ -124,19 +124,11 @@
                             </div>
                         </div>
                         {% endfor %}
-                        <div class="grid grid-cols-2 justify-between gap-8">
-                            <div class="flex flex-col text-start">
-                                <p class="text-base font-normal text-gray-500">Comisión</p>
-                            </div>
-                            <div class="text-end">
-                                <p class="text-base font-normal text-gray-500">$50.00</p>
-                            </div>
-                        </div>
                     </div>
 
                     <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
                         <dt class="text-base font-bold text-gray-900">Total</dt>
-                        <dd class="text-base font-bold text-gray-900">${{ total + 50 }} mxn</dd>
+                        <dd class="text-base font-bold text-gray-900">${{ total }} mxn</dd>
                     </dl>
                 </div>
 
@@ -185,7 +177,7 @@
                                             <i class="fa-solid fa-check mr-2"></i>
                                             Sí, generar
                                         </button>
-                                        <button type="submit"
+                                        <button data-modal-hide="modal-cerrar-venta"
                                             class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-100">
                                             <i class="fa-solid fa-xmark mr-2"></i>
                                             No, cancelar
