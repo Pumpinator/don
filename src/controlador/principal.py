@@ -107,14 +107,6 @@ def load_user(user_id):
     except Exception as e:
         return None
 
-@controlador.errorhandler(404)
-def page_not_found(error):
-    return render_template('errors/404.html'), 404
-
-@controlador.errorhandler(403)
-def forbidden(error):
-    return render_template('errors/403.html'), 403
-
 @controlador.before_request
 def log():
     usuario_servicio = UsuarioServicio(bd)
@@ -128,3 +120,10 @@ def log():
         request.args.to_dict(),
         request.form.to_dict()
     )
+    
+@controlador.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
