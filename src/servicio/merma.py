@@ -36,7 +36,7 @@ class MermaServicio:
                 cantidad=cantidad,
                 medida_id=medida_id
             )
-
+#
             if tipo == "insumo":
                 merma.insumo_id = item_id
                 insumo = self.bd.session.query(InsumoInventario).filter_by(insumo_id=item_id).first()
