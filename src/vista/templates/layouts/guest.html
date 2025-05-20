@@ -19,12 +19,16 @@
         </a>
 
         <div class="flex items-center space-x-4">
-            <a href="{{ url_for('principal.pedido.ver_carrito') }}" class="relative group hover:text-gray-200 cursor-pointer">
+            <a href="{{ url_for('principal.pedido.ver_carrito') }}"
+                class="relative group hover:text-gray-200 cursor-pointer">
                 <i class="fas fa-shopping-cart text-xl"></i>
-                <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                {% if session.get('carrito') %}
+                {% set total = 0 %}
+                <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full">
+                </span>
+                {% endif %}
             </a>
-            <a href="{{url_for('principal.ingresar')}}"
-                class="hover:text-gray-200 cursor-pointer">
+            <a href="{{url_for('principal.ingresar')}}" class="hover:text-gray-200 cursor-pointer">
                 <i class="fas fa-user text-xl"></i>
             </a>
         </div>

@@ -43,39 +43,62 @@
     </div>
 
     {% elif current_user.roles and current_user.roles[0] == 'COMPRADOR' %}
-    <div class="flex items-center justify-center p-4">
-        <div class="w-full max-w-md bg-white rounded-lg p-6">
-            <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
-            <p class="text-gray-600 text-center mt-2">
-                Ordena tus galletas favoritas y recógelas en sucursal.
-            </p>
-            <div class="mt-6">
-                <a href="{{ url_for('principal.pedido.menu') }}"
-                    class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
-                    Ver el Menú
-                </a>
+    <div class="relative h-full w-full">
+        <img src="{{ url_for('static', filename='img/background.jpg') }}" alt="Galletas artesanales" class="absolute inset-0 w-full h-full object-cover filter brightness-70">
+        
+        <!-- Overlay para mejorar legibilidad del texto -->
+        <div class="absolute inset-0 overlay"></div>
+        
+        <!-- Contenido principal -->
+        <div class="relative z-10 h-full flex flex-col">
+            
+            <!-- Contenido central -->
+            <div class="flex-grow flex flex-col items-center justify-center px-4 text-center">
+                <h1 class="hero-title text-5xl md:text-6xl font-bold text-gray-100 mb-4 drop-shadow-lg">D🍪N</h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg">Galletas artesanales, frescas y deliciosas 😋</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="{{ url_for('principal.pedido.menu') }}" class="bg-[#3b2f2f] hover:bg-[#5a4545] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                        Ver Menú
+                    </a>
+                </div>
             </div>
+            
+            <!-- Footer -->
+            <footer class="py-4 px-6 text-white text-center">
+                <p class="text-sm">© 2025 DON - Todos los derechos reservados</p>
+            </footer>
         </div>
     </div>
     {% endif %}
 </div>
 {% else %}
-<div class="flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-lg p-6">
-        <h1 class="text-2xl font-bold text-center text-gray-800">Bienvenido a la Tienda de Galletas!</h1>
-        <p class="text-gray-600 text-center mt-2">
-            Ordena tus galletas favoritas y recógelas en sucursal.
-        </p>
-        <div class="mt-6">
-            <a href="{{ url_for('principal.pedido.menu') }}"
-                class="block bg-[var(--color-red-default)] text-white text-center py-2 px-4 rounded-lg hover:bg-[var(--color-red-dark)]">
-                Ver el Menú
-            </a>
-            <a href="{{ url_for('principal.ingresar') }}"
-                class="block bg-gray-200 text-gray-800 text-center py-2 px-4 rounded-lg mt-4 hover:bg-gray-300">
-                Accede a tu Cuenta
-            </a>
+<div class="relative h-full w-full">
+    <img src="{{ url_for('static', filename='img/background.jpg') }}" alt="Galletas artesanales" class="absolute inset-0 w-full h-full object-cover filter brightness-70">
+    
+    <!-- Overlay para mejorar legibilidad del texto -->
+    <div class="absolute inset-0 overlay"></div>
+    
+    <!-- Contenido principal -->
+    <div class="relative z-10 h-full flex flex-col">
+        
+        <!-- Contenido central -->
+        <div class="flex-grow flex flex-col items-center justify-center px-4 text-center">
+            <h1 class="hero-title text-5xl md:text-6xl font-bold text-gray-100 mb-4 drop-shadow-lg">D🍪N</h1>
+            <p class="text-lg md:text-xl text-gray-200 mb-8 drop-shadow-lg">Galletas artesanales, frescas y deliciosas 😋</p>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="{{ url_for('principal.pedido.menu') }}" class="bg-[#3b2f2f] hover:bg-[#5a4545] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                    Ver Menú
+                </a>
+                <a href="{{ url_for('principal.ingresar') }}" class="bg-transparent hover:bg-white/20 text-white border-2 border-white font-bold py-3 px-8 rounded-full transition-colors shadow-lg">
+                    Iniciar Sesión
+                </a>
+            </div>
         </div>
+        
+        <!-- Footer -->
+        <footer class="py-4 px-6 text-white text-center">
+            <p class="text-sm">© 2025 DON - Todos los derechos reservados</p>
+        </footer>
     </div>
 </div>
 {% endif %}
